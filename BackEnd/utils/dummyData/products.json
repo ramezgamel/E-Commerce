@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Iphone 12",
+    "quantity": 9,
+    "category": "636f86d9ba88a8e1dc79c96a",
+    "coverImage": "iphone image",
+    "price": 37000,
+    "priceAfterDiscount": 32000,
+    "desc": "CPU: Ionic 16, RAM: 8GB, Storage: 128GB"
+  },
+  {
+    "name": "Iphone 13",
+    "quantity": 23,
+    "category": "636f86d9ba88a8e1dc79c96a",
+    "coverImage": "iphone image",
+    "price": 39000,
+    "priceAfterDiscount": 35000,
+    "desc": "CPU: Ionic 16, RAM: 8GB, Storage: 128GB"
+  },
+  {
+    "name": "Iphone 14",
+    "quantity": 23,
+    "category": "636f86d9ba88a8e1dc79c96a",
+    "coverImage": "iphone image",
+    "price": 52000,
+    "priceAfterDiscount": 49000,
+    "desc": "CPU: Ionic 16, RAM: 8GB, Storage: 128GB"
+  }
+]
