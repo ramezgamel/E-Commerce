@@ -3,12 +3,14 @@ const dotenv = require("dotenv");
 const morgan = require("morgan")
 
 const dbConnection = require("./config/dbConnection");
+const globalError = require("./middleware/globalError");
+const ApiError = require("./utils/apiError");
+
+const authRoutes = require("./routes/auth.routes");
 const productsRoutes = require("./routes/product.routes");
 const categoryRoutes = require("./routes/category.routes");
 const subCategoryRoutes = require("./routes/subCategory.routes");
-const brandRoutes = require("./routes/brand.routes")
-const ApiError = require("./utils/apiError");
-const globalError = require("./middleware/globalError")
+const brandRoutes = require("./routes/brand.routes");
 
 dotenv.config();
 dbConnection();
@@ -25,6 +27,7 @@ app.use("/category",categoryRoutes);
 app.use("/subCategory",subCategoryRoutes);
 app.use("/brand", brandRoutes);
 app.use("/product",productsRoutes);
+app.use(authRoutes)
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't get this route: ${req.originalUrl}`, 400))
@@ -34,7 +37,7 @@ app.use(globalError);
 
 
 
-const port = process.env.PORT || 4100;
+const port = process.env.PORT || 4000;
 const server = app.listen(port, () => console.log("Server Running"));
 
 process.on("unhandledRejection", (err) => {

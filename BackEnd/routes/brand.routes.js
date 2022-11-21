@@ -2,16 +2,29 @@ const router = require("express").Router();
 
 const controller = require("../controllers/brand.controller");
 const brandValidator = require("../utils/validators/brand.validators");
+const Authorization = require("../middleware/auth.middleware");
 
 router
   .route("/")
-  .post(brandValidator.createBrandValidator, controller.createBrand)
+  .post(
+    brandValidator.createBrandValidator,
+    Authorization,
+    controller.createBrand
+  )
   .get(controller.getBrands);
 
 router
   .route("/:id")
   .get(brandValidator.getBrandValidator, controller.getBrand)
-  .put(brandValidator.updateBrandValidator, controller.updateBrand)
-  .delete(brandValidator.deleteBrandValidator, controller.deleteBrand);
+  .put(
+    brandValidator.updateBrandValidator,
+    Authorization,
+    controller.updateBrand
+  )
+  .delete(
+    brandValidator.deleteBrandValidator,
+    Authorization,
+    controller.deleteBrand
+  );
 
 module.exports = router;
