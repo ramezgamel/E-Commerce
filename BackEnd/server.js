@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const morgan = require("morgan")
+const morgan = require("morgan");
+const cors = require("cors");
 
 const dbConnection = require("./config/dbConnection");
 const globalError = require("./middleware/globalError");
@@ -16,26 +17,26 @@ dotenv.config();
 dbConnection();
 
 const app = express();
-if(process.env.NODE_ENV === "development"){
-  app.use(morgan('dev'))
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(cors());
 
 // Routes
-app.use("/category",categoryRoutes);
-app.use("/subCategory",subCategoryRoutes);
+app.use("/category", categoryRoutes);
+app.use("/subCategory", subCategoryRoutes);
 app.use("/brand", brandRoutes);
-app.use("/product",productsRoutes);
-app.use(authRoutes)
+app.use("/product", productsRoutes);
+app.use("/user",authRoutes);
 
 app.all("*", (req, res, next) => {
-  next(new ApiError(`Can't get this route: ${req.originalUrl}`, 400))
-})
+  next(new ApiError(`Can't get this route: ${req.originalUrl}`, 400));
+});
 
 app.use(globalError);
-
-
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => console.log("Server Running"));
@@ -43,7 +44,7 @@ const server = app.listen(port, () => console.log("Server Running"));
 process.on("unhandledRejection", (err) => {
   console.log(`UnhandledRejection Error: ${err.name} | ${err.message}`);
   server.close(() => {
-    console.error("Shutting down...")
-    process.exit(1)
-  })
-})
+    console.error("Shutting down...");
+    process.exit(1);
+  });
+});
