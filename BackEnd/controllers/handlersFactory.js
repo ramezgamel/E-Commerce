@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
-const slugify = require("slugify")
+const slugify = require("slugify");
 
 module.exports = class HandlerFactory {
   static deleteOne = (model) =>
@@ -30,6 +30,17 @@ module.exports = class HandlerFactory {
       if (req.body.name) {
         req.body.slug = slugify(req.body.name);
       }
+      if (req.file) {
+          req.body.image = req.file.path;
+      }
+      if (req.files) {
+        if (model.modelName == "Product") {
+          req.body.coverImage = req.files.coverImage[0].path;
+          req.body.images = req.files.images.map((img) => img.path);
+        } else {
+          req.body.images = req.files.images.map((img) => img.path);
+        };
+      }
       const document = await model.create(req.body);
       res.status(201).send({ data: document });
     });
@@ -52,10 +63,7 @@ module.exports = class HandlerFactory {
   static getAll = (model) =>
     asyncHandler(async (req, res) => {
       const documentsCount = await model.countDocuments();
-      const apiFeatures = new ApiFeatures(
-        model.find(),
-        req.query
-      )
+      const apiFeatures = new ApiFeatures(model.find(), req.query)
         .sort()
         .search(model.modelName)
         .limitFields()
@@ -67,4 +75,3 @@ module.exports = class HandlerFactory {
         .send({ results: items.length, paginationResult, data: items });
     });
 };
-

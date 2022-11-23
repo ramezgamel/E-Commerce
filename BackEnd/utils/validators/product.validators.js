@@ -7,7 +7,7 @@ const ApiError = require("../apiError");
 // make a custom check on priceAfterDiscount
 module.exports = class ProductValidator {
   static createValidator = [
-    check("name").notEmpty().withMessage("Title is required"),
+    check("name").notEmpty().withMessage("Name is required"),
     check("desc")
       .notEmpty()
       .withMessage("Description is required")
@@ -45,7 +45,6 @@ module.exports = class ProductValidator {
       .optional()
       .isArray()
       .withMessage("Available images must be array of string"),
-    check("coverImage").notEmpty().withMessage("Cover image is required"),
     check("category")
       .notEmpty()
       .withMessage("Category is required")

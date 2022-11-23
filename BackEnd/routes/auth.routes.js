@@ -5,10 +5,11 @@ const AuthMiddleWare = require("../middleware/auth.middleware");
 
 router.post("/register", authValidate.register, auth.register);
 router.post("/login", authValidate.login, auth.login);
+router.post("/forgetPassword", auth.forgetPassword);
+router.post("/resetPassword/:token", auth.resetPassword);
+router.put("/profile/:id", auth.editProfile)
 
 router.post("/setAdmin/:id", AuthMiddleWare, auth.addAdmin);
 
-router.post("/forgetPassword", auth.forgetPassword);
-router.post("/resetPassword/:token", auth.resetPassword);
 
 module.exports = router;

@@ -74,9 +74,9 @@ module.exports = class Auth {
       subject: "Password reset",
       text: `there is a link to reset ur password ${link}`,
     };
-    transporter.sendMail(mailOption, function(err, info){
-      if(err) console.log(err);
-      else console.log("Email Sent" + info.response)
+    transporter.sendMail(mailOption, function (err, info) {
+      if (err) console.log(err);
+      else console.log("Email Sent" + info.response);
     });
 
     res.send("Done");
@@ -92,4 +92,14 @@ module.exports = class Auth {
     await UserModel.findByIdAndUpdate(user.id, { password: hashPassword });
     res.status(200).send("Password Updated");
   });
+
+  static editProfile = asyncHandler(async (req, res) => {
+    const decoded = jwt.verify(req.header("x-auth-token"), process.env.JWTSEC);
+    if (req.params.id != decoded.userId)
+      throw new ApiError("Only user can edit his profile", 400);
+    const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {new:true});
+    res.status(200).send({ msg: "user updated" , data: user});
+  });
+
+  
 };

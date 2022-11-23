@@ -25,6 +25,7 @@ class BrandValidator {
       .withMessage("Too short name")
       .isLength({ max: 20 })
       .withMessage("Too long name"),
+    check("image").optional().isString(),
     validator
   ];
 };
