@@ -1,0 +1,20 @@
+<label > Sort By:</label>
+                      <!-- Sort Selector -->
+<select #selector class="form-select mb-2" aria-label="Default select example" (change)="sortby(selector.value)">
+  <option selected value="default">Default</option>
+  <option value="price">Price</option>
+  <option value="name">Name</option>
+</select>
+
+                      <!-- Products List -->
+<div class="row gap-2">
+  <div class="card" style="width: 18rem;" *ngFor="let prd of products">
+    <img src="https://via.placeholder.com/150" class="card-img-top" [alt]="prd.name">
+    <!-- <img src="{{APIRoot+prd.coverImage}}" class="card-img-top" [alt]="prd.name"> -->
+    <div class="card-body">
+      <h5 class="card-title">{{prd.name}}</h5>
+      <p class="card-text">{{prd.desc}}</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="submit()">
+    <div class="form-group">  <!-- userName -->
+      <label for="userName" >User name:</label>
+      <input type="text" class="form-control" name="userName" formControlName="userName" [ngClass]="{'is-valid': userName?.valid, 'is-invalid': userName?.invalid && userName?.touched}">
+      <div class="alert alert-danger" *ngIf="userName?.invalid && userName?.touched">
+        <small>User name is required</small>
+      </div>
+    </div>
+    <div class="form-group">  <!-- Email -->
+      <label for="email">Email:</label> 
+      <input type="text" class="form-control" name="email" formControlName="email">
+      <div class="alert alert-danger" *ngIf="email?.errors && email?.touched">
+        <small *ngIf="email?.errors?.['required']">Email is required</small>
+        <small *ngIf="email?.errors?.['emailIsExist']">this email is already exist</small>
+      </div>
+    </div>
+    <div class="form-group">  <!-- Password -->
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" name="password" formControlName="password">
+    </div>
+    <div class="form-group">  <!-- ConfirmPassword -->
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" class="form-control" name="confirmPassword" formControlName="confirmPassword">
+      <div *ngIf="password?.touched && confirmPassword?.touched && registerForm.errors" class="alert alert-danger">
+        <small *ngIf="registerForm.errors?.['doesMatch']">Password doesn't match</small>
+        <small *ngIf="confirmPassword?.errors?.['required'] || password?.errors?.['required']">Password required</small>
+      </div>
+    </div>
+    <div class="form-group">  <!-- ProfileImage -->
+      <label for="profileImage">Profile Image:</label>
+      <input type="file" class="form-control" name="profileImage" formControlName="profileImage">
+    </div>
+
+    <!-- FormArray  -->
+    <div formArrayName="phoneNumber">
+      <div  class="form-group" *ngFor="let ph of phoneNumber.controls; let i = index">
+        <label for="num{{i+1}}">Phone Number #{{i+1}}:</label>
+        <div class="d-flex gap-2">
+          <input type="text" class="form-control" name="num{{i+1}}" [formControlName]="i">
+          <button class="btn btn-danger mt-1" (click)="removeField(i,this.phoneNumber)" *ngIf="i != 0">Remove</button>
+        </div>
+      </div>
+      <button class="btn btn-success mt-1" (click)="addField(this.phoneNumber)" [disabled]="phoneNumber.at(phoneNumber.controls.length - 1).value == ''">Add</button>
+    </div>
+    <div formArrayName="address">
+      <div  class="form-group" *ngFor="let adr of address.controls; let i = index">
+        <label for="adr-{{i+1}}">Address no #{{(i+1)}}:</label>
+        <div class="d-flex gap-2">
+          <input type="text" class="form-control" name="adr-{{i+1}}" [formControlName]="i">
+          <button class="btn btn-danger mt-1" (click)="removeField(i,this.address)" *ngIf="i != 0">Remove</button>
+        </div>
+      </div>
+      <button class="btn btn-success mt-1" (click)="addField(this.address)" [disabled]="address.at(address.controls.length - 1).value == ''">Add</button>
+    </div>
+
+    <!-- SelectBox -->
+    <div>
+      <div class="d-flex">
+        <div class="form-check me-3">
+        <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="facebook" id="flexRadioDefault1" (change)="changeValidators()">
+        <label class="form-check-label" for="flexRadioDefault1">
+          Facebook
+        </label>
+        </div>
+        <div class="form-check me-3">
+          <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="friends" id="flexRadioDefault2" (change)="changeValidators()">
+          <label class="form-check-label" for="flexRadioDefault2">
+            From Friends
+          </label>
+        </div>
+        <div class="form-check me-3">
+          <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="other" id="flexRadioDefault3" (change)="changeValidators()">
+          <label class="form-check-label" for="flexRadioDefault3">
+            Others
+          </label>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="referral?.value=='other'">
+        <label for="referralOther">Other:</label>
+        <input type="text" class="form-control" name="referralOther" formControlName="referralOther">
+      </div>
+    </div>
+    <button class="btn btn-success" [disabled]="registerForm.invalid" *ngIf="!isEdit">Submit</button>
+    <button class="btn btn-success" *ngIf="isEdit">Edit</button>
+  </form>
+</div>
