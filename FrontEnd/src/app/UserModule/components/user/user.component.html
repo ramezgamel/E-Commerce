@@ -54,33 +54,6 @@
       <button class="btn btn-success mt-1" (click)="addField(this.address)" [disabled]="address.at(address.controls.length - 1).value == ''">Add</button>
     </div>
 
-    <!-- SelectBox -->
-    <div>
-      <div class="d-flex">
-        <div class="form-check me-3">
-        <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="facebook" id="flexRadioDefault1" (change)="changeValidators()">
-        <label class="form-check-label" for="flexRadioDefault1">
-          Facebook
-        </label>
-        </div>
-        <div class="form-check me-3">
-          <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="friends" id="flexRadioDefault2" (change)="changeValidators()">
-          <label class="form-check-label" for="flexRadioDefault2">
-            From Friends
-          </label>
-        </div>
-        <div class="form-check me-3">
-          <input class="form-check-input" type="radio" formControlName="referral" name="referral" value="other" id="flexRadioDefault3" (change)="changeValidators()">
-          <label class="form-check-label" for="flexRadioDefault3">
-            Others
-          </label>
-        </div>
-      </div>
-      <div class="form-group" *ngIf="referral?.value=='other'">
-        <label for="referralOther">Other:</label>
-        <input type="text" class="form-control" name="referralOther" formControlName="referralOther">
-      </div>
-    </div>
     <button class="btn btn-success" [disabled]="registerForm.invalid" *ngIf="!isEdit">Submit</button>
     <button class="btn btn-success" *ngIf="isEdit">Edit</button>
   </form>

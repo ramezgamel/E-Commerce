@@ -4,12 +4,29 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IUser } from '../Models/iuser';
 
+import jwtDecode from 'jwt-decode';
+import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  currentUser = new BehaviorSubject(null)
+  constructor(private httpClient:HttpClient) { 
+    if(localStorage.getItem("token")){
+      this.saveCurrentUser()
+    }
+  };
 
-  constructor(private httpClient:HttpClient) { };
+  saveCurrentUser(){
+    let token = localStorage.getItem("token");
+    this.currentUser.next(jwtDecode(token!))
+  };
+
+  deleteCurrentUser(){
+    localStorage.removeItem('token')
+    this.currentUser.next(null)
+  }
 
   register(user:IUser):Observable<IUser>{
     return this.httpClient.post<IUser>(`${environment.APIUrl}user/register`,user)

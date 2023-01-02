@@ -22,15 +22,15 @@ export class GlobalService {
     return this.http.get<T>(`${environment.APIUrl}${endpoint}/${id}`)
   };
 
-  deleteOne<T>(endpoint:string, id:number): Observable<T>{
-    return this.http.delete<T>(`${environment.APIUrl}${endpoint}/${id}`)
+  deleteOne<T>(endpoint:string, id:number, token:string): Observable<T>{
+    return this.http.delete<T>(`${environment.APIUrl}${endpoint}/${id}`,{headers:{'x-auth-token': token}})
   };
 
-  updateOne<T>(endpoint:string, id:number, newData:T): Observable<T>{
-    return this.http.put<T>(`${environment.APIUrl}${endpoint}/${id}`, newData,{reportProgress:true})
+  updateOne<T>(endpoint:string, id:number, newData:T, token:string): Observable<T>{
+    return this.http.put<T>(`${environment.APIUrl}${endpoint}/${id}`, newData,{reportProgress:true, headers:{'x-auth-token': token}})
   };
 
-  createOne<T>(endpoint:string, data:T, token:any): Observable<T>{
+  createOne<T>(endpoint:string, data:T, token:string): Observable<T>{
     return this.http.post<T>(`${environment.APIUrl}${endpoint}`, data, {headers:{'x-auth-token': token}})
   };
 

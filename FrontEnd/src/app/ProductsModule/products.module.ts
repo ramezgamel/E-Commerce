@@ -5,10 +5,12 @@ import { AllProductsComponent } from './components/all-products/all-products.com
 import { SingleProductComponent } from './components/single-product/single-product.component';
 import { AddProductComponent } from './components/add-product/add-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { AdminGuard } from '../UserModule/admin.guard';
 
 const routes:Routes = [
   {path:"", component:AllProductsComponent, pathMatch:"full"},
-  {path:"create", component:AddProductComponent},
+  {path:"create", canActivate:[AdminGuard], component:AddProductComponent},
   {path:":id", component:SingleProductComponent}
 ]
 
@@ -21,6 +23,7 @@ const routes:Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     RouterModule.forChild(routes)
   ],
   exports:[

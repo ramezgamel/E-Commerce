@@ -1,3 +1,4 @@
+// import { ToastrModule } from 'ngx-toastr';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,7 +24,8 @@ import { GlobalErrorHandlerInterceptor } from './core/global-error-handler.inter
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    // ToastrModule.forRoot({})
   ],
   providers: [
     {

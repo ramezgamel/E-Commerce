@@ -1,6 +1,9 @@
+import { IUser } from './../../../Models/iuser';
+import { Router } from '@angular/router';
 import { UserService } from './../../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-login',
@@ -10,8 +13,13 @@ import { Component, OnInit } from '@angular/core';
 
 
 export class LoginComponent{
-  loginForm:FormGroup
-  constructor(private auth:UserService) {
+  loginForm:FormGroup;
+  currentUser?:IUser
+
+  constructor(
+    private auth:UserService, 
+    private router:Router,
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl('ramez@ram.com',[Validators.required, Validators.email]),
       password: new FormControl('123', [Validators.required])
@@ -24,7 +32,11 @@ export class LoginComponent{
   login(){
     this.auth.login(this.email?.value , this.password?.value)
       .subscribe((res:any )=> {
-        localStorage.setItem("token", res.response)
+        if(res.success) {
+          localStorage.setItem("token", res.response)
+          this.auth.saveCurrentUser()
+          this.router.navigate(['/products'])
+        }
       })
   }
 

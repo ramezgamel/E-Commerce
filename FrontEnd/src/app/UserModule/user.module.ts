@@ -20,7 +20,7 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   exports:[
     RouterModule

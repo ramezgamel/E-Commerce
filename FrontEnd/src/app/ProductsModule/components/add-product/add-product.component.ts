@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from 'src/app/Services/category.service';
 import { ICategory } from 'src/app/Models/icategory';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+
 
 @Component({
   selector: 'app-add-product',
@@ -16,7 +19,8 @@ export class AddProductComponent implements OnInit {
   constructor(
     private fb:FormBuilder, 
     private prdService:ProductService,
-    private catService:CategoryService
+    private catService:CategoryService,
+    private snackBar:MatSnackBar 
     ) {
 
     this.productForm = fb.group({
@@ -39,7 +43,8 @@ export class AddProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.catService.getAllCategories().subscribe(cats => this.categories = cats)
+    this.catService.getAllCategories().subscribe(cats => this.categories = cats);
+    // this.snackBar.open("Created", 'Undo');
   }
 
   createOne(){
@@ -50,7 +55,7 @@ export class AddProductComponent implements OnInit {
       formData.append('coverImage', this.uploadFile)
     this.prdService.addProduct(formData)
       .subscribe({
-        next:res => console.log(res), 
+        next:res => this.snackBar.open("Created", 'success'), 
         error:err => console.log(err)
       })
     console.log(this.productForm.value)

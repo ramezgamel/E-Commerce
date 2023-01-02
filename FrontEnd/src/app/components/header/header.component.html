@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-light">
+<div class="position-sticky top-0 header">
+  <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Navbar</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,13 +14,16 @@
           <a class="nav-link" routerLinkActive="active" routerLink="/products">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/user/register" routerLinkActive="active" [hidden]="!isLogged">Register</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/products/create">Create</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/user/login" routerLinkActive="active" [hidden]="!isLogged">Login</a>
+          <a class="nav-link" routerLink="/user/register" routerLinkActive="active" [hidden]="isLogged">Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="logout()" style="cursor: pointer;">Logout</a>
+          <a class="nav-link" routerLink="/user/login" routerLinkActive="active" [hidden]="isLogged">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()" style="cursor: pointer;" [hidden]="!isLogged">Logout</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -30,7 +34,7 @@
   </div>
 </nav>
 
-<div class="container-fluid d-flex justify-content-between">
+<div class="container-fluid d-flex justify-content-between ">
   <div class="btn-group w-100 sec-nav" role="group" aria-label="Basic radio toggle button group">
 
     <input type="radio" class="btn-check" name="btnradio" id="btnradio" autocomplete="off">
@@ -43,4 +47,5 @@
 
     
   </div>
+</div>
 </div>

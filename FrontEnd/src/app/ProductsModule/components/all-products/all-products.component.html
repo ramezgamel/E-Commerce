@@ -7,14 +7,20 @@
 </select>
 
                       <!-- Products List -->
-<div class="row gap-2">
-  <div class="card" style="width: 18rem;" *ngFor="let prd of products">
-    <img src="https://via.placeholder.com/150" class="card-img-top" [alt]="prd.name">
-    <!-- <img src="{{APIRoot+prd.coverImage}}" class="card-img-top" [alt]="prd.name"> -->
-    <div class="card-body">
-      <h5 class="card-title">{{prd.name}}</h5>
-      <p class="card-text">{{prd.desc}}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+<div class="text-center">
+  <div class="row gap-1">
+    <div class="card col" style="min-width: 15rem;max-width: 18rem;" *ngFor="let product of products">
+      <img src="https://via.placeholder.com/150" class="card-img-top" [alt]="product.name">
+      <!-- <img src="{{APIRoot+product.coverImage}}" class="card-img-top" [alt]="product.name"> -->
+      <div class="card-body">
+        <h5 class="card-title">{{product.name}}</h5>
+        <p class="card-text">{{product.desc}}</p>
+        <div class="form-group d-flex align-items-center">
+          <label for="quantity">Quantity</label>
+          <input type="number" #quantity class="form-control mx-1" name="quantity">
+        </div>
+        <a class="btn btn-success" (click)="addToCart(product, quantity.value)">Add To Cart</a>
+      </div>
     </div>
   </div>
 </div>

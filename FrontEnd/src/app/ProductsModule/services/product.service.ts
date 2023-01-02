@@ -25,15 +25,23 @@ export class ProductService {
     if(token){
       return this.globalService.createOne("product", data, token)
     }
-    throw Error("LogIn first")
+    throw Error("Only Admin Can do this")
   };
-
+  
   deleteProductByID(prdID: number):Observable<IProduct>{
-    return this.globalService.deleteOne("product", prdID)
+    let token = localStorage.getItem("token") 
+    if(token){
+      return this.globalService.deleteOne("product", prdID, token)
+    }
+    throw Error("Only Admin Can do this")
   };
-
+  
   updateProductByID(prdID: number, data: IProduct):Observable<IProduct>{
-    return this.globalService.updateOne("product", prdID, data)
+    let token = localStorage.getItem("token") 
+    if(token){
+      return this.globalService.updateOne("product", prdID, data, token)
+    }
+    throw Error("Only Admin Can do this")
   };
 
 };
