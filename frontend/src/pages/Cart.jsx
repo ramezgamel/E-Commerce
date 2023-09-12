@@ -12,6 +12,7 @@ import {
 import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeItem } from "../store/cartSlice";
+import { LinkContainer } from "react-router-bootstrap";
 function Cart() {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
@@ -79,13 +80,15 @@ function Cart() {
                 .toFixed(2)}
             </ListGroup.Item>
             <ListGroup.Item>
-              <Button
-                type="button"
-                className="btn-block"
-                disabled={cartItems.length === 0}
-              >
-                Checkout
-              </Button>
+              <LinkContainer to="/shipping">
+                <Button
+                  type="button"
+                  className="btn-block"
+                  disabled={cartItems.length === 0}
+                >
+                  Checkout
+                </Button>
+              </LinkContainer>
             </ListGroup.Item>
           </ListGroup>
         </Card>

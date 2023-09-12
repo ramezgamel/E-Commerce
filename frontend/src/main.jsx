@@ -12,6 +12,10 @@ import NewProduct from "./pages/NewProduct.jsx";
 import Cart from "./pages/Cart.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Shipping from "./pages/Shipping.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+import Payment from "./pages/Payment.jsx";
+import PlaceOrder from "./pages/PlaceOrder.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,12 +38,30 @@ const router = createBrowserRouter([
         element: <Cart />,
       },
       {
-        path: "product/new",
+        path: "/product/new",
         element: <NewProduct />,
       },
       {
-        path: "product/:id",
+        path: "/product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/",
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "/shipping",
+            element: <Shipping />,
+          },
+          {
+            path: "/payment",
+            element: <Payment />,
+          },
+          {
+            path: "/placeorder",
+            element: <PlaceOrder />,
+          },
+        ],
       },
     ],
   },

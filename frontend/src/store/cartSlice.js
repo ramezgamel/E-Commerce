@@ -34,7 +34,25 @@ const cartSlice = createSlice({
       state.cartItems = state.cartItems.filter((i) => i._id !== id);
       return updateCart(state);
     },
+    saveShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload;
+      return updateCart(state);
+    },
+    savePaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload;
+      return updateCart(state);
+    },
+    clearCartItems: (state) => {
+      state.cartItems = [];
+      return updateCart(state);
+    },
   },
 });
-export const { addToCart, removeItem } = cartSlice.actions;
+export const {
+  addToCart,
+  removeItem,
+  saveShippingAddress,
+  savePaymentMethod,
+  clearCartItems,
+} = cartSlice.actions;
 export default cartSlice.reducer;

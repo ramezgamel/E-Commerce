@@ -16,7 +16,7 @@ function Header() {
 
   const logoutHandler = async () => {
     try {
-      const res = await logoutCall("asd").unwrap();
+      const res = await logoutCall().unwrap();
       console.log(res);
       dispatch(logout());
       navigate("/login");

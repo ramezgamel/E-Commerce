@@ -12,8 +12,15 @@ module.exports.register = asyncHandler(async (req, res) => {
     email: email,
   });
   await user.save();
-
-  res.status(201).json(user);
+  const token = await user.generateToken();
+  res.cookie("token", token, {
+    // signed: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV !== "development",
+  });
+  res.end();
 });
 module.exports.login = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
@@ -22,16 +29,26 @@ module.exports.login = asyncHandler(async (req, res, next) => {
   const isMatch = await user.checkPass(req.body.password);
   if (!isMatch) return next(new ApiError("Invalid email or password", 400));
   const token = await user.generateToken();
-  res.status(200).json(token);
+  res.cookie("token", token, {
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV !== "development",
+  });
+  res.status(200).json({ id: user._id, name: user.name, email: user.email });
 });
 module.exports.logout = asyncHandler(async (req, res) => {
-  res.status(200).json("logout");
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "Logout Successfully" });
 });
 // private
 module.exports.getProfile = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(id);
-  res.status(200).json(user);
+  const user = await User.findById(req.user._id);
+  if (!user) throw new ApiError("Not Found this user", 401);
+  res.status(200).json(req.user);
 });
 
 module.exports.updateUser = asyncHandler(async (req, res) => {
