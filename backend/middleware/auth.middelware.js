@@ -5,17 +5,12 @@ const ApiError = require("../utils/apiError");
 
 module.exports.protect = asyncHandler(async (req, res, next) => {
   const { token } = req.cookies;
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.SEC_JWT);
-      req.user = await User.findById(decoded.id).select("-password");
-      next();
-    } catch (error) {
-      throw new ApiError("Not Authorized, failed token", 401);
-    }
-  } else {
-    throw new ApiError("Not Authorized, no token", 401);
-  }
+  if (!token) throw new ApiError("Not Authorized, no token", 401);
+  const decoded = jwt.verify(token, process.env.SEC_JWT);
+  const user = await User.findById(decoded.id).select("-password");
+  if (user == null) throw new ApiError("User not found");
+  req.user = user;
+  next();
 });
 
 module.exports.restrictTo = (roles) => {

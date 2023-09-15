@@ -5,11 +5,10 @@ const ApiError = require("../utils/apiError");
 
 module.exports.register = asyncHandler(async (req, res) => {
   const { name, password, email } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
   const user = new User({
     name,
-    password: password,
-    email: email,
+    password,
+    email,
   });
   await user.save();
   const token = await user.generateToken();
@@ -20,7 +19,7 @@ module.exports.register = asyncHandler(async (req, res) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV !== "development",
   });
-  res.end();
+  res.json({ id: user._id, name: user.name, email: user.email });
 });
 module.exports.login = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
@@ -45,17 +44,19 @@ module.exports.logout = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Logout Successfully" });
 });
 // private
-module.exports.getProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user) throw new ApiError("Not Found this user", 401);
-  res.status(200).json(req.user);
-});
 
 module.exports.updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { name, image, password, newPassword } = req.body;
-  const user = await User.findById(id);
-  res.status(200).json("Deleted");
+  if (req.body.hasOwnProperty("role"))
+    throw new ApiError("Can't update role", 403);
+  const user = await User.findById(req.user._id);
+  if (!user) throw new ApiError("Invalid user", 404);
+  const checkPass = await user.checkPass(req.body.password);
+  if (!checkPass) throw new ApiError("Incorrect password");
+  Object.keys(req.body).forEach(function (key) {
+    user[key] = req.body[key];
+  });
+  await user.save();
+  res.status(200).json(user);
 });
 // admin
 module.exports.getUsers = asyncHandler(async (req, res) => {
@@ -63,10 +64,16 @@ module.exports.getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 module.exports.updateUserById = asyncHandler(async (req, res) => {
-  const users = await User.find({});
-  res.status(200).json(users);
+  const { id } = req.params;
+  const user = await User.findById(id);
+  Object.keys(req.body).forEach(function (key) {
+    user[key] = req.body[key];
+  });
+  await user.save();
+  res.status(200).json(user);
 });
 module.exports.deleteUserById = asyncHandler(async (req, res) => {
-  const users = await User.find({});
-  res.status(200).json(users);
+  const { id } = req.params;
+  await User.findByIdAndDelete(id);
+  res.status(200).json("deleted");
 });

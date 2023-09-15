@@ -6,11 +6,15 @@ router.post("/register", controller.register);
 router.post("/login", controller.login);
 router.post("/logout", controller.logout);
 // auth
-router.get("/profile", protect, controller.getProfile);
-router.put("/profile", controller.updateUser);
+router.put("/profile", protect, controller.updateUser);
 //admin
-router.get("/", controller.getUsers);
-router.put("/:id", controller.updateUserById);
-router.delete("/:id", controller.deleteUserById);
+router.get("/", protect, restrictTo(["admin"]), controller.getUsers);
+router.put("/:id", protect, restrictTo(["admin"]), controller.updateUserById);
+router.delete(
+  "/:id",
+  protect,
+  restrictTo(["admin"]),
+  controller.deleteUserById
+);
 
 module.exports = router;

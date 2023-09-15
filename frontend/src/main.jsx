@@ -14,8 +14,13 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Shipping from "./pages/Shipping.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import Order from "./pages/Order.jsx";
 import Payment from "./pages/Payment.jsx";
 import PlaceOrder from "./pages/PlaceOrder.jsx";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import Profile from "./pages/Profile.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
+import OrderList from "./pages/OrderList.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +55,10 @@ const router = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           {
+            path: "/profile",
+            element: <Profile />,
+          },
+          {
             path: "/shipping",
             element: <Shipping />,
           },
@@ -61,16 +70,35 @@ const router = createBrowserRouter([
             path: "/placeorder",
             element: <PlaceOrder />,
           },
+          {
+            path: "/order/:id",
+            element: <Order />,
+          },
+        ],
+      },
+      {
+        path: "/admin",
+        element: <AdminRoute />,
+        children: [
+          {
+            path: "/orderList",
+            element: <OrderList />,
+          },
         ],
       },
     ],
   },
 ]);
-
+const clientId = import.meta.env.VITE_APP_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <PayPalScriptProvider
+        options={{ clientId, currency: "USD" }}
+        // deferLoading={true}
+      >
+        <RouterProvider router={router} />
+      </PayPalScriptProvider>
     </Provider>
   </React.StrictMode>
 );
