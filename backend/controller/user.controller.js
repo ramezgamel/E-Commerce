@@ -2,7 +2,11 @@ const User = require("../model/User");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const ApiError = require("../utils/apiError");
+const ApiFeatures = require("../utils/apiFeatures");
 
+// @desc    Register new user
+// @route   POST /api/users/register
+// @access  all
 module.exports.register = asyncHandler(async (req, res) => {
   const { name, password, email } = req.body;
   const user = new User({
@@ -10,6 +14,9 @@ module.exports.register = asyncHandler(async (req, res) => {
     password,
     email,
   });
+  if (req.file) {
+    user.image = req.file.filename;
+  }
   await user.save();
   const token = await user.generateToken();
   res.cookie("token", token, {
@@ -21,6 +28,7 @@ module.exports.register = asyncHandler(async (req, res) => {
   });
   res.json({ id: user._id, name: user.name, email: user.email });
 });
+
 module.exports.login = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -34,8 +42,14 @@ module.exports.login = asyncHandler(async (req, res, next) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV !== "development",
   });
-  res.status(200).json({ id: user._id, name: user.name, email: user.email });
+  res.status(200).json({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  });
 });
+
 module.exports.logout = asyncHandler(async (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
@@ -60,8 +74,19 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
 });
 // admin
 module.exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
-  res.status(200).json(users);
+  const countDocuments = await User.countDocuments();
+  const features = new ApiFeatures(User.find({}), req.query)
+    .sort()
+    .search()
+    .paginate(countDocuments);
+  const users = await features.query;
+  if (!users) throw new ApiError("No users found", 404);
+  res.status(200).json({
+    totalPages: features.totalPages,
+    page: features.page,
+    limit: features.limit,
+    result: users,
+  });
 });
 module.exports.updateUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;

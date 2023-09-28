@@ -19,17 +19,21 @@ import Payment from "./pages/Payment.jsx";
 import PlaceOrder from "./pages/PlaceOrder.jsx";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Profile from "./pages/Profile.jsx";
+import UserLayout from "./pages/UserLayout.jsx";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import OrderList from "./pages/admin/OrderList.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
-import OrderList from "./pages/OrderList.jsx";
+import UserList from "./pages/admin/UserList.jsx";
+import ProductList from "./pages/admin/ProductList.jsx";
+import ProductEdit from "./pages/admin/ProductEdit.jsx";
+import { ToastContainer } from "react-toastify";
+import { HelmetProvider } from "react-helmet-async";
+import DashBoard from "./pages/admin/DashBoard.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
       {
         path: "/login",
         element: <Login />,
@@ -39,50 +43,81 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/cart",
-        element: <Cart />,
-      },
-      {
-        path: "/product/new",
-        element: <NewProduct />,
-      },
-      {
-        path: "/product/:id",
-        element: <ProductDetails />,
-      },
-      {
         path: "/",
-        element: <PrivateRoute />,
+        element: <UserLayout />,
         children: [
           {
-            path: "/profile",
-            element: <Profile />,
+            path: "/",
+            element: <Home />,
           },
           {
-            path: "/shipping",
-            element: <Shipping />,
+            path: "/cart",
+            element: <Cart />,
           },
           {
-            path: "/payment",
-            element: <Payment />,
+            path: "/product/new",
+            element: <NewProduct />,
           },
           {
-            path: "/placeorder",
-            element: <PlaceOrder />,
+            path: "/product/:id",
+            element: <ProductDetails />,
           },
           {
-            path: "/order/:id",
-            element: <Order />,
+            path: "/",
+            element: <PrivateRoute />,
+            children: [
+              {
+                path: "/profile",
+                element: <Profile />,
+              },
+              {
+                path: "/shipping",
+                element: <Shipping />,
+              },
+              {
+                path: "/payment",
+                element: <Payment />,
+              },
+              {
+                path: "/placeorder",
+                element: <PlaceOrder />,
+              },
+              {
+                path: "/order/:id",
+                element: <Order />,
+              },
+            ],
           },
         ],
       },
       {
         path: "/admin",
-        element: <AdminRoute />,
+        element: <AdminLayout />,
         children: [
           {
-            path: "/orderList",
+            path: "",
+            element: <AdminRoute />,
+          },
+          {
+            index: true,
+            path: "dashboard",
+            element: <DashBoard />,
+          },
+          {
+            path: "orders",
             element: <OrderList />,
+          },
+          {
+            path: "users",
+            element: <UserList />,
+          },
+          {
+            path: "products",
+            element: <ProductList />,
+          },
+          {
+            path: "product/:id/edit",
+            element: <ProductEdit />,
           },
         ],
       },
@@ -92,13 +127,16 @@ const router = createBrowserRouter([
 const clientId = import.meta.env.VITE_APP_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PayPalScriptProvider
-        options={{ clientId, currency: "USD" }}
-        // deferLoading={true}
-      >
-        <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <PayPalScriptProvider
+          options={{ clientId, currency: "USD", intent: "capture" }}
+          // deferLoading={true}
+        >
+          <ToastContainer />
+          <RouterProvider router={router} />
+        </PayPalScriptProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );

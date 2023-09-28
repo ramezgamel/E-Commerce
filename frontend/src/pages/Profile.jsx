@@ -18,6 +18,7 @@ import { setCredentials } from "../store/authSlice";
 import { useGetMyOrdersQuery } from "../store/orderApiSlice";
 import Loader from "../components/Loader";
 import { LinkContainer } from "react-router-bootstrap";
+import Paginate from "../components/Paginate";
 function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,11 +27,12 @@ function Profile() {
   const dispatch = useDispatch();
   const [updateUser, { isLoading: loadingUser }] = useUpdateUserMutation();
   const { userInfo } = useSelector((state) => state.auth);
+  const [page, setPage] = useState(1);
   const {
     data: orders,
     isLoading: loadingOrders,
     error,
-  } = useGetMyOrdersQuery();
+  } = useGetMyOrdersQuery(page);
   useEffect(() => {
     if (userInfo) {
       setName(userInfo.name);
@@ -100,49 +102,61 @@ function Profile() {
         <h2>My Orders</h2>
         {loadingOrders && <Loader />}
         {error && <Alert variant="danger">{error}</Alert>}
-
-        <Table striped hover responsive className="table-sm">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Paid</th>
-              <th>Delivered</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders?.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>{order.totalPrice}</td>
-                <td>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <FaTimes style={{ color: "red" }} />
-                  )}
-                </td>
-                <td>
-                  {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
-                  ) : (
-                    <FaTimes style={{ color: "red" }} />
-                  )}
-                </td>
-                <td>
-                  <LinkContainer to={`/order/${order._id}`}>
-                    <Button className="btn-sm" variant="light">
-                      Details
-                    </Button>
-                  </LinkContainer>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        {orders?.result?.length == 0 ? (
+          <Alert variant="info">No Orders yet</Alert>
+        ) : (
+          <>
+            <Table striped hover responsive className="table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Delivered</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders?.result?.map((order) => (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.createdAt.substring(0, 10)}</td>
+                    <td>{order.totalPrice}</td>
+                    <td>
+                      {order.isPaid ? (
+                        order.paidAt.substring(0, 10)
+                      ) : (
+                        <FaTimes style={{ color: "red" }} />
+                      )}
+                    </td>
+                    <td>
+                      {order.isDelivered ? (
+                        order.deliveredAt.substring(0, 10)
+                      ) : (
+                        <FaTimes style={{ color: "red" }} />
+                      )}
+                    </td>
+                    <td>
+                      <LinkContainer to={`/order/${order._id}`}>
+                        <Button className="btn-sm" variant="light">
+                          Details
+                        </Button>
+                      </LinkContainer>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <div className="d-flex justify-content-center">
+              <Paginate
+                pages={orders?.totalPages}
+                pageNum={orders?.page}
+                setPage={setPage}
+              />
+            </div>
+          </>
+        )}
       </Col>
     </Row>
   );

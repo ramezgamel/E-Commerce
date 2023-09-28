@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import {
+  useDeliverOrderMutation,
   useGetOrderByIdQuery,
   usePayOrderMutation,
 } from "../store/orderApiSlice";
@@ -23,15 +24,18 @@ function Order() {
     isLoading,
     isError,
     error,
+    refetch,
   } = useGetOrderByIdQuery(orderId);
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
-  // const { userInfo } = useSelector((state) => state.auth);
-
+  const [{ isPending }] = usePayPalScriptReducer();
+  const { userInfo } = useSelector((state) => state.auth);
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async function (details) {
       try {
-        await payOrder({ orderId, details });
+        await payOrder({ orderId, details }).unwrap();
+        refetch();
         toast.success("Order is paid");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
@@ -47,10 +51,21 @@ function Order() {
           },
         ],
       })
-      .then((orderId) => orderId);
+      .then((orderId) => {
+        return orderId;
+      });
   };
   const onError = (err) => {
     toast.error(err.message);
+  };
+  const deliverHandler = async () => {
+    try {
+      await deliverOrder(orderId);
+      toast.success("Order is delivered");
+      refetch();
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
   if (isLoading) return <Loader />;
   if (isError) return <Alert variant="danger">{error.message}</Alert>;
@@ -80,7 +95,18 @@ function Order() {
                   Delivered on {order.deliveredAt}
                 </Alert>
               ) : (
-                <Alert variant="danger">Not Delivered</Alert>
+                <>
+                  <Alert variant="danger">Not Delivered</Alert>
+                  {userInfo.role === "admin" && order.isPaid && (
+                    <Button
+                      disabled={loadingDeliver}
+                      variant="primary"
+                      onClick={deliverHandler}
+                    >
+                      {loadingDeliver ? <Loader /> : "Deliver Order"}
+                    </Button>
+                  )}
+                </>
               )}
             </ListGroup.Item>
             <ListGroup.Item>
@@ -145,21 +171,13 @@ function Order() {
                   {isPending ? (
                     <Loader />
                   ) : (
-                    <>
-                      {/* <Button
-                        style={{ marginBottom: "10px" }}
-                        onClick={onApproveTest}
-                      >
-                        test Pay
-                      </Button> */}
-                      <div>
-                        <PayPalButtons
-                          onApprove={onApprove}
-                          onError={onError}
-                          createOrder={createOrder}
-                        />
-                      </div>
-                    </>
+                    <div>
+                      <PayPalButtons
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                        onError={onError}
+                      />
+                    </div>
                   )}
                 </ListGroup.Item>
               )}

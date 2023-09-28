@@ -8,7 +8,7 @@ router.put("/:id/pay", protect, controller.updateOrderToPaid);
 
 //admin
 router.get("/", protect, restrictTo(["admin"]), controller.getOrders);
-router.patch(
+router.put(
   "/:id/deliver",
   protect,
   restrictTo(["admin"]),

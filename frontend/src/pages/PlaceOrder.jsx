@@ -42,7 +42,6 @@ function PlaceOrder() {
       dispatch(clearCartItems());
       navigate(`/order/${res._id}`);
     } catch (error) {
-      console.log(error);
       toast.error(error);
     }
   };

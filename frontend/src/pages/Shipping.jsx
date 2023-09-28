@@ -28,6 +28,7 @@ function Shipping() {
         <Form.Group controlId="address" className="my-2">
           <Form.Label>Address</Form.Label>
           <Form.Control
+            required
             type="text"
             placeholder="Enter your address"
             value={address}
@@ -37,6 +38,7 @@ function Shipping() {
         <Form.Group controlId="city" className="my-2">
           <Form.Label>City</Form.Label>
           <Form.Control
+            required
             type="text"
             placeholder="Enter your city"
             value={city}
@@ -46,6 +48,7 @@ function Shipping() {
         <Form.Group controlId="country" className="my-2">
           <Form.Label>Country</Form.Label>
           <Form.Control
+            required
             type="text"
             placeholder="Enter your country"
             value={country}
@@ -55,6 +58,7 @@ function Shipping() {
         <Form.Group controlId="postalCode" className="my-2">
           <Form.Label>PostalCode</Form.Label>
           <Form.Control
+            required
             type="text"
             placeholder="Enter your postalCode"
             value={postalCode}

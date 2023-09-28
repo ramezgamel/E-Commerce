@@ -5,11 +5,5 @@ export const apiSlice = createApi({
     baseUrl: "/api/",
   }),
   tagTypes: ["Product", "Order", "User"],
-  endpoints: (builder) => ({
-    // getProduct: builder.query({
-    //   query: () => `/api/products`,
-    // }),
-  }),
+  endpoints: (builder) => ({}),
 });
-
-export const { useGetProductQuery } = apiSlice;

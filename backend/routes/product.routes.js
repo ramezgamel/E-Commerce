@@ -1,11 +1,27 @@
 const router = require("express").Router();
 
 const controller = require("../controller/products.controller");
+const { protect, restrictTo } = require("../middleware/auth.middelware");
+const upload = require("../middleware/upload");
 
 router.get("/", controller.getProducts);
-router.post("/", controller.createProduct);
+router.get("/top", controller.getTopProduct);
 router.get("/:id", controller.getProduct);
-router.delete("/:id", controller.deleteProduct);
-router.patch("/:id", controller.updateProduct);
+router.post("/:id/review", protect, controller.createReview);
+router.post(
+  "/",
+  protect,
+  restrictTo(["admin"]),
+  upload.single("image"),
+  controller.createProduct
+);
+router.delete("/:id", protect, restrictTo(["admin"]), controller.deleteProduct);
+router.put(
+  "/:id",
+  protect,
+  restrictTo(["admin"]),
+  upload.single("image"),
+  controller.updateProduct
+);
 
 module.exports = router;

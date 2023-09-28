@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../model/Order");
 const ApiError = require("../utils/apiError");
+const ApiFeatures = require("../utils/apiFeatures");
 
 // private
 module.exports.createOrder = asyncHandler(async (req, res) => {
@@ -32,13 +33,25 @@ module.exports.createOrder = asyncHandler(async (req, res) => {
   await order.save();
   res.status(200).send(order);
 });
-module.exports.getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-  res.status(200).json(orders);
-});
 
-module.exports.updateOrderToPaid = asyncHandler(async (req, res) => {
-  res.send("updateOrderToPaid");
+module.exports.getMyOrders = asyncHandler(async (req, res) => {
+  const countDocuments = await Order.countDocuments();
+  const features = new ApiFeatures(
+    Order.find({ user: req.user._id }),
+    req.query
+  )
+    .sort()
+    .search()
+    .paginate(countDocuments);
+  const orders = await features.query;
+
+  if (!orders) throw new ApiError("Don't have any orders yet", 404);
+  res.status(200).json({
+    totalPages: features.totalPages,
+    page: features.page,
+    limit: features.limit,
+    result: orders,
+  });
 });
 
 module.exports.updateOrderToPaid = asyncHandler(async (req, res) => {
@@ -52,18 +65,40 @@ module.exports.updateOrderToPaid = asyncHandler(async (req, res) => {
     update_time: req.body.update_time,
     email_address: req.body.email_address,
   };
-  const updatedOrder = await Order.save();
+  const updatedOrder = await order.save();
   res.status(200).json(updatedOrder);
 });
 
 // admin
 module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
-  res.send("updateOrderToDelivered");
+  const { id } = req.params;
+  const order = await Order.findById(id);
+  if (!order) throw new ApiError("Order not found", 404);
+  order.isDelivered = true;
+  order.deliveredAt = Date.now();
+  const updatedOrder = await order.save();
+  res.status(200).send(updatedOrder);
 });
 
 module.exports.getOrders = asyncHandler(async (req, res) => {
-  res.send("get all orders");
+  const countDocuments = await Order.countDocuments();
+  const features = new ApiFeatures(
+    Order.find({}).populate("user", "id name"),
+    req.query
+  )
+    .sort()
+    .search()
+    .paginate(countDocuments);
+  const orders = await features.query;
+  if (!orders) throw new ApiError("No orders to show", 404);
+  res.status(200).send({
+    totalPages: features.totalPages,
+    page: features.page,
+    limit: features.limit,
+    result: orders,
+  });
 });
+
 module.exports.getOrderById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const order = await Order.findById(id).populate("user", "name email");
