@@ -8,7 +8,9 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const ApiError = require("./utils/apiError");
 const globalError = require("./middleware/globalError");
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 app.use(cookieParser());
 app.use(express.static("../uploads"));
 app.use(express.json());
@@ -29,12 +31,12 @@ app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/chart", chartRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/build")));
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  );
-}
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "frontend/build")));
+//   app.get("*", (req, res) =>
+//     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+//   );
+// }
 app.all("*", (req, res, next) => {
   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
 });

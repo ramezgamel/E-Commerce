@@ -4,14 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon NODE_ENV=development server"
+    "dev": "nodemon NODE_ENV=development server",
+    "production": "nodemon NODE_ENV=production server"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "dotenv": "^16.3.1"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "dotenv": "^16.3.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
