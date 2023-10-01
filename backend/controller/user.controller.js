@@ -20,10 +20,9 @@ module.exports.register = asyncHandler(async (req, res) => {
   await user.save();
   const token = await user.generateToken();
   res.cookie("token", token, {
-    // signed: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "None",
     secure: process.env.NODE_ENV !== "development",
   });
   res.json({ id: user._id, name: user.name, email: user.email });
