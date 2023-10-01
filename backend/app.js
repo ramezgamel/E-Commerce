@@ -1,4 +1,4 @@
-require("dotenv").config();
+  require("dotenv").config();
 require("./db")();
 const express = require("express");
 const app = express();
@@ -18,7 +18,7 @@ app.use(
   })
 );
 app.use(cors({
-  origin: 'http://127.0.0.1:5173/',
+  origin: 'http://127.0.0.1:5173',
   optionsSuccessStatus: 200
 }));
 
