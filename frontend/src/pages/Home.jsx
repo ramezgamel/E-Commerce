@@ -15,14 +15,18 @@ function Home() {
       <ProductCarousel />
       <h1>Latest Products</h1>
       <Row>
-        {products?.result?.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-            <Product product={product} />
-          </Col>
-        ))}
+        {products?.result.length > 0 ? (
+          products?.result?.map((product) => (
+            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+              <Product product={product} />
+            </Col>
+          ))
+        ) : (
+          <Alert variant="danger">No Data To show</Alert>
+        )}
       </Row>
       <div className="text-center">
-        {products?.result.length && (
+        {products?.result.length > 0 && (
           <div className="d-flex justify-content-center">
             <Paginate
               pages={products?.totalPages}

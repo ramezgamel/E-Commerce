@@ -19,7 +19,12 @@ app.use(
     extended: true,
   })
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
+  })
+);
 
 const productsRoutes = require("./routes/product.routes");
 const usersRoutes = require("./routes/user.routes");
@@ -37,6 +42,7 @@ app.use("/api/chart", chartRoutes);
 //     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
 //   );
 // }
+
 app.all("*", (req, res, next) => {
   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
 });

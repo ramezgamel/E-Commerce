@@ -43,6 +43,7 @@ function Login() {
             type="email"
             placeholder="Enter email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
@@ -52,6 +53,7 @@ function Login() {
             type="password"
             placeholder="Enter password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>

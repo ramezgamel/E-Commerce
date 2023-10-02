@@ -57,6 +57,13 @@ function Profile() {
       toast.error(err?.data?.message || err?.error);
     }
   };
+
+  if (error)
+    return (
+      <Alert variant="danger">
+        {error?.status == 401 ? "Unauthorized" : "Some thing went wrong"}
+      </Alert>
+    );
   return (
     <Row>
       <Col md={3}>
