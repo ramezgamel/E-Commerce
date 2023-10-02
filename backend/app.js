@@ -21,7 +21,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: "http://127.0.0.1:4173",
+    origin: ["http://127.0.0.1:4173", "https://mhpshop-rlks.onrender.com"],
     credentials: true,
   })
 );
