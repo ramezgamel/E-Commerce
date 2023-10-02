@@ -9,13 +9,7 @@
   },
   "author": "",
   "license": "ISC",
-<<<<<<< HEAD
   "devDependencies": {},
-=======
-  "devDependencies": {
-    
-  },
->>>>>>> 7dc6b1ab047da25e88d7923ac7aff6c2457f7568
   "dependencies": {
     "dotenv": "^16.3.1",
     "bcryptjs": "^2.4.3",

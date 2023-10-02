@@ -1,4 +1,4 @@
-  require("dotenv").config();
+require("dotenv").config();
 require("./db")();
 const express = require("express");
 const app = express();
@@ -19,20 +19,12 @@ app.use(
     extended: true,
   })
 );
-<<<<<<< HEAD
 app.use(
   cors({
-    origin: "http://127.0.0.1:5173",
+    origin: "http://127.0.0.1:4173",
     credentials: true,
   })
 );
-=======
-app.use(cors({
-  origin: 'http://127.0.0.1:5173',
-  optionsSuccessStatus: 200,
-  credentials: true
-}));
->>>>>>> 7dc6b1ab047da25e88d7923ac7aff6c2457f7568
 
 const productsRoutes = require("./routes/product.routes");
 const usersRoutes = require("./routes/user.routes");
@@ -43,16 +35,6 @@ app.use("/api/products", productsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/chart", chartRoutes);
-
-<<<<<<< HEAD
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "frontend/build")));
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-//   );
-// }
-=======
->>>>>>> 7dc6b1ab047da25e88d7923ac7aff6c2457f7568
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
