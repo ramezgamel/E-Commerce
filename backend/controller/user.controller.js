@@ -20,10 +20,9 @@ module.exports.register = asyncHandler(async (req, res) => {
   await user.save();
   const token = await user.generateToken();
   res.cookie("token", token, {
-    // signed: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "None",
     secure: process.env.NODE_ENV !== "development",
   });
   res.json({ id: user._id, name: user.name, email: user.email });
@@ -40,8 +39,12 @@ module.exports.login = asyncHandler(async (req, res, next) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
+<<<<<<< HEAD
     secure: true,
     // secure: process.env.NODE_ENV !== "development",
+=======
+    secure: process.env.NODE_ENV !== "development",
+>>>>>>> 7dc6b1ab047da25e88d7923ac7aff6c2457f7568
   });
   res.status(200).json({
     id: user._id,
