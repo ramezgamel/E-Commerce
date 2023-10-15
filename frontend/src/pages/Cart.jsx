@@ -1,21 +1,17 @@
-import { Link } from "react-router-dom";
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Button,
-  Card,
-  Alert,
-  FormControl,
-} from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeItem } from "../store/cartSlice";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeItem } from '../store/cartSlice';
 function Cart() {
   const dispatch = useDispatch();
-  const { cartItems } = useSelector((state) => state.cart);
+  const {
+    cartItems,
+    itemsPrice,
+    itemsQuantity,
+    shippingPrice,
+    taxPrice,
+    totalPrice,
+  } = useSelector((state) => state.cart);
   const updateCart = (item, qty) => {
     dispatch(addToCart({ ...item, qty }));
   };
@@ -23,77 +19,81 @@ function Cart() {
     dispatch(removeItem(id));
   };
   return (
-    <Row>
-      <Col md={8}>
-        <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
-        {cartItems.length == 0 ? (
-          <Alert variant="info">
-            Cart is Empty
-            <Link to="/"> Go Back</Link>
-          </Alert>
-        ) : (
-          // variant="flush"
-          <ListGroup>
-            {cartItems.map((i) => (
-              <ListGroup.Item key={i?._id}>
-                <Row>
-                  <Col md={2}>
-                    <Image src={i?.image} alt={i?.name} fluid rounded />
-                  </Col>
-                  <Col md={3}>
-                    <Link to={`/product/${i?._id}`}>{i?.name}</Link>
-                  </Col>
-                  <Col md={2}>${i?.price}</Col>
-                  <Col md={2}>
-                    <FormControl
-                      defaultValue={i?.qty}
-                      type="number"
-                      onChange={(e) => updateCart(i, Number(e.target.value))}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <Button
-                      type="button"
-                      variant="light"
-                      onClick={() => handleDelete(i?._id)}
-                    >
-                      <FaTrash />
-                    </Button>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        )}
-      </Col>
-      <Col md={4}>
-        <Card>
-          <ListGroup>
-            <ListGroup.Item>
-              <h2>
-                Subtotal ({cartItems.reduce((acc, i) => acc + +i?.qty, 0)})
-                items
-              </h2>
-              $
-              {cartItems
-                .reduce((acc, item) => acc + item?.qty * item?.price, 0)
-                .toFixed(2)}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <LinkContainer to="/shipping">
-                <Button
-                  type="button"
-                  className="btn-block"
-                  disabled={cartItems.length === 0}
+    <>
+      <h1 className="mb-2 text-main">Shopping Cart</h1>
+      <div className="grid-cols-12 gap-3 md:grid">
+        <div className="col-span-8">
+          {cartItems.length == 0 ? (
+            <div role="alert" className="alert">
+              Cart is Empty
+            </div>
+          ) : (
+            <div>
+              {cartItems.map((i) => (
+                <div
+                  key={i?._id}
+                  className="bd grid grid-cols-12 gap-2 border-b py-2"
                 >
-                  Checkout
-                </Button>
-              </LinkContainer>
-            </ListGroup.Item>
-          </ListGroup>
-        </Card>
-      </Col>
-    </Row>
+                  <div className="col-span-3">
+                    <img
+                      src={i?.image}
+                      alt={i?.name}
+                      className="h-full rounded-lg"
+                    />
+                  </div>
+                  <div className="col-span-9">
+                    <Link to={`/product/${i?._id}`}>{i?.name}</Link>
+                    <p className="text-main">${i?.price}</p>
+                    <div className="flex justify-between">
+                      <input
+                        className="w-50"
+                        type="number"
+                        defaultValue={i?.qty}
+                        onChange={(e) => updateCart(i, Number(e.target.value))}
+                      />
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={() => handleDelete(i?._id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="col-span-4 h-fit p-2 shadow-lg">
+          <div className="text-main">
+            <h4>Subtotal ({itemsQuantity}) items</h4>
+            <div className="flex justify-between">
+              <strong>Price :</strong>${itemsPrice}
+            </div>
+            <div className="flex justify-between">
+              <strong>Shipping :</strong>${shippingPrice}
+            </div>
+            <div className="flex justify-between">
+              <strong>Tax :</strong>${taxPrice}
+            </div>
+            <hr />
+            <div className="flex justify-between">
+              <strong>Total :</strong>${totalPrice}
+            </div>
+          </div>
+          <Link to="/shipping">
+            <button
+              type="button"
+              className="btn mt-2 w-full"
+              disabled={cartItems.length == 0}
+            >
+              Checkout
+            </button>
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }
 

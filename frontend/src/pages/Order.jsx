@@ -1,22 +1,13 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from 'react-router-dom';
 import {
   useDeliverOrderMutation,
   useGetOrderByIdQuery,
   usePayOrderMutation,
-} from "../store/orderApiSlice";
-import Loader from "../components/Loader";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Image,
-  ListGroup,
-  Row,
-} from "react-bootstrap";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+} from '../store/orderApiSlice';
+import Loader from '../components/Loader';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 function Order() {
   const { id: orderId } = useParams();
   const {
@@ -36,7 +27,7 @@ function Order() {
       try {
         await payOrder({ orderId, details }).unwrap();
         refetch();
-        toast.success("Order is paid");
+        toast.success('Order is paid');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -61,130 +52,125 @@ function Order() {
   const deliverHandler = async () => {
     try {
       await deliverOrder(orderId);
-      toast.success("Order is delivered");
+      toast.success('Order is delivered');
       refetch();
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
   if (isLoading) return <Loader />;
-  if (isError) return <Alert variant="danger">{error.message}</Alert>;
+  if (isError) return <div className="alert">{error.message}</div>;
   return (
     <div>
-      <h1>Order {order._id}</h1>
-      <Row>
-        <Col md={8}>
-          <ListGroup>
-            <ListGroup.Item>
-              <h2>Shipping</h2>
-              <p>
-                <strong>Name: </strong> {order.user.name}
-              </p>
-              <p>
-                <strong>Email: </strong>
-                {order.user.email}
-              </p>
-              <p>
-                <strong>Address: </strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
-                {order.shippingAddress.postalCode},{" "}
-                {order.shippingAddress.country}
-              </p>
-              {order.isDelivered ? (
-                <Alert variant="success">
-                  Delivered on {order.deliveredAt}
-                </Alert>
-              ) : (
-                <>
-                  <Alert variant="danger">Not Delivered</Alert>
-                  {userInfo.role === "admin" && order.isPaid && (
-                    <Button
-                      disabled={loadingDeliver}
-                      variant="primary"
-                      onClick={deliverHandler}
-                    >
-                      {loadingDeliver ? <Loader /> : "Deliver Order"}
-                    </Button>
-                  )}
-                </>
-              )}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <p>
-                <strong>Method</strong> {order.paymentMethod}
-              </p>
-              {order.isPaid ? (
-                <Alert variant="success">Paid on {order.paidAt}</Alert>
-              ) : (
-                <Alert variant="danger">Not Paid</Alert>
-              )}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2>Order Items</h2>
-              {order.orderItems.map((item) => (
-                <ListGroup.Item key={item._id}>
-                  <Row>
-                    <Col md={1}>
-                      <Image src={item.image} alt={item.name} fluid rounded />
-                    </Col>
-                    <Col>
-                      <Link to={`/products/${item._id}`}>{item.name}</Link>
-                    </Col>
-                    <Col md={4}>
-                      {item.qty} x {item.price} = {item.qty * item.price}
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-              ))}
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items</Col>
-                  <Col>{order.itemsPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Shipping</Col>
-                  <Col>{order.shippingPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Tax</Col>
-                  <Col>{order.taxPrice}</Col>
-                </Row>
-                <Row>
-                  <Col>Total</Col>
-                  <Col>{order.totalPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              {/* mark as paid and deliverd  */}
-              {!order.isPaid && (
-                <ListGroup.Item>
-                  {loadingPay && <Loader />}
-                  {isPending ? (
-                    <Loader />
-                  ) : (
-                    <div>
-                      <PayPalButtons
-                        createOrder={createOrder}
-                        onApprove={onApprove}
-                        onError={onError}
-                      />
-                    </div>
-                  )}
-                </ListGroup.Item>
-              )}
-            </ListGroup>
-          </Card>
-        </Col>
-      </Row>
+      <h1 className="text-main">Order {order._id}</h1>
+      <div className="grid grid-cols-12">
+        {/* // div className="grid grid-cols-12" */}
+        <div className="col-span-8">
+          <div className="mb-2 p-2 text-main shadow-md">
+            <h2>Shipping</h2>
+            <p>
+              <strong>Name: </strong> {order.user.name}
+            </p>
+            <p>
+              <strong>Email: </strong>
+              {order.user.email}
+            </p>
+            <p>
+              <strong>Address: </strong>
+              {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
+              {order.shippingAddress.postalCode},{' '}
+              {order.shippingAddress.country}
+            </p>
+            {order.isDelivered ? (
+              <div className="success">Delivered on {order.deliveredAt}</div>
+            ) : (
+              <>
+                <div role="alert" className="alert">
+                  Not Delivered
+                </div>
+                {userInfo.role === 'admin' && order.isPaid && (
+                  <button
+                    disabled={loadingDeliver}
+                    className="btn"
+                    onClick={deliverHandler}
+                  >
+                    {loadingDeliver ? <Loader /> : 'Deliver Order'}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+          <div className="mb-2 p-2 text-main shadow-md">
+            <h2>Payment Method</h2>
+            <p>
+              <strong>Method</strong> {order.paymentMethod}
+            </p>
+            {order.isPaid ? (
+              <div className="success">Paid on {order.paidAt.slice(0, 10)}</div>
+            ) : (
+              <div className="alert">Not Paid</div>
+            )}
+          </div>
+          <div className="mb-2 p-2 text-main shadow-md">
+            <h2 className="text-main">Order Items</h2>
+            {order.orderItems.map((item) => (
+              <div className="grid-cols-12 gap-2 md:grid" key={item._id}>
+                <div className="col-span-2">
+                  <img
+                    className="rounded-md"
+                    src={item.image}
+                    alt={item.name}
+                  />
+                </div>
+                <div className="col-span-6 text-main">
+                  <Link to={`/products/${item._id}`}>{item.name}</Link>
+                </div>
+                <div className="col-span-4 my-auto">
+                  {item.qty} x {item.price} = {item.qty * item.price}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="col-span-4">
+          <div className="p-1 text-main shadow-md">
+            <h2>Order Summary</h2>
+            <div className="flex justify-between">
+              <strong>Items :</strong>
+              <p>{order.itemsPrice}</p>
+            </div>
+            <div className="flex justify-between">
+              <strong>Shipping :</strong>
+              <p>{order.shippingPrice}</p>
+            </div>
+            <div className="flex justify-between">
+              <strong>Tax :</strong>
+              <p>{order.taxPrice}</p>
+            </div>
+            <div className="bd flex justify-between border-t">
+              <strong className="my-auto py-2">Total :</strong>
+              <p className="my-auto py-2">{order.totalPrice}</p>
+            </div>
+            {/* mark as paid and deliverd  */}
+            {!order.isPaid && (
+              <div>
+                {loadingPay && <Loader />}
+                {isPending ? (
+                  <Loader />
+                ) : (
+                  <div>
+                    <PayPalButtons
+                      createOrder={createOrder}
+                      onApprove={onApprove}
+                      onError={onError}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

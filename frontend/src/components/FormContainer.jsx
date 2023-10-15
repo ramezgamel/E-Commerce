@@ -1,14 +1,13 @@
-import { Col, Container, Row } from "react-bootstrap";
-
+/* eslint-disable react/prop-types */
 function FormContainer({ children }) {
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col xs={12} md={6}>
+    <div className="container h-screen">
+      <div className="grid h-full grid-cols-12 items-center">
+        <div className="col-span-12 p-3 shadow-xl md:col-span-8 md:col-start-3">
           {children}
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 }
 

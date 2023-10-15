@@ -2,7 +2,14 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../uploads");
+    switch (req.baseUrl) {
+      case "/api/products":
+        cb(null, "../uploads/products");
+        break;
+
+      default:
+        cb(null, "../uploads");
+    }
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -15,7 +22,6 @@ const fileFilter = function (req, file, cb) {
   if (mimeType) return cb(null, true);
   cb("Images Only");
 };
-
 module.exports = multer({
   storage,
   fileFilter,

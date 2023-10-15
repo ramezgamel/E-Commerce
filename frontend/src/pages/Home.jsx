@@ -1,33 +1,39 @@
-import { Row, Col, Alert } from "react-bootstrap";
-import { useGetProductQuery } from "../store/productsApiSlice";
-import Product from "../components/Product";
-import Loader from "../components/Loader";
-import Paginate from "../components/Paginate";
-import ProductCarousel from "./ProductCarousel";
-import { useState } from "react";
+import { useGetProductQuery } from '../store/productsApiSlice';
+import Product from '../components/Product';
+import Loader from '../components/Loader';
+import Paginate from '../components/Paginate';
+import ProductCarousel from './ProductCarousel';
+import { useState } from 'react';
 function Home() {
   const [page, setPage] = useState(1);
   const { data: products, isLoading, error } = useGetProductQuery(page);
   if (isLoading) return <Loader />;
-  if (error) return <Alert variant="danger">{error}</Alert>;
+  if (error)
+    return (
+      <div role="alert" className="alert">
+        Something went wrong
+      </div>
+    );
   return (
     <>
       <ProductCarousel />
-      <h1>Latest Products</h1>
-      <Row>
+      <h1 className="text-main">Latest Products</h1>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products?.result.length > 0 ? (
           products?.result?.map((product) => (
-            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+            <div key={product._id}>
               <Product product={product} />
-            </Col>
+            </div>
           ))
         ) : (
-          <Alert variant="danger">No Data To show</Alert>
+          <div role="alert" className="alert">
+            No Data to Show
+          </div>
         )}
-      </Row>
+      </div>
       <div className="text-center">
         {products?.result.length > 0 && (
-          <div className="d-flex justify-content-center">
+          <div className="d-flex justify-content-center mt-4">
             <Paginate
               pages={products?.totalPages}
               pageNum={products?.page}

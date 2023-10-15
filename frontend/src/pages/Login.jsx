@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
-import FormContainer from "../components/FormContainer";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../store/userApiSlice";
-import { setCredentials } from "../store/authSlice";
-import Loader from "../components/Loader";
-import { toast } from "react-toastify";
+import { useEffect, useState } from 'react';
+import FormContainer from '../components/FormContainer';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLoginMutation } from '../store/userApiSlice';
+import { setCredentials } from '../store/authSlice';
+import Loader from '../components/Loader';
+import { toast } from 'react-toastify';
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // const [name, setName] = useState('');
+  // const [formType, setFormType] = useState('login');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
@@ -17,7 +18,7 @@ function Login() {
 
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const redirect = searchParams.get("redirect") || "/";
+  const redirect = searchParams.get('redirect') || '/';
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -35,43 +36,36 @@ function Login() {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email" className="my-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
+      <h1 className="text-main">Sign In</h1>
+      <form onSubmit={submitHandler}>
+        <div className="my-2">
+          <label>Email</label>
+          <input
             type="email"
             placeholder="Enter email"
             value={email}
             required
             onChange={(e) => setEmail(e.target.value)}
           />
-        </Form.Group>
-        <Form.Group controlId="password" className="my-3">
-          <Form.Label>password</Form.Label>
-          <Form.Control
+        </div>
+        <div className="my-2">
+          <label>password</label>
+          <input
             type="password"
             placeholder="Enter password"
             value={password}
             required
             onChange={(e) => setPassword(e.target.value)}
           />
-        </Form.Group>
-        <Button
-          type="submit"
-          variant="primary"
-          className="my-3"
-          disabled={isLoading}
-        >
+        </div>
+        <button type="submit" className="btn my-2" disabled={isLoading}>
           Sign In
-        </Button>
+        </button>
         {isLoading && <Loader />}
-      </Form>
-      <Row className="py-3">
-        <Col>
-          Create new account <Link to="/register">Register</Link>
-        </Col>
-      </Row>
+      </form>
+      <div className="py-1 text-main">
+        Create new account <Link to="/register">Register</Link>
+      </div>
     </FormContainer>
   );
 }

@@ -1,56 +1,62 @@
 // import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Col, Image, Row } from "react-bootstrap";
-import { Form } from "react-bootstrap";
-import { useGetProductsFeaturesMutation } from "../store/productsApiSlice";
-import { LinkContainer } from "react-router-bootstrap";
+import { useState } from 'react';
+import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
+import { Link } from 'react-router-dom';
 
 function SearchBox() {
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [searchProducts, { data }] = useGetProductsFeaturesMutation();
   const onSearch = (e) => {
     setKeyword(e.target.value);
-    searchProducts(keyword);
+    searchProducts({ keyword });
   };
+  document.addEventListener('click', () => {
+    setKeyword('');
+  });
   return (
     <>
-      <Form className="position-relative">
-        <Form.Control
+      <form className="position-relative">
+        <input
           type="text"
           name="q"
+          placeholder="Search..."
           onChange={onSearch}
           className="mr-sm-2 ml-sm-5"
-        ></Form.Control>
-        {data?.result.length > 0 && keyword != "" && (
+        ></input>
+        {data?.result.length > 0 && keyword != '' && (
           <div
             style={{
-              backgroundColor: "rgba(0,0,0,.7)",
+              backgroundColor: 'rgba(0,0,0,.7)',
               zIndex: 500,
-              overflow: "scroll",
-              height: "400px",
+              overflow: 'scroll',
+              height: '400px',
             }}
             className="position-absolute w-100"
           >
             {data?.result.length > 0 &&
               data?.result?.map((item) => (
-                <LinkContainer
+                <Link
                   key={item._id}
                   to={`/product/${item._id}`}
-                  onClick={() => setKeyword("")}
+                  onClick={() => setKeyword('')}
                 >
-                  <Row className="p-2">
-                    <Col md={3}>
-                      <Image src={item.image} alt={item.name} fluid />
-                    </Col>
-                    <Col md={9}>
-                      <p style={{ color: "white" }}>{item.name.slice(0, 30)}</p>
-                    </Col>
-                  </Row>
-                </LinkContainer>
+                  <div className="grid grid-cols-12 p-2">
+                    <div className="col-span-3">
+                      <img
+                        className="rounded-md"
+                        src={item.image}
+                        alt={item.name}
+                      />
+                    </div>
+                    <div className="col-span-9">
+                      <p style={{ color: 'white' }}>{item.name.slice(0, 30)}</p>
+                    </div>
+                  </div>
+                </Link>
               ))}
           </div>
         )}
-      </Form>
+      </form>
     </>
   );
 }

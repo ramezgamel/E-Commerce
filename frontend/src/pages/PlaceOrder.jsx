@@ -5,15 +5,6 @@ import { useCreateOrderMutation } from "../store/orderApiSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { clearCartItems } from "../store/cartSlice";
 import { toast } from "react-toastify";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Image,
-  ListGroup,
-  Row,
-} from "react-bootstrap";
 import Loader from "../components/Loader";
 function PlaceOrder() {
   const navigate = useNavigate();
@@ -48,10 +39,9 @@ function PlaceOrder() {
   return (
     <>
       <CheckoutSteps step1 step2 step3 />
-      <Row>
-        <Col md={8}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
+      <div className="grid grid-cols-12">
+        <div className="col-span-8">
+            <div>
               <h2>Shipping</h2>
               <p>
                 <strong>Address:</strong>
@@ -59,91 +49,73 @@ function PlaceOrder() {
                 {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </p>
-            </ListGroup.Item>
-            <ListGroup.Item>
+            </div>
+            <div>
               <h2>Payment Method</h2>
               <strong>Method: </strong>
               {cart.paymentMethod}
-            </ListGroup.Item>
-            <ListGroup.Item>
+            </div>
+            <div>
               <h2>Order Items</h2>
               {cart.cartItems.length == 0 ? (
-                <Alert variant="danger">Your cart is Empty</Alert>
+                <h3 role="alert" className="alert">Your cart is Empty</h3>
               ) : (
-                <ListGroup variant="flush">
+                <div>
                   {cart?.cartItems?.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row>
-                        <Col md={1}>
-                          <Image
+                    <div key={index} className="grid grid-cols-12">
+                        <div className="col-span-2">
+                          <img
                             src={item.image}
                             alt={item.name}
-                            fluid
-                            rounded
+                            className="rounded-md"
                           />
-                        </Col>
-                        <Col>
+                        </div>
+                        <div className="col-span-5">
                           <Link to={`/products/${item._id}`}>{item.name}</Link>
-                        </Col>
-                        <Col md={4}>
+                        </div>
+                        <div className="col-span-4">
                           {item.qty} * ${item.price} = ${item.qty * item.price}
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
+                        </div>
+                    </div>
                   ))}
-                </ListGroup>
+                </div>
               )}
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items:</Col>
-                  <Col>{cart.itemsPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Shipping:</Col>
-                  <Col>{cart.shippingPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Tax:</Col>
-                  <Col>{cart.taxPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Total:</Col>
-                  <Col>{cart.totalPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                {error && <Alert variant="danger">{error}</Alert>}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
+            </div>
+        </div>
+        <div className="col-span-4">
+          <h2>Order Summary</h2>
+          <div className="flex justify-between items-center">
+                  <p>Items:</p>
+                  <p>{cart.itemsPrice}</p>
+          </div>
+          <div className="flex justify-between items-center">
+                  <p>Shipping:</p>
+                  <p>{cart.shippingPrice}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p>Tax:</p>
+            <p>{cart.taxPrice}</p>
+          </div>
+          <div className="flex justify-between items-center">
+                  <p>Total:</p>
+                  <p>{cart.totalPrice}</p>
+          </div>
+          <div className="flex justify-between items-center">
+                {error && <h3 role="alert" className="alert">{error}</h3>}
+          </div>
+          <div className="flex justify-between items-center">
+                <button
                   type="button"
-                  className="btn-block"
+                  className="btn"
                   disabled={cart.cartItems.length === 0}
                   onClick={placeOrderHandler}
                 >
                   Place Order
-                </Button>
+                </button>
                 {isLoading && <Loader />}
-              </ListGroup.Item>
-            </ListGroup>
-          </Card>
-        </Col>
-      </Row>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { Button, Col, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { savePaymentMethod } from "../store/cartSlice";
@@ -21,29 +19,18 @@ function Payment() {
     navigate("/placeorder");
   };
   return (
-    <FormContainer>
+    <>
       <CheckoutSteps step1 step2 step3 />
       <h1>Payment Method</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group>
-          <Form.Label as="legend">Select method</Form.Label>
-          <Col>
-            <Form.Check
-              type="radio"
-              className="my-2"
-              label="PayPal or Credit Card"
-              name="paymentMethod"
-              value="PayPal"
-              checked
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check>
-          </Col>
-        </Form.Group>
-        <Button type="submit" variant="primary">
+      <form onSubmit={submitHandler}>
+          <label>Select method</label>
+          <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+        
+        <button type="submit" className="btn">
           Continue
-        </Button>
-      </Form>
-    </FormContainer>
+        </button>
+      </form>
+    </>
   );
 }
 

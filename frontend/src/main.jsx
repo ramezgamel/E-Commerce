@@ -29,6 +29,7 @@ import ProductEdit from "./pages/admin/ProductEdit.jsx";
 import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
 import DashBoard from "./pages/admin/DashBoard.jsx";
+import NotFound from "./pages/NotFound.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:"*",
+    element: <NotFound/>
+  }
 ]);
 const clientId = import.meta.env.VITE_APP_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -133,7 +138,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           options={{ clientId, currency: "USD", intent: "capture" }}
           // deferLoading={true}
         >
-          <ToastContainer />
+        <ToastContainer />
           <RouterProvider router={router} />
         </PayPalScriptProvider>
       </Provider>

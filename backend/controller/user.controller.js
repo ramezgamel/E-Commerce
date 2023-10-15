@@ -15,7 +15,7 @@ module.exports.register = asyncHandler(async (req, res) => {
     email,
   });
   if (req.file) {
-    user.image = req.file.filename;
+    user.image = "users/" + req.file.filename;
   }
   await user.save();
   const token = await user.generateToken();
@@ -23,9 +23,15 @@ module.exports.register = asyncHandler(async (req, res) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
-    secure: process.env.NODE_ENV !== "development",
+    // secure: process.env.NODE_ENV !== "development",
+    secure: true,
   });
-  res.json({ id: user._id, name: user.name, email: user.email });
+  res.json({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    image: user.image,
+  });
 });
 
 module.exports.login = asyncHandler(async (req, res, next) => {
@@ -39,14 +45,15 @@ module.exports.login = asyncHandler(async (req, res, next) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
-    // secure: true,
-    secure: process.env.NODE_ENV !== "development",
+    secure: true,
+    // secure: process.env.NODE_ENV !== "development",
   });
   res.status(200).json({
     id: user._id,
     name: user.name,
     email: user.email,
     role: user.role,
+    image: user.image,
   });
 });
 
@@ -66,9 +73,13 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError("Invalid user", 404);
   const checkPass = await user.checkPass(req.body.password);
   if (!checkPass) throw new ApiError("Incorrect password");
+
   Object.keys(req.body).forEach(function (key) {
     user[key] = req.body[key];
   });
+  if (req.file) {
+    user.image = "users/" + req.file.filename;
+  }
   await user.save();
   res.status(200).json(user);
 });

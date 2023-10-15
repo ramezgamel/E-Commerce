@@ -7,10 +7,10 @@ export const updateCart = (state) => {
     state.cartItems.reduce((acc, item) => acc + item?.price * item?.qty, 0)
   );
 
-  state.shippingPrice = addDecimals(state?.itemsPrice > 100 ? 0 : 10);
+  state.shippingPrice = addDecimals(state?.itemsPrice > 100 || state?.itemsPrice == 0 ? 0 : 10);
 
   state.taxPrice = addDecimals(Number((0.15 * state.itemsPrice).toFixed(2)));
-
+    state.itemsQuantity = state.cartItems.length
   state.totalPrice = (
     Number(state.itemsPrice) +
     Number(state.shippingPrice) +

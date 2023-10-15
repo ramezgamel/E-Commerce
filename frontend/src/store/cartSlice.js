@@ -25,6 +25,8 @@ const cartSlice = createSlice({
           x._id === isExist._id ? item : x
         );
       } else {
+        item.price = Number(item.price)
+        item.qty = Number(item.qty)
         state.cartItems = [...state.cartItems, item];
       }
       return updateCart(state, item);

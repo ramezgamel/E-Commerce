@@ -1,21 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  FormGroup,
-  FormLabel,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 function ProductForm({ submit, btnName, product }) {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [countInStock, setCountInStock] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [images, setImages] = useState([]);
+  const [brand, setBrand] = useState('');
+  const [category, setCategory] = useState('');
+  const [countInStock, setCountInStock] = useState('');
+  const [description, setDescription] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
     if (product) {
@@ -25,7 +18,7 @@ function ProductForm({ submit, btnName, product }) {
       setCategory(product?.category);
       setCountInStock(product?.countInStock);
       setDescription(product?.description);
-      setImage(product?.image);
+      setImages(product?.images);
     }
   }, [product]);
   const submitHandler = (e) => {
@@ -37,79 +30,85 @@ function ProductForm({ submit, btnName, product }) {
       category,
       countInStock,
       description,
-      image,
+      images,
     };
     if (product) {
       newPrd._id = product._id;
-      submit(newPrd._id, newPrd);
+      submit(newPrd);
     } else {
       submit(newPrd);
     }
-    navigate("/admin/products");
+    navigate('/admin/products');
   };
   return (
-    <Form onSubmit={submitHandler}>
-      <FormGroup controlId="name">
-        <FormLabel>Name:</FormLabel>
-        <FormControl
+    <form onSubmit={submitHandler}>
+      <div>
+        <label className="text-main">Name:</label>
+        <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-      </FormGroup>
-      <FormGroup controlId="price">
-        <FormLabel>Price:</FormLabel>
-        <FormControl
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup controlId="brand">
-        <FormLabel>Brand:</FormLabel>
-        <FormControl
-          type="text"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup controlId="category">
-        <FormLabel>Category:</FormLabel>
-        <FormControl
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup controlId="countInStock">
-        <FormLabel>CountInStock:</FormLabel>
-        <FormControl
-          type="number"
-          value={countInStock}
-          onChange={(e) => setCountInStock(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup controlId="countInStock">
-        <FormLabel>Image:</FormLabel>
-        <FormControl
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <div>
+          <label className="text-main">Price:</label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>CountInStock:</label>
+          <input
+            type="number"
+            value={countInStock}
+            onChange={(e) => setCountInStock(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <div>
+          <label>Brand:</label>
+          <input
+            type="text"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Category:</label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label>Images:</label>
+        <input
           type="file"
-          onChange={(e) => setImage(e.target.files[0])}
+          multiple
+          onChange={(e) => setImages(e.target.files)}
         />
-      </FormGroup>
-      <FormGroup controlId="description">
-        <FormLabel>Description:</FormLabel>
-        <FormControl
+      </div>
+      <div>
+        <label>Description:</label>
+        <textarea
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-      </FormGroup>
-      {
-        <Button type="submit" variant="primary" className="my-2">
+      </div>
+      <div className="mt-2 text-right">
+        <button type="submit" className="btn">
           {btnName}
-        </Button>
-      }
-    </Form>
+        </button>
+      </div>
+    </form>
   );
 }
 

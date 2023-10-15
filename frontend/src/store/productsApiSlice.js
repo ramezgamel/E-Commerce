@@ -1,67 +1,69 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from './apiSlice';
 
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProduct: builder.query({
       query: (page) => ({
         url: `/products?limit=10&page=${page}`,
-        method: "GET",
+        method: 'GET',
       }),
-      providesTags: ["Products"],
+      providesTags: ['Products'],
       keepUnusedDataFor: 5,
     }),
     getProductsFeatures: builder.mutation({
-      query: (q) => ({
-        url: `/products?keyword=${q.keyword || ""}&sort=${q.sort || ""}`,
-        method: "GET",
+      query: ({ keyword, page, sort, dec }) => ({
+        url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
+          keyword ? `&keyword=${keyword}` : ''
+        }${sort && sort != 'default' ? `&sort=${dec}${sort}` : ''}`,
+        method: 'GET',
       }),
       keepUnusedDataFor: 5,
     }),
     getProductById: builder.query({
       query: (id) => ({
         url: `/products/${id}`,
-        method: "GET",
+        method: 'GET',
       }),
       keepUnusedDataFor: 5,
     }),
     createProduct: builder.mutation({
       query: (data) => ({
-        url: "/products",
-        method: "POST",
+        url: '/products',
+        method: 'POST',
         body: data,
       }),
       keepUnusedDataFor: 5,
-      invalidatesTags: ["Products"],
+      invalidatesTags: ['Products'],
     }),
     updateProduct: builder.mutation({
-      query: (data) => ({
-        url: `/products/${data.id}`,
-        method: "PUT",
-        body: data.formData,
+      query: (product) => ({
+        url: `/products/${product._id}`,
+        method: 'PUT',
+        body: product,
       }),
       keepUnusedDataFor: 5,
-      invalidatesTags: ["Products"],
+      invalidatesTags: ['Products'],
     }),
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `/products/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
       keepUnusedDataFor: 5,
-      invalidatesTags: ["Products"],
+      invalidatesTags: ['Products'],
     }),
     addReview: builder.mutation({
       query: (data) => ({
         url: `/products/${data.id}/review`,
-        method: "POST",
+        method: 'POST',
         body: { ...data },
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: ['Products'],
     }),
     getTopProducts: builder.query({
       query: () => ({
-        url: "/products/top",
-        method: "GET",
+        url: '/products/top',
+        method: 'GET',
       }),
       keepUnusedDataFor: 5,
     }),

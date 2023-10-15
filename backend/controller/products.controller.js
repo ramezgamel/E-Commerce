@@ -16,8 +16,10 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
     countInStock,
     description,
   });
-  if (req.file) {
-    newProduct.image = req.file.filename;
+  if (req.files) {
+    req.files.map((image) =>
+      newProduct.images.push("products/" + image.filename)
+    );
   }
   const product = await newProduct.save();
   res.status(201).json(product);
@@ -70,7 +72,6 @@ module.exports.updateProduct = asyncHandler(async (req, res) => {
   // if (unAvailable.includes(key)) throw new ApiError("Forbidden field", 403);
   // product[key] = req.body[key];
   // }
-  console.log(req.body);
   Object.keys(req.body).forEach((key) => {
     if (unAvailable.includes(key)) throw new ApiError("Forbidden field", 403);
     product[key] = req.body[key];
