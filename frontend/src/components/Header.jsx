@@ -303,7 +303,7 @@ function Header() {
                           Logout
                         </button>
                       </Menu.Item>
-                      {userInfo.role == 'admin' && (
+                      {userInfo && userInfo.role == 'admin' && (
                         <Menu.Item>
                           <Link
                             to="/admin/dashboard"

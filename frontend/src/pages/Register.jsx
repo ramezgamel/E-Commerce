@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
-import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 function Login() {
   const [email, setEmail] = useState('');
@@ -37,7 +36,7 @@ function Login() {
   return (
     <FormContainer>
       <h1>Sign Up</h1>
-      <fom onSubmit={submitHandler}>
+      <form onSubmit={submitHandler}>
         <div className="my-3">
           <label>Name</label>
           <input
@@ -65,11 +64,10 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn my-3" disabled={isLoading}>
+        <button type="submit" className="btn my-3 " disabled={isLoading}>
           Sign Up
         </button>
-        {isLoading && <Loader />}
-      </fom>
+      </form>
       <div className="py-3">
         Already have an account? <Link to="/login">Login</Link>
       </div>
