@@ -15,6 +15,8 @@ const orderApiSlice = apiSlice.injectEndpoints({
         url: `/orders/${id}`,
         method: 'GET',
       }),
+      keepUnusedDataFor:5,
+      providesTags:["Order"]
     }),
     getMyOrders: builder.query({
       query: (page) => ({
@@ -31,10 +33,10 @@ const orderApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Order'],
     }),
-    getOrders: builder.mutation({
+    getOrders: builder.query({
       query: ({ keyword, page, sort = '', dec = '+' }) => ({
         url: `/orders?limit=${import.meta.env.VITE_LIMIT}&page=${page}${
-          sort != 'default' ? `&sort=${dec}${sort}` : ''
+          sort != '' ? `&sort=${dec}${sort}` : ''
         }${keyword ? `&keyword=${keyword}:` : ''}`,
         method: 'GET',
       }),
@@ -55,6 +57,6 @@ export const {
   useGetOrderByIdQuery,
   usePayOrderMutation,
   useGetMyOrdersQuery,
-  useGetOrdersMutation,
+  useGetOrdersQuery,
   useDeliverOrderMutation,
 } = orderApiSlice;

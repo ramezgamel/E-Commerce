@@ -54,7 +54,7 @@ function AdminHeader() {
     }
   };
   return (
-    <nav className="bd relative flex items-center justify-between border-b bg-slate-50 p-2 dark:bg-gray-900 md:justify-end">
+    <nav className="bd relative flex items-center justify-between border-b bg-slate-50 p-2 dark:bg-gray-800 md:justify-end">
       {/* SIDEBAR  */}
       <Disclosure as="div" className="md:hidden">
         <Disclosure.Button>
@@ -71,13 +71,8 @@ function AdminHeader() {
         >
           <Disclosure.Panel
             as="ul"
-            className="bd absolute left-0 top-0 z-10 flex h-screen w-[160px] flex-col border-r border-gray-200 bg-slate-100 pl-1 pt-2 text-center font-medium text-gray-700 text-main dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 md:hidden"
+            className="bd absolute left-0 top-14 z-10 flex h-screen w-[160px] flex-col border-r border-gray-200 bg-slate-100 pl-1 pt-2 text-center font-medium text-gray-700 text-main dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 md:hidden"
           >
-            <li className="mb-2 cursor-pointer text-right text-main hover:text-violet-500">
-              <Disclosure.Button>
-                <span className="pr-2">X</span>
-              </Disclosure.Button>
-            </li>
             <li>
               <NavLink
                 to="/admin/dashboard"

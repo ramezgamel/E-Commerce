@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import './index.css';
 import { useEffect } from 'react';
-
+import Header from "./components/Header"
 function App() {
   useEffect(() => {
     // window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -12,7 +12,11 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
   }, []);
-  return <Outlet />;
+  
+  return <>
+    <Header/>
+    <Outlet/>
+  </> ;
 }
 
 export default App;

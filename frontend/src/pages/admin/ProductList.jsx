@@ -1,13 +1,13 @@
 import {
   useCreateProductMutation,
   useDeleteProductMutation,
-  useGetProductsFeaturesMutation,
+  useGetProductQuery,
   useUpdateProductMutation,
 } from '../../store/productsApiSlice';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Loader from '../../components/Loader';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import Paginate from '../../components/Paginate';
 import Model from '../../components/Modal';
 import ProductForm from '../../components/ProductForm';
@@ -16,28 +16,22 @@ import AdminSearchBox from '../../components/AdminSearchBox';
 function ProductList() {
   const [page, setPage] = useState(1);
   const [show, setShow] = useState(false);
-  const [sort, setSort] = useState('Default');
+  const [sort, setSort] = useState('');
   const [product, setProduct] = useState({});
   const [keyword, setKeyword] = useState('');
   const [toggle, setToggle] = useState('+');
-  const [products, setProducts] = useState({});
-  const [getProducts, { isLoading, error }] = useGetProductsFeaturesMutation();
+  const {data:products, isLoading,isFetching, error} = useGetProductQuery({ keyword, page, sort, dec: toggle });
   const [deletePrd] = useDeleteProductMutation();
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
-  useEffect(() => {
-    const getData = async () => {
-      const prds = await getProducts({ keyword, page, sort, dec: toggle });
-      setProducts(prds);
-    };
-    getData();
-  }, [toggle, getProducts, page, sort, keyword]);
+
+
   const deleteProduct = async (id) => {
     try {
       if (window.confirm('Are you sure?')) {
-        await deletePrd(id);
+        await deletePrd(id).unwrap();
         toast.success('Product Deleted');
       }
     } catch (err) {
@@ -74,6 +68,7 @@ function ProductList() {
           formData.append(key, updatedPrd[key]);
         }
       });
+      
       await updateProduct(formData).unwrap();
       toast.success('Product updated');
     } catch (err) {
@@ -86,12 +81,15 @@ function ProductList() {
     <>
       <Model
         show={show}
-        handleClose={() => setShow(false)}
-        header={product ? 'Update Product' : 'Create Product'}
+        handleClose={() => {
+          setShow(false)
+          Object.keys(product).length !== 0 && setProduct({})
+        }}
+        header={Object.keys(product).length !== 0 ? 'Update Product' : 'Create Product'}
       >
         {loadingCreate || loadingUpdate ? (
           <Loader />
-        ) : !product ? (
+        ) : Object.keys(product).length === 0 ? (
           <ProductForm btnName="Create" submit={handleCreate} />
         ) : (
           <ProductForm
@@ -101,9 +99,9 @@ function ProductList() {
           />
         )}
       </Model>
-      <div className="relative mx-3 mt-3 overflow-auto bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
+      <div className="px-4 mt-3 overflow-auto bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
         {/* NAV  */}
-        <div className="flex  items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
+        <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <AdminSearchBox keyword={keyword} setKeyword={setKeyword} />
           {/* ADD PRODUCT BUTTON  */}
           <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
@@ -118,7 +116,7 @@ function ProductList() {
             </button>
           </div>
           {/* SORT  */}
-          <div className="flex  w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
+          <div className="flex w-full flex-shrink-0 gap-2 items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
             <label htmlFor="sort" className="my-auto">
               Sort
             </label>
@@ -129,7 +127,7 @@ function ProductList() {
               id="sort"
               onChange={(e) => setSort(e.target.value)}
             >
-              <option value="default">Default</option>
+              <option value="">Default</option>
               <option value="name">Name</option>
               <option value="price">Price</option>
               <option value="rating">Rating</option>
@@ -140,6 +138,8 @@ function ProductList() {
             />
           </div>
         </div>
+
+
         {/* TABLE  */}
         <div className="overflow-auto">
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -165,11 +165,8 @@ function ProductList() {
                 </th>
               </tr>
             </thead>
-            {isLoading ? (
-              <div className="w-full ">
-                <Loader />
-              </div>
-            ) : error ? (
+            {
+              error ? (
               <tr className="w-[100%] text-center">
                 <div role="info" className="alert">
                   {error.error || 'Something went wrong'}
@@ -177,8 +174,8 @@ function ProductList() {
               </tr>
             ) : (
               <tbody>
-                {products?.data &&
-                  products?.data?.result.map((product) => (
+                { !isFetching &&
+                  products?.result.map((product) => (
                     <tr
                       key={product._id}
                       className="border-b dark:border-gray-700"
@@ -208,10 +205,22 @@ function ProductList() {
                     </tr>
                   ))}
               </tbody>
-            )}
+            )} 
           </table>
         </div>
+        {isLoading || isFetching ? (
+            <div className="py-5 text-center">
+              <Loader />
+            </div>
+          ) : (
+            products?.result.length === 0 && (
+              <div className="py-5 text-center">
+                <strong className="text-main">Not Found</strong>
+              </div>
+            )
+          )}
         {/* PAGINATE  */}
+        {products?.totalPages > 1 &&(
         <div className="d-flex justify-content-center">
           <Paginate
             pages={products?.data?.totalPages}
@@ -219,6 +228,7 @@ function ProductList() {
             setPage={setPage}
           />
         </div>
+        )}
       </div>
     </>
   );

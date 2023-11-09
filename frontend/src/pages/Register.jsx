@@ -9,6 +9,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [image, setImage] = useState({});
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +22,13 @@ function Login() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await register({ email, password, name }).unwrap();
+      const formData = new FormData();
+      formData.append("email", email)
+      formData.append("password", password)
+      formData.append("name", name);
+      formData.append("image", image);
+
+      const res = await register(formData).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
@@ -35,7 +42,7 @@ function Login() {
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <h1 className="text-main">Sign Up</h1>
       <form onSubmit={submitHandler}>
         <div className="my-3">
           <label>Name</label>
@@ -56,6 +63,13 @@ function Login() {
           />
         </div>
         <div className="my-3">
+          <label>Profile Image</label>
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0]) }
+          />
+        </div>
+        <div className="my-3">
           <label>password</label>
           <input
             type="password"
@@ -68,7 +82,7 @@ function Login() {
           Sign Up
         </button>
       </form>
-      <div className="py-3">
+      <div className="py-3 text-main">
         Already have an account? <Link to="/login">Login</Link>
       </div>
     </FormContainer>

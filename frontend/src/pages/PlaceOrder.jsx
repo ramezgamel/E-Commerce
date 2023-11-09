@@ -37,14 +37,14 @@ function PlaceOrder() {
     }
   };
   return (
-    <>
+    <div className="container text-main">
       <CheckoutSteps step1 step2 step3 />
       <div className="grid grid-cols-12">
         <div className="col-span-8">
             <div>
               <h2>Shipping</h2>
               <p>
-                <strong>Address:</strong>
+                <strong>Address: </strong>
                 {cart.shippingAddress.address}, {cart.shippingAddress.city}
                 {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
@@ -58,11 +58,11 @@ function PlaceOrder() {
             <div>
               <h2>Order Items</h2>
               {cart.cartItems.length == 0 ? (
-                <h3 role="alert" className="alert">Your cart is Empty</h3>
+                <div role="alert" className="alert">Your cart is Empty</div>
               ) : (
-                <div>
+                <div className="px-3">
                   {cart?.cartItems?.map((item, index) => (
-                    <div key={index} className="grid grid-cols-12">
+                    <div key={index} className="grid grid-cols-12 shadow-md my-2 p-2">
                         <div className="col-span-2">
                           <img
                             src={item.image}
@@ -85,7 +85,7 @@ function PlaceOrder() {
         <div className="col-span-4">
           <h2>Order Summary</h2>
           <div className="flex justify-between items-center">
-                  <p>Items:</p>
+                  <p>Items price:</p>
                   <p>{cart.itemsPrice}</p>
           </div>
           <div className="flex justify-between items-center">
@@ -116,7 +116,7 @@ function PlaceOrder() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

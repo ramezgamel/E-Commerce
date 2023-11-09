@@ -30,6 +30,8 @@ import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
 import DashBoard from "./pages/admin/DashBoard.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import CreateNotification from "./pages/admin/CreateNotification.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/resetPassword/:token",
+        element: <ResetPassword />,
       },
       {
         path: "/",
@@ -100,7 +106,6 @@ const router = createBrowserRouter([
             element: <AdminRoute />,
           },
           {
-            index: true,
             path: "dashboard",
             element: <DashBoard />,
           },
@@ -109,12 +114,17 @@ const router = createBrowserRouter([
             element: <OrderList />,
           },
           {
+            index: true,
             path: "users",
             element: <UserList />,
           },
           {
             path: "products",
             element: <ProductList />,
+          },
+          {
+            path: "notifications",
+            element: <CreateNotification />,
           },
           {
             path: "product/:id/edit",

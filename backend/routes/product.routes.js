@@ -22,6 +22,7 @@ router.put(
   protect,
   restrictTo(["admin"]),
   upload.array("images", 5),
+  resizePhotos,
   controller.updateProduct
 );
 

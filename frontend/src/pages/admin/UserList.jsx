@@ -2,20 +2,19 @@ import Loader from '../../components/Loader';
 import { toast } from 'react-toastify';
 import {
   useDeleteUserMutation,
-  useGetUsersMutation,
+  useGetUsersQuery,
 } from '../../store/userApiSlice';
 import Paginate from '../../components/Paginate';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { HiSwitchVertical } from 'react-icons/hi';
 import AdminSearchBox from '../../components/AdminSearchBox';
 function UserList() {
   const [page, setPage] = useState(1);
-  const [users, setUsers] = useState({});
   const [keyword, setKeyword] = useState('');
   const [toggle, setToggle] = useState('+');
-  const [sort, setSort] = useState('default');
-  const [getUsers, { isLoading, isError, error }] = useGetUsersMutation();
+  const [sort, setSort] = useState('');
+  const {data:users, isLoading, isFetching, error} = useGetUsersQuery({ keyword, page, sort, dec: toggle });
   const [deleteUser] = useDeleteUserMutation();
   const deleteHandler = async (id) => {
     if (window.confirm('Are you sure?')) {
@@ -27,21 +26,15 @@ function UserList() {
       }
     }
   };
-  useEffect(() => {
-    const getData = async () => {
-      const users = await getUsers({ keyword, page, sort, dec: toggle });
-      setUsers(users);
-    };
-    getData();
-  }, [getUsers, page, sort, toggle, keyword]);
+
   return (
-    <div className=" mx-auto max-w-screen-xl bg-gray-50 dark:bg-gray-900 lg:px-12">
+    <div className="max-w-screen-xl bg-gray-50 dark:bg-gray-800">
       <div className="relative mx-3 mt-3 overflow-hidden bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
         <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <AdminSearchBox keyword={keyword} setKeyword={setKeyword} />
           {/* ACTIONS PART */}
           <div className="flex  w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-            <div className="flex  w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
+            <div className="flex w-full flex-shrink-0 gap-2 items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
               <label htmlFor="sort" className="my-auto">
                 Sort
               </label>
@@ -85,13 +78,13 @@ function UserList() {
                 </th>
               </tr>
             </thead>
-            {isError ? (
+            {error ? (
               <div role="info" className="alert">
-                {error.message || error.error || 'Something went wrong'}
+                {error?.message || error?.error || 'Something went wrong'}
               </div>
-            ) : (
+            ) : ( 
               <tbody>
-                {users?.data?.result.map((user) => (
+                {!isFetching && users?.result.map((user) => (
                   <tr key={user._id} className="border-b dark:border-gray-700">
                     <td className="p-2">{user._id}</td>
                     <td className="p-2">{user.name}</td>
@@ -113,18 +106,19 @@ function UserList() {
               </tbody>
             )}
           </table>
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <div className="py-5 text-center">
               <Loader />
             </div>
           ) : (
-            users?.data?.result.length === 0 && (
+            users?.result.length === 0 && (
               <div className="py-5 text-center">
                 <strong className="text-main">Not Found</strong>
               </div>
             )
           )}
         </div>
+        {users?.totalPages > 1 &&(
         <div className="d-flex justify-content-center">
           <Paginate
             pages={users?.totalPages}
@@ -132,6 +126,7 @@ function UserList() {
             setPage={setPage}
           />
         </div>
+        )}
       </div>
     </div>
   );

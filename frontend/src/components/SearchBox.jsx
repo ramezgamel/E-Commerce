@@ -15,7 +15,7 @@ function SearchBox() {
   });
   return (
     <>
-      <form className="position-relative">
+      <form >
         <input
           type="text"
           name="q"

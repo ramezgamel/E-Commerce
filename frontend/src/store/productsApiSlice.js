@@ -3,28 +3,28 @@ import { apiSlice } from './apiSlice';
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProduct: builder.query({
-      query: (page) => ({
-        url: `/products?limit=10&page=${page}`,
+      query: ({ keyword, page = 1, sort, dec }) => ({
+        url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
+          keyword ? `&keyword=${keyword}` : ''
+        }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}`,
         method: 'GET',
       }),
-      providesTags: ['Products'],
-      keepUnusedDataFor: 5,
+      providesTags: ['Product'],
     }),
     getProductsFeatures: builder.mutation({
       query: ({ keyword, page, sort, dec }) => ({
         url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
           keyword ? `&keyword=${keyword}` : ''
-        }${sort && sort != 'default' ? `&sort=${dec}${sort}` : ''}`,
+        }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}`,
         method: 'GET',
       }),
-      keepUnusedDataFor: 5,
+      // providesTags: ['Product']
     }),
     getProductById: builder.query({
       query: (id) => ({
         url: `/products/${id}`,
         method: 'GET',
       }),
-      keepUnusedDataFor: 5,
     }),
     createProduct: builder.mutation({
       query: (data) => ({
@@ -32,25 +32,22 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      keepUnusedDataFor: 5,
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Product'],
     }),
     updateProduct: builder.mutation({
-      query: (product) => ({
-        url: `/products/${product._id}`,
+      query: (data) =>({
+        url: `/products/${data.get("_id")}`,
         method: 'PUT',
-        body: product,
+        body: data,
       }),
-      keepUnusedDataFor: 5,
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Product'],
     }),
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `/products/${id}`,
         method: 'DELETE',
       }),
-      keepUnusedDataFor: 5,
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Product'],
     }),
     addReview: builder.mutation({
       query: (data) => ({
@@ -58,14 +55,13 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: { ...data },
       }),
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Product'],
     }),
     getTopProducts: builder.query({
       query: () => ({
         url: '/products/top',
         method: 'GET',
       }),
-      keepUnusedDataFor: 5,
     }),
   }),
 });

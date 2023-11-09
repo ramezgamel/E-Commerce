@@ -2,7 +2,7 @@ import { apiSlice } from './apiSlice';
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+  register: builder.mutation({
       query: (data) => ({
         url: '/users/register',
         method: 'POST',
@@ -28,16 +28,25 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: { ...data },
       }),
-      invalidatesTags: ['Users'],
+      invalidatesTags: ['User'],
     }),
-    getUsers: builder.mutation({
-      query: ({ keyword, page, sort = '', dec = '+' }) => ({
-        url: `/users?limit=${import.meta.env.VITE_LIMIT}&page=${page}${
-          sort != 'default' ? `&sort=${dec}${sort}` : ''
-        }${keyword ? `&keyword=${keyword}:` : ''}`,
+    getNotification: builder.query({
+      query: () => ({
+        url: "/users/notifications",
         method: 'GET',
       }),
-      providesTags: ['Users'],
+      keepUnusedDataFor: 5,
+      providesTags:['Notification'],
+      invalidatesTags:['Order'],
+    }),
+    getUsers: builder.query({
+      query: ({ keyword, page = 1, sort = '', dec = '+' }) => ({
+        url: `/users?limit=${import.meta.env.VITE_LIMIT}&page=${page}${
+          sort != '' ? `&sort=${dec}${sort}` : ''
+        }${keyword ? `&keyword=${keyword}` : ''}`,
+        method: 'GET',
+      }),
+      providesTags: ['User'],
       keepUnusedDataFor: 5,
     }),
     deleteUser: builder.mutation({
@@ -45,8 +54,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `/users/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Users'],
+      invalidatesTags: ['User'],
     }),
+    forgetPassword: builder.mutation({
+      query: (email) => ({
+        url: `/users/forgetPassword`,
+        method: 'POST',
+        body:email
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `/users/resetPassword/${data.token}`,
+        method: 'POST',
+        body: {password: data.password, confirmPassword: data.confirmPassword}
+      }),
+    }),
+    markAsRead: builder.mutation({
+      query: (id)=>({
+        url: `/users/notifications/${id}`,
+        method: 'POST',
+      }),
+      invalidatesTags:['Notifications']
+    })
   }),
 });
 
@@ -55,6 +85,10 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useUpdateUserMutation,
-  useGetUsersMutation,
+  useGetUsersQuery,
   useDeleteUserMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useGetNotificationQuery,
+  useMarkAsReadMutation
 } = userApiSlice;

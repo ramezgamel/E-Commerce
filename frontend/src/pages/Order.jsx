@@ -8,24 +8,39 @@ import Loader from '../components/Loader';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import {sendNotification} from "../socket";
+import { useEffect, useState } from 'react';
 function Order() {
   const { id: orderId } = useParams();
   const {
-    data: order,
+    data,
     isLoading,
     isError,
     error,
     refetch,
   } = useGetOrderByIdQuery(orderId);
+  const [order, setOrder] = useState({})
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [{ isPending }] = usePayPalScriptReducer();
   const { userInfo } = useSelector((state) => state.auth);
   const [deliverOrder, { isLoading: loadingDeliver }] =
     useDeliverOrderMutation();
+  useEffect(()=> {
+    if(!isLoading && data){
+      setOrder(data)
+    }
+  },[data, isLoading]);
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async function (details) {
       try {
         await payOrder({ orderId, details }).unwrap();
+        const notification = {
+          userInfo: userInfo, 
+          type:"payment success",
+          date: Date.now(),
+          refId:orderId,
+        }
+        sendNotification(notification)
         refetch();
         toast.success('Order is paid');
       } catch (err) {
@@ -34,11 +49,13 @@ function Order() {
     });
   };
   const createOrder = (data, actions) => {
+    console.log('create order')
+    console.log(order?.totalPrice)
     return actions.order
       .create({
         purchase_units: [
           {
-            amount: { value: order.totalPrice },
+            amount: { value: order?.totalPrice },
           },
         ],
       })
@@ -52,6 +69,12 @@ function Order() {
   const deliverHandler = async () => {
     try {
       await deliverOrder(orderId);
+      sendNotification({
+      receiver: order.user._id, 
+      type:"Deliver",
+      date: Date.now(),
+      refId:orderId,
+    })
       toast.success('Order is delivered');
       refetch();
     } catch (err) {
@@ -61,34 +84,35 @@ function Order() {
   if (isLoading) return <Loader />;
   if (isError) return <div className="alert">{error.message}</div>;
   return (
+    // {order && }
     <div>
-      <h1 className="text-main">Order {order._id}</h1>
+      <h1 className="text-main">Order {order?._id}</h1>
       <div className="grid grid-cols-12">
         {/* // div className="grid grid-cols-12" */}
         <div className="col-span-8">
           <div className="mb-2 p-2 text-main shadow-md">
             <h2>Shipping</h2>
             <p>
-              <strong>Name: </strong> {order.user.name}
+              <strong>Name: </strong> {order?.user?.name}
             </p>
             <p>
               <strong>Email: </strong>
-              {order.user.email}
+              {order?.user?.email}
             </p>
             <p>
               <strong>Address: </strong>
-              {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
-              {order.shippingAddress.postalCode},{' '}
-              {order.shippingAddress.country}
+              {order?.shippingAddress?.address}, {order?.shippingAddress?.city}{' '}
+              {order?.shippingAddress?.postalCode},{' '}
+              {order?.shippingAddress?.country}
             </p>
-            {order.isDelivered ? (
-              <div className="success">Delivered on {order.deliveredAt}</div>
+            {order?.isDelivered ? (
+              <div className="success">Delivered on {order?.deliveredAt}</div>
             ) : (
               <>
                 <div role="alert" className="alert">
                   Not Delivered
                 </div>
-                {userInfo.role === 'admin' && order.isPaid && (
+                {userInfo.role === 'admin' && order?.isPaid && (
                   <button
                     disabled={loadingDeliver}
                     className="btn"
@@ -103,17 +127,17 @@ function Order() {
           <div className="mb-2 p-2 text-main shadow-md">
             <h2>Payment Method</h2>
             <p>
-              <strong>Method</strong> {order.paymentMethod}
+              <strong>Method</strong> {order?.paymentMethod}
             </p>
-            {order.isPaid ? (
-              <div className="success">Paid on {order.paidAt.slice(0, 10)}</div>
+            {order?.isPaid ? (
+              <div className="success">Paid on {order?.paidAt.slice(0, 10)}</div>
             ) : (
               <div className="alert">Not Paid</div>
             )}
           </div>
           <div className="mb-2 p-2 text-main shadow-md">
             <h2 className="text-main">Order Items</h2>
-            {order.orderItems.map((item) => (
+            {order?.orderItems?.map((item) => (
               <div className="grid-cols-12 gap-2 md:grid" key={item._id}>
                 <div className="col-span-2">
                   <img
@@ -137,22 +161,22 @@ function Order() {
             <h2>Order Summary</h2>
             <div className="flex justify-between">
               <strong>Items :</strong>
-              <p>{order.itemsPrice}</p>
+              <p>{order?.itemsPrice}</p>
             </div>
             <div className="flex justify-between">
               <strong>Shipping :</strong>
-              <p>{order.shippingPrice}</p>
+              <p>{order?.shippingPrice}</p>
             </div>
             <div className="flex justify-between">
               <strong>Tax :</strong>
-              <p>{order.taxPrice}</p>
+              <p>{order?.taxPrice}</p>
             </div>
             <div className="bd flex justify-between border-t">
               <strong className="my-auto py-2">Total :</strong>
-              <p className="my-auto py-2">{order.totalPrice}</p>
+              <p className="my-auto py-2">{order?.totalPrice}</p>
             </div>
             {/* mark as paid and deliverd  */}
-            {!order.isPaid && (
+            {!order?.isPaid && (
               <div>
                 {loadingPay && <Loader />}
                 {isPending ? (

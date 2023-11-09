@@ -11,8 +11,12 @@ router.post(
   controller.register
 );
 router.post("/login", controller.login);
-router.post("/logout", controller.logout);
+router.post("/logout", protect, controller.logout);
+router.post("/forgetPassword", controller.forgetPassword);
+router.post("/resetPassword/:resetToken", controller.resetPassword);
 // auth
+router.post("/notifications/:id", protect, controller.markAsRead);
+router.get("/notifications", protect, controller.myNotification);
 router.put(
   "/profile",
   upload.single("image"),

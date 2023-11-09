@@ -12,14 +12,14 @@ function Product({ product }) {
   };
   return (
     <div
-      className="h-[300px] w-full max-w-sm rounded-lg border 
+      className="h-[300px] max-w-sm rounded-lg border 
     border-gray-200 bg-slate-50 shadow transition-colors hover:bg-gray-400 dark:border-gray-700 dark:bg-gray-800  dark:transition-colors dark:hover:bg-gray-600"
     >
       <div className="h-[55%]">
         <Link to={`/product/${product?._id}`}>
           <img
             className="h-full rounded-t-lg"
-            src={import.meta.env.VITE_BASE_URL + product?.images[0]}
+          src={import.meta.env.VITE_BASE_URL + product?.images[0]}
           />
         </Link>
       </div>

@@ -5,8 +5,31 @@ class ApiFeatures {
   }
   sort() {
     if (this.queryParams.sort) {
-      const sortBy = this.queryParams.sort;
+      const sortBy = this.queryParams.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort("-createdAt");
+    }
+    return this;
+  }
+  fields() {
+    if (this.queryParams.fields) {
+      const fields = this.queryParams.fields.split(",").join(" ");
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select("-__v");
+    }
+    return this;
+  }
+
+  filter() {
+    const qParams = { ...this.queryParams };
+    const excludedFields = ["sort", "page", "limit", "fields", "keyword"];
+    excludedFields.forEach((q) => delete qParams[q]);
+    let queryStr = JSON.stringify(qParams);
+    queryStr = queryStr.replace(/\b{gt|gte|lt|lte}\b/g, (match) => `$${match}`);
+    if (queryStr != "") {
+      this.query = this.query.find(JSON.parse(queryStr));
     }
     return this;
   }
