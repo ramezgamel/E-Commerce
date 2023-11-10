@@ -4,10 +4,11 @@ import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import ProductCarousel from './ProductCarousel';
 import { useState } from 'react';
+import Tabs from '../components/Tabs';
 function Home() {
   const [page, setPage] = useState(1);
-  
-  const { data: products, isLoading, error } = useGetProductQuery(page);
+  const [category, setCategory] = useState('');
+  const { data: products, isLoading, error } = useGetProductQuery({page,category});
   if (isLoading) return <Loader />;
   if (error)
     return (
@@ -17,7 +18,10 @@ function Home() {
     );
   
   return (
-    <>
+    <> 
+      <div className='sticky top-16 z-50'>
+        <Tabs category={category} setCategory={setCategory}/>
+      </div>
       <ProductCarousel />
       <h1 className="text-main mb-4">Latest Products</h1>
       <div className=" grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -44,7 +48,6 @@ function Home() {
           </div>
         )}
       </div>
-      
     </>
   );
 }

@@ -3,12 +3,14 @@ import { apiSlice } from './apiSlice';
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProduct: builder.query({
-      query: ({ keyword, page = 1, sort, dec }) => ({
+      query: ({keyword, page, sort, dec, category }) => {
+        return ({
         url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
           keyword ? `&keyword=${keyword}` : ''
-        }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}`,
+        }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}${category && category!=''?`&category=${category}`:""}`,
         method: 'GET',
-      }),
+      })
+      },
       providesTags: ['Product'],
     }),
     getProductsFeatures: builder.mutation({

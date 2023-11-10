@@ -44,21 +44,21 @@ function Header() {
   },[userInfo]);
 
   useEffect(()=>{
-    if(!isLoading && data.notifications){
+    if(!isLoading && data?.notifications){
       setNotifications([...data.notifications].reverse());
     const unRead = data.notifications.filter(n => n.isRead == false);
     setUnreadNotification([...unRead]);
   }
   },[data,isLoading]);
-
   useEffect(()=>{
+    if(!userInfo) return 
     getNotification((res)=> {
       setNotifications([res,...data.notifications])
       setUnreadNotification([...unreadNotification, res]);
       refetch();
       toast.success(res.content)
     });
-  },[data?.notifications, refetch, unreadNotification]);
+  },[data?.notifications, userInfo,refetch, unreadNotification]);
 
   const logoutHandler = async () => {
     try {
@@ -169,11 +169,11 @@ function Header() {
                 >
                   <Menu.Items as="ul" className="absolute right-0 top-3 z-10 mt-2 w-60 origin-top-right rounded-md bg-gray-700 max-h-48 shadow-lg ring-1 ring-black ring-opacity-5 p-0 focus:outline-none overflow-y-auto">
                     {isLoading && <Loader/>}
-                    {notifications?.length > 0 && notifications.map((notification, index) => 
-                      <Link key={index} to={`${notification.refId != undefined ? `order/${notification.refId}`:"" }`}>
+                    {notifications?.length > 0 && notifications?.map((notification, index) => 
+                      <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}`:"" }`}>
                       <Menu.Item as="li"
-                        onClick={()=>markRead(notification._id)}
-                        className={`${notification.isRead ? "":"bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
+                        onClick={()=>markRead(notification?._id)}
+                        className={`${notification?.isRead ? "":"bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
                           {data?.sender && ( 
                             <div className="col-span-2">
                               <img 
@@ -182,10 +182,10 @@ function Header() {
                             />
                             </div>
                           )}
-                        <div className={data.sender?"col-span-6": "col-span-8"}>
-                          <p className="m-0 text-sm">{notification.content}</p>
+                        <div className={data?.sender?"col-span-6": "col-span-8"}>
+                          <p className="m-0 text-sm">{notification?.content}</p>
                           <p className="text-gray-400 m-0 text-xs text-right">
-                            {new Date(notification.date).toLocaleTimeString("en-EG")}
+                            {new Date(notification?.date).toLocaleTimeString("en-EG")}
                           </p>
                         </div>
                       </Menu.Item> 

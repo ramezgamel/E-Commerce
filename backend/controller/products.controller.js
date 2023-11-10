@@ -46,6 +46,25 @@ module.exports.getProducts = asyncHandler(async (req, res) => {
     result: products,
   });
 });
+// @desc    Get products by category
+// @route   GET /api/products/category
+// @access  All
+module.exports.getProducts = asyncHandler(async (req, res) => {
+  const countDocument = await Product.countDocuments();
+  const features = new ApiFeatures(Product.find(), req.query)
+    .sort()
+    .search()
+    .fields()
+    .filter()
+    .paginate(countDocument);
+  const products = await features.query;
+  res.status(200).json({
+    totalPages: features.totalPages,
+    page: features.page,
+    limit: features.limit,
+    result: products,
+  });
+});
 // @desc    Get top products
 // @route   GET /api/products/top
 // @access  All
