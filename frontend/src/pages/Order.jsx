@@ -81,7 +81,6 @@ function Order() {
   };
   if (isLoading) return <Loader />;
   if (isError) return <div className="alert">{error.data.message || "Something went wrong"}</div>;
-  console.log(order?.orderItems)
   return (
     // {order && }
     <div>

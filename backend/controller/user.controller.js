@@ -79,7 +79,6 @@ module.exports.myNotification = asyncHandler(async (req, res) => {
 module.exports.updateUser = asyncHandler(async (req, res) => {
   if ("role" in req.body) throw new ApiError("Can't update role", 403);
   const { password } = req.body;
-  console.log(password);
   const user = await User.findById(req.user._id);
   if (!user) throw new ApiError("Invalid user", 404);
   if (!password) throw new ApiError("Password is required", 404);
@@ -209,7 +208,6 @@ module.exports.publishNotification = asyncHandler(
       user.notifications = [...user.notifications, notification];
       await user.save();
     });
-    console.log(users);
     return users;
   }
 );

@@ -35,23 +35,21 @@ function Profile() {
     if (!isMatch) return toast.error("Passwords didn't match");
     try {
       let res;
-      const updateUser = {
+      const updatedUser = {
         _id: userInfo._id,
         name,
         email,
         password,
       };
-      console.log(updateUser)
-      Object.keys(updateUser).map(key=> console.log(key))
       if(image) {
-        updateUser.image = image;
+        updatedUser.image = image;
         const formData = new FormData();
-        Object.keys(updateUser).map(key => formData.append(key, updateUser[key]))
-        // res = await updateUser(formData).unwrap();
+        Object.keys(updatedUser).map(key => formData.append(key, updatedUser[key]))
+        res = await updateUser(formData).unwrap();
       }else {
-        // res = await updateUser(updatedUser).unwrap();
+        res = await updateUser(updatedUser).unwrap();
       }
-      // dispatch(setCredentials(res));
+      dispatch(setCredentials(res));
       toast.success('Profile updated successfully');
     } catch (err) {
       toast.error(err?.data?.message || err?.error);
