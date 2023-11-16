@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetCatsQuery } from '../store/catApiSlice';
+import { toast } from 'react-toastify';
 function ProductForm({ submit, btnName, product }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -34,6 +35,7 @@ function ProductForm({ submit, btnName, product }) {
       description,
       images,
     };
+    if(category == "") return toast.error("Should select category");
     if (product) {
       newPrd._id = product._id;
       submit(newPrd);
@@ -82,7 +84,8 @@ function ProductForm({ submit, btnName, product }) {
         <div className='w-[50%]'>
           <label>Category:</label>
           <select className='hover:cursor-pointer' name="category" onChange={(e)=>setCategory(e.target.value)}>
-            {data?.result?.map(cat => <option key={cat._id} value={`${cat._id}`} >{cat.name}</option> )}
+            <option value="">Select Category</option>
+            {data?.result?.map(cat => <option key={cat._id} value={cat._id} >{cat.name}</option> )}
           </select>
         </div>
       </div>
