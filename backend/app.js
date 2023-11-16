@@ -16,11 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [
-      "http://127.0.0.1:4173",
-      "http://127.0.0.1:5173",
-      "https://mhpshop-rlks.onrender.com",
-    ],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );

@@ -23,10 +23,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     updateUser: builder.mutation({
-      query: (data) => ({
+      query: (data) =>({
         url: '/users/profile',
         method: 'PUT',
-        body: { ...data },
+        body: data ,
       }),
       invalidatesTags: ['User'],
     }),

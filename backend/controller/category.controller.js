@@ -4,14 +4,21 @@ const ApiFeatures = require("../utils/apiFeatures");
 const ApiError = require("../utils/apiError");
 
 module.exports.getCategories = asyncHandler(async (req, res) => {
+  const countDocument = await Category.countDocuments();
   const features = new ApiFeatures(Category.find(), req.query)
     .fields()
     .filter()
     .search()
     .sort()
-    .paginate();
+    .paginate(countDocument);
   const categories = await features.query;
-  res.status(200).json({ status: "success", data: categories });
+  res.status(200).json({
+    status: "success",
+    totalPages: features.totalPages,
+    page: features.page,
+    limit: features.limit,
+    result: categories,
+  });
 });
 
 module.exports.createCategory = asyncHandler(async (req, res) => {

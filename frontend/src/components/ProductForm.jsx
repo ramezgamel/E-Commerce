@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGetCatsQuery } from '../store/catApiSlice';
 function ProductForm({ submit, btnName, product }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -9,6 +10,7 @@ function ProductForm({ submit, btnName, product }) {
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState('');
   const [description, setDescription] = useState('');
+  const {data} = useGetCatsQuery()
   const navigate = useNavigate();
   useEffect(() => {
     if (product) {
@@ -77,13 +79,11 @@ function ProductForm({ submit, btnName, product }) {
             onChange={(e) => setBrand(e.target.value)}
           />
         </div>
-        <div>
+        <div className='w-[50%]'>
           <label>Category:</label>
-          <input
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
+          <select className='hover:cursor-pointer' name="category" onChange={(e)=>setCategory(e.target.value)}>
+            {data?.result?.map(cat => <option key={cat._id} value={`${cat._id}`} >{cat.name}</option> )}
+          </select>
         </div>
       </div>
 

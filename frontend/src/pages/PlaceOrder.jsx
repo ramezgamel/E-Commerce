@@ -18,16 +18,18 @@ function PlaceOrder() {
       navigate("/payment");
     }
   }, [cart.shippingAddress.address, cart.paymentMethod, navigate]);
+  
   const placeOrderHandler = async () => {
     try {
       const res = await createOrder({
-        orderItems: cart.cartItems,
+        orderItems: cart.cartItems.map(item=> ({_id:item._id, qty:item.qty}))
+        ,
         paymentMethod: cart.paymentMethod,
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
         shippingAddress: cart.shippingAddress,
+        // itemsPrice: cart.itemsPrice,
+        // shippingPrice: cart.shippingPrice,
+        // taxPrice: cart.taxPrice,
+        // totalPrice: cart.totalPrice,
       }).unwrap();
 
       dispatch(clearCartItems());

@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
+import Loader from './Loader';
 
 function SearchBox() {
   const [keyword, setKeyword] = useState('');
-  const [searchProducts, { data }] = useGetProductsFeaturesMutation();
+  const [searchProducts, { data, isLoading }] = useGetProductsFeaturesMutation();
   const onSearch = (e) => {
     setKeyword(e.target.value);
     searchProducts({ keyword });
@@ -23,24 +24,18 @@ function SearchBox() {
           onChange={onSearch}
           className="mr-sm-2 ml-sm-5"
         ></input>
-        {data?.result.length > 0 && keyword != '' && (
-          <div
-            style={{
-              backgroundColor: 'rgba(0,0,0,.7)',
-              zIndex: 500,
-              overflow: 'scroll',
-              height: '400px',
-            }}
-            className="position-absolute w-100"
-          >
-            {data?.result.length > 0 &&
+        {keyword != '' && (
+          <div className='mt-2 overflow-auto'>
+            {isLoading? <div className='text-center my-auto'>
+              <Loader/>
+            </div> : data?.result.length > 0 &&
               data?.result?.map((item) => (
                 <Link
                   key={item._id}
                   to={`/product/${item._id}`}
                   onClick={() => setKeyword('')}
                 >
-                  <div className="grid grid-cols-12 p-2">
+                  <div className="grid grid-cols-12 p-2 gap-2 hover:cursor-pointer hover:bg-gray-500">
                     <div className="col-span-3">
                       <img
                         className="rounded-md"
@@ -49,7 +44,9 @@ function SearchBox() {
                       />
                     </div>
                     <div className="col-span-9">
-                      <p style={{ color: 'white' }}>{item.name.slice(0, 30)}</p>
+                      <p className='text-main mb-1'>{item.name}</p>
+                      <p className='text-main mb-1 text-sm'>{item.price}</p>
+                      <p className='text-main mb-1 text-sm'>{item.category}</p>
                     </div>
                   </div>
                 </Link>

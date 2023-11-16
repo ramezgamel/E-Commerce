@@ -77,13 +77,14 @@ module.exports.myNotification = asyncHandler(async (req, res) => {
 // @route   POST /api/users/profile
 // @access  user
 module.exports.updateUser = asyncHandler(async (req, res) => {
-  if (req.body.hasOwnProperty("role"))
-    throw new ApiError("Can't update role", 403);
+  if ("role" in req.body) throw new ApiError("Can't update role", 403);
+  const { password } = req.body;
+  console.log(password);
   const user = await User.findById(req.user._id);
   if (!user) throw new ApiError("Invalid user", 404);
-  const checkPass = await user.checkPass(req.body.password);
+  if (!password) throw new ApiError("Password is required", 404);
+  const checkPass = await user.checkPass(password);
   if (!checkPass) throw new ApiError("Incorrect password");
-
   Object.keys(req.body).forEach(function (key) {
     user[key] = req.body[key];
   });

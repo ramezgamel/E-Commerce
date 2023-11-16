@@ -49,8 +49,6 @@ function Order() {
     });
   };
   const createOrder = (data, actions) => {
-    console.log('create order')
-    console.log(order?.totalPrice)
     return actions.order
       .create({
         purchase_units: [
@@ -82,7 +80,8 @@ function Order() {
     }
   };
   if (isLoading) return <Loader />;
-  if (isError) return <div className="alert">{error.message}</div>;
+  if (isError) return <div className="alert">{error.data.message || "Something went wrong"}</div>;
+  console.log(order?.orderItems)
   return (
     // {order && }
     <div>
@@ -141,8 +140,8 @@ function Order() {
               <div className="grid-cols-12 gap-2 md:grid" key={item._id}>
                 <div className="col-span-2">
                   <img
-                    className="rounded-md"
-                    src={item.image}
+                    className="rounded-md max-w-full"
+                    src={import.meta.env.VITE_BASE_URL + item.images[0]}
                     alt={item.name}
                   />
                 </div>

@@ -8,20 +8,19 @@ import Tabs from '../components/Tabs';
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
-  const { data: products, isLoading, error } = useGetProductQuery({page,category});
-  if (isLoading) return <Loader />;
+  const { data: products, isLoading, error } = useGetProductQuery({page});
+  if (isLoading) return <div className='h-full my-auto text-center'>
+    <Loader/>
+  </div> ;
   if (error)
     return (
       <div role="alert" className="alert">
         Something went wrong
       </div>
     );
-  
   return (
     <> 
-      <div className='sticky top-16 z-50'>
-        <Tabs category={category} setCategory={setCategory}/>
-      </div>
+      <Tabs category={category} setCategory={setCategory}/>
       <ProductCarousel />
       <h1 className="text-main mb-4">Latest Products</h1>
       <div className=" grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

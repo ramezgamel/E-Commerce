@@ -32,6 +32,8 @@ import DashBoard from "./pages/admin/DashBoard.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import CreateNotification from "./pages/admin/CreateNotification.jsx";
+import CategoryList from "./pages/admin/CategoryList.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -125,6 +127,10 @@ const router = createBrowserRouter([
           {
             path: "notifications",
             element: <CreateNotification />,
+          },
+          {
+            path: "categories",
+            element: <CategoryList />,
           },
           {
             path: "product/:id/edit",

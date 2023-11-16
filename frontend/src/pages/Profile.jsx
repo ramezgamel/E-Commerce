@@ -12,6 +12,7 @@ function Profile() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [image, setImage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const [updateUser, { isLoading: loadingUser }] = useUpdateUserMutation();
@@ -33,14 +34,24 @@ function Profile() {
     const isMatch = password === confirmPassword;
     if (!isMatch) return toast.error("Passwords didn't match");
     try {
-      const updatedUser = {
+      let res;
+      const updateUser = {
         _id: userInfo._id,
         name,
         email,
         password,
       };
-      const res = await updateUser(updatedUser).unwrap();
-      dispatch(setCredentials(res));
+      console.log(updateUser)
+      Object.keys(updateUser).map(key=> console.log(key))
+      if(image) {
+        updateUser.image = image;
+        const formData = new FormData();
+        Object.keys(updateUser).map(key => formData.append(key, updateUser[key]))
+        // res = await updateUser(formData).unwrap();
+      }else {
+        // res = await updateUser(updatedUser).unwrap();
+      }
+      // dispatch(setCredentials(res));
       toast.success('Profile updated successfully');
     } catch (err) {
       toast.error(err?.data?.message || err?.error);
@@ -71,6 +82,13 @@ function Profile() {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <label>Profile Image: </label>
+            <input
+              type="file"
+              onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
           <div className="my-2">

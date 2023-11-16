@@ -26,7 +26,9 @@ function SideBar() {
                 } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
               }
             >
-              <MdOutlineSpaceDashboard />
+              <div className="col-span-2">
+                <MdOutlineSpaceDashboard />
+              </div>
               <div>Dashboard</div>
             </NavLink>
           </li>
@@ -41,8 +43,10 @@ function SideBar() {
                 } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
               }
             >
-              <AiOutlineUser />
-              <div>Users</div>
+              <div className="col-span-2">
+                <AiOutlineUser />
+              </div>
+              <div className="col-span-10">Users</div>
             </NavLink>
           </li>
           <li>
@@ -55,12 +59,13 @@ function SideBar() {
                     : ''
                 } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
               }
-            >
+            > 
+            <div className="col-span-2">
               <AiOutlineShoppingCart />
-              <div>Orders</div>
+            </div>
+              <div className="col-span-10">Orders</div>
             </NavLink>
           </li>
-          
           <li>
             <NavLink
               to="/admin/products"
@@ -72,8 +77,10 @@ function SideBar() {
                 } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
               }
             >
-              <AiOutlineShop />
-              <div>Products</div>
+              <div className="col-span-2">
+                <AiOutlineShop />
+              </div>
+              <div className="col-span-10">Products</div>
             </NavLink>
           </li>
           <li>
@@ -84,11 +91,30 @@ function SideBar() {
                   isActive
                     ? 'border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
                     : ''
+                } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300 grid-cols-12`
+              }
+            >
+              <div  className="col-span-2">
+                <AiFillBell/>
+              </div>
+              <div className="col-span-10">Notifications</div>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admin/categories"
+              className={({ isActive }) =>
+                `${
+                  isActive
+                    ? 'border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
+                    : ''
                 } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
               }
             >
-              <AiFillBell />
-              <div>Notifications</div>
+              <div className="col-span-2">
+                <AiFillBell />
+              </div>
+              <div className="col-span-10">Categories</div>
             </NavLink>
           </li>
         </ul>

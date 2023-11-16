@@ -22,7 +22,7 @@ function ProductDetails() {
   const {
     data: product,
     isLoading,
-    isError,
+    error,
     refetch,
   } = useGetProductByIdQuery(id);
   useEffect(() => {
@@ -48,8 +48,10 @@ function ProductDetails() {
       toast.error(err?.data?.message || err.error);
     }
   };
-  if (isLoading) return <Loader />;
-  if (isError) return <h1>Error: {isError.message}</h1>;
+  if (isLoading) return  <div className='h-full my-auto text-center'>
+    <Loader/>
+  </div>;
+  if (error) return <div className="alert">Error: {error.message || "Something went wrong"}</div>;
 
   return (
     <>

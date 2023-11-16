@@ -32,13 +32,13 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
 // @access  All
 module.exports.getProducts = asyncHandler(async (req, res) => {
   const countDocument = await Product.countDocuments();
-  const features = new ApiFeatures(Product.find(), req.query)
+  const features = new ApiFeatures(Product.find({}), req.query)
     .sort()
     .search()
     .fields()
     .filter()
     .paginate(countDocument);
-  const products = await features.query;
+  const products = await features.query.populate("category", "name");
   res.status(200).json({
     totalPages: features.totalPages,
     page: features.page,

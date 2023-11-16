@@ -3,28 +3,38 @@ const Order = require("../model/Order");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 const { io } = require("../app");
+const Product = require("../model/Product");
 // @desc    Create Order
 // @route   POST /api/orders
 // @access  user
 module.exports.createOrder = asyncHandler(async (req, res) => {
-  const {
-    orderItems,
-    shippingAddress,
-    paymentMethod,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-  } = req.body;
-  if (orderItems && orderItems.length === 0)
+  const { orderItems, shippingAddress, paymentMethod } = req.body;
+  if ((orderItems && orderItems.length === 0) || !orderItems)
     throw new ApiError("No order items", 400);
+  const itemsId = orderItems.map((item) => item._id);
+  const items = await Product.find({ _id: { $in: itemsId } });
+  // check on qty if not in stock
+  const itemsPrice = items
+    .reduce((acc, item) => {
+      const orderItem = orderItems.find((i) => i._id == item._id);
+      return acc + item.price * orderItem.qty;
+    }, 0)
+    .toFixed(2);
+  const shippingPrice = itemsPrice > 100 || itemsPrice == 0 ? 0 : 10;
+  const taxPrice = (0.15 * itemsPrice).toFixed(2);
+  const totalPrice = (+itemsPrice + +shippingPrice + +taxPrice).toFixed(2);
   const order = new Order({
     user: req.user._id,
-    orderItems: orderItems.map((item) => ({
-      ...item,
-      product: item._id,
-      _id: undefined,
-    })),
+    orderItems: items.map((item) => {
+      const itemOrder = orderItems.find((i) => i._id == item._id);
+      return {
+        qty: +itemOrder.qty,
+        _id: item._id,
+        name: item.name,
+        price: item.price,
+        images: item.images,
+      };
+    }),
     shippingAddress,
     paymentMethod,
     itemsPrice,
@@ -48,8 +58,8 @@ module.exports.getMyOrders = asyncHandler(async (req, res) => {
     .search()
     .paginate(countDocuments);
   const orders = await features.query;
-
   if (!orders) throw new ApiError("Don't have any orders yet", 404);
+
   res.status(200).json({
     totalPages: features.totalPages,
     page: features.page,
@@ -96,16 +106,13 @@ module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @access  admin
 module.exports.getOrders = asyncHandler(async (req, res) => {
   const countDocuments = await Order.countDocuments();
-  const features = new ApiFeatures(
-    Order.find({}).populate("user", "id name"),
-    req.query
-  )
+  const features = new ApiFeatures(Order.find({}), req.query)
     .sort()
     .search()
     .filter()
     .fields()
     .paginate(countDocuments);
-  const orders = await features.query;
+  const orders = await features.query.populate("user", "name");
   if (!orders) throw new ApiError("No orders to show", 404);
   res.status(200).send({
     totalPages: features.totalPages,

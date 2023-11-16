@@ -17,6 +17,7 @@ import {
 import { CiLogout } from 'react-icons/ci';
 import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { BsFillMoonFill, BsFillSunFill, BsFillTrashFill } from 'react-icons/bs';
+import Modal from "../components/Modal"
 import { removeItem } from '../store/cartSlice';
 import { useMarkAsReadMutation } from '../store/userApiSlice';
 import { getNotification, setUser, socket } from '../socket';
@@ -28,7 +29,7 @@ function Header() {
   const [unreadNotification, setUnreadNotification] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
-  
+  const [show, setShow] = useState(false)
   const [darkMode, setDarkMode] = useState(localStorage.getItem('theme'));
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -101,6 +102,10 @@ function Header() {
     }
   }
   return (
+    <>
+    <Modal show={show} header="Search" handleClose={()=>setShow(false)}>
+      <SearchBox />
+    </Modal>
     <header className="sticky top-0 z-50">
       <Disclosure as="nav" className="bd border-b bg-slate-50 dark:bg-gray-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -136,9 +141,11 @@ function Header() {
             <div 
               className="absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
             >
-              <AiOutlineSearch className='text-main w-5 h-5 sm:hidden'/>
+              <div onClick={()=>setShow(true)} >
+                <AiOutlineSearch className='text-main w-5 h-5 hover:cursor-pointer sm:hidden'/>
               <div className='hidden sm:block'>
                 <SearchBox />
+              </div>
               </div>
               
               <button onClick={toggleMode} >
@@ -394,6 +401,7 @@ function Header() {
         </div>
       </Disclosure>
     </header>
+    </>
   );
 }
 

@@ -13,7 +13,6 @@ exports.resizeUserPhoto = (req, res, next) => {
   next();
 };
 exports.resizeCatPhoto = (req, res, next) => {
-  console.log(req.file);
   if (!req.file) return next();
   req.file.filename = `category-${Math.round(
     Math.random() * 1e9
