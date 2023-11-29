@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -26,7 +26,7 @@ import AdminRoute from "./components/AdminRoute.jsx";
 import UserList from "./pages/admin/UserList.jsx";
 import ProductList from "./pages/admin/ProductList.jsx";
 import ProductEdit from "./pages/admin/ProductEdit.jsx";
-import { ToastContainer } from "react-toastify";
+
 import { HelmetProvider } from "react-helmet-async";
 import DashBoard from "./pages/admin/DashBoard.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -152,9 +152,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Provider store={store}>
         <PayPalScriptProvider
           options={{ clientId, currency: "USD", intent: "capture" }}
-          // deferLoading={true}
+          // deferLoading={true} 
         >
-        <ToastContainer />
+        
           <RouterProvider router={router} />
         </PayPalScriptProvider>
       </Provider>

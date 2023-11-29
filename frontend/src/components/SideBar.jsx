@@ -5,7 +5,7 @@ import {
   AiOutlineShop,
   AiFillBell
 } from 'react-icons/ai';
-import { MdOutlineSpaceDashboard } from 'react-icons/md';
+// import { MdOutlineSpaceDashboard } from 'react-icons/md';
 function SideBar() {
   return (
     <aside className="border-r pr-4 h-screen border-slate-900/10 bg-slate-50 dark:border-slate-50/[0.06] dark:bg-gray-800 rounded-lg">
@@ -15,7 +15,7 @@ function SideBar() {
         </Link>
         </div>
         <ul className="flex flex-col border-gray-200 px-1 text-center font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400">
-          <li>
+          {/* <li>
             <NavLink
               to="/admin/dashboard"
               className={({ isActive }) =>
@@ -31,7 +31,7 @@ function SideBar() {
               </div>
               <div>Dashboard</div>
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
               to="/admin/users"

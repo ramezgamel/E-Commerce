@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useGetCatsQuery } from "../store/catApiSlice";
 function Tabs({setCategory,category}) {
-  const {data} = useGetCatsQuery({page:1});
+  const {data} = useGetCatsQuery(1);
   return (
     <div className="text-sm font-medium text-center text-gray-500 border-b pt-1 border-gray-200 dark:text-gray-400 dark:border-gray-700 bg-slate-50 dark:bg-gray-800">
         <ul className="flex flex-wrap -mb-px">

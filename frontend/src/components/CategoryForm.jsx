@@ -7,12 +7,22 @@ function CategoryForm({setShow ,category}) {
   const [image, setImage] = useState('');
   const [createCat] = useCreateCatsMutation();
   const [updateCat] = useUpdateCatMutation();
+  const [previewSource, setPreviewSource] = useState('')
   useEffect(()=>{
     if(category){
       setName(category.name)
       setImage(category.image)
     }
   }, [category]);
+  const handleFileChange = (e)=>{
+    const file = e.target.files[0]
+    setImage(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPreviewSource(reader.result);
+    }
+  }
   const submitHandler = async (e)=>{
     e.preventDefault()
     const formData = new FormData();
@@ -42,8 +52,11 @@ function CategoryForm({setShow ,category}) {
       </div>
       <div className="mb-3">
         <label htmlFor="image">Image</label>
-        <input type="file" onChange={(e)=>setImage(e.target.files[0])}/>
+        <input type="file" onChange={handleFileChange}/>
       </div>
+      {previewSource && <div className="py-2">
+        <img src={previewSource} alt="" />
+      </div> }
       <div className="text-right">
         <button className="btn" type="submit">{category? "Update":"Create"}</button>
       </div>

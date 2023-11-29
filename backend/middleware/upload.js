@@ -1,28 +1,36 @@
 const multer = require("multer");
+const path = require("path");
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     switch (req.baseUrl) {
-//       case "/api/products":
-//         cb(null, "../uploads/products");
-//         break;
-
-//       default:
-//         cb(null, "../uploads");
-//     }
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, file.fieldname + "-" + uniqueSuffix + "-" + file.originalname);
-//   },
-// });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    switch (req.baseUrl.split("/api/")[1]) {
+      case "users":
+        cb(null, path.join(__dirname, "../../uploads/users"));
+        break;
+      case "products":
+        cb(null, path.join(__dirname, "../../uploads/products"));
+        break;
+      case "category":
+        s;
+        cb(null, path.join(__dirname, "../../uploads/categories"));
+        break;
+      default:
+        break;
+    }
+  },
+  filename: function (req, file, cb) {
+    file.filename = `user-${Math.round(
+      Math.random() * 1e9
+    )}-${Date.now()}.jpeg`;
+    cb(null, file.filename);
+  },
+});
 const fileFilter = function (req, file, cb) {
   const fileTypes = /png|jpeg|jpg/;
   const mimeType = fileTypes.test(file.mimetype);
   if (mimeType) return cb(null, true);
   cb("Images Only");
 };
-const storage = multer.memoryStorage();
 module.exports = multer({
   storage,
   fileFilter,

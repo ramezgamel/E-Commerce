@@ -3,7 +3,7 @@ import { apiSlice } from './apiSlice';
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProduct: builder.query({
-      query: ({keyword, page, sort, dec, category }) => ({
+      query: ({keyword, page=1, sort, dec, category }) => ({
         url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
           keyword ? `&keyword=${keyword}` : ''
         }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}${category && category!=''?`&category=${category}`:""}`,
@@ -13,7 +13,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       },
     ),
     getProductsFeatures: builder.mutation({
-      query: ({ keyword, page, sort, dec }) => ({
+      query: ({ keyword, page=1, sort, dec }) => ({
         url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
           keyword ? `&keyword=${keyword}` : ''
         }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}`,

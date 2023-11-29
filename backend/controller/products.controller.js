@@ -20,9 +20,7 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
     description,
   });
   if (req.files) {
-    req.files.map((image) =>
-      newProduct.images.push("products/" + image.filename)
-    );
+    newProduct.images = req.files.images;
   }
   const product = await newProduct.save();
   res.status(201).json(product);

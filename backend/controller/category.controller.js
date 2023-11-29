@@ -25,7 +25,7 @@ module.exports.createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const newCat = new Category({ name });
   if (req.file) {
-    newCat.image = "categories/" + req.file.filename;
+    newCat.image = req.file.url;
   }
   await newCat.save();
   res.status(200).json({ status: "success", data: newCat });
@@ -47,7 +47,7 @@ module.exports.updateCategory = asyncHandler(async (req, res) => {
   if (!category) throw new ApiError("No Category with this id", 404);
   category.name = name;
   if (req.file) {
-    category.image = req.file.filename;
+    category.image = req.file.url;
   }
   await category.save();
   res.status(200).json({ status: "success", data: category });

@@ -36,8 +36,8 @@ app.use("/api/category", categoryRoutes);
 //   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
 // });
 
-// IO trying
-const server = require("http").createServer(app);
-require("./socket")(server);
 app.use(globalError);
-module.exports = server;
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, { cors: { origin: "*" } });
+require("./socket")(io);
+module.exports = { server, io };

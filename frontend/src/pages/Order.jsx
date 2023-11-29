@@ -11,20 +11,20 @@ import { toast } from 'react-toastify';
 import {sendNotification} from "../socket";
 import { useEffect, useState } from 'react';
 function Order() {
-  const { id: orderId } = useParams();
+  const { id: orderId } = useParams();  
   const {
     data,
-    isLoading,
-    isError,
     error,
+    isLoading,
+    isError,  
     refetch,
-  } = useGetOrderByIdQuery(orderId);
+  } = useGetOrderByIdQuery(orderId);   
   const [order, setOrder] = useState({})
-  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [{ isPending }] = usePayPalScriptReducer();
   const { userInfo } = useSelector((state) => state.auth);
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [deliverOrder, { isLoading: loadingDeliver }] =
-    useDeliverOrderMutation();
+    useDeliverOrderMutation();  
   useEffect(()=> {
     if(!isLoading && data){
       setOrder(data)
@@ -53,14 +53,16 @@ function Order() {
       .create({
         purchase_units: [
           {
-            amount: { value: order?.totalPrice },
+            amount: { 
+              value: order.totalPrice 
+            }
           },
         ],
       })
       .then((orderId) => {
         return orderId;
-      });
-  };
+      })
+  };  
   const onError = (err) => {
     toast.error(err.message);
   };
@@ -78,12 +80,11 @@ function Order() {
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
-  };
-  if (isLoading) return <Loader />;
+  };    
+  if (isLoading) return <Loader />; 
   if (isError) return <div className="alert">{error.data.message || "Something went wrong"}</div>;
   return (
-    // {order && }
-    <div>
+    <div> 
       <h1 className="text-main">Order {order?._id}</h1>
       <div className="grid grid-cols-12">
         {/* // div className="grid grid-cols-12" */}
@@ -140,7 +141,7 @@ function Order() {
                 <div className="col-span-2">
                   <img
                     className="rounded-md max-w-full"
-                    src={import.meta.env.VITE_BASE_URL + item.images[0]}
+                    src={item.images[0]}
                     alt={item.name}
                   />
                 </div>

@@ -13,6 +13,7 @@ function Profile() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [image, setImage] = useState("");
+  const [imagePrev, setImagePrev] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const [updateUser, { isLoading: loadingUser }] = useUpdateUserMutation();
@@ -27,6 +28,7 @@ function Profile() {
     if (userInfo) {
       setName(userInfo.name);
       setEmail(userInfo.email);
+      setImage(userInfo.image);
     }
   }, [userInfo, userInfo.email, userInfo.name]);
   const submitHandler = async (e) => {
@@ -40,7 +42,7 @@ function Profile() {
         name,
         email,
         password,
-      };
+      };  
       if(image) {
         updatedUser.image = image;
         const formData = new FormData();
@@ -55,7 +57,18 @@ function Profile() {
       toast.error(err?.data?.message || err?.error);
     }
   };
-
+  const imageChangeHandler = (e) => {
+    const file = e.target.files[0];
+    setImage(file)
+    prevImageHandler(file)
+  }
+  const prevImageHandler = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImagePrev(reader.result);
+    };
+  }
   if (error)
     return (
       <div role="alert" className="alert">
@@ -86,7 +99,7 @@ function Profile() {
             <label>Profile Image: </label>
             <input
               type="file"
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={imageChangeHandler}
             />
           </div>
           <div className="my-2">
@@ -112,6 +125,9 @@ function Profile() {
         </form>
       </div>
       <div className="col-span-8">
+        <div className='flex justify-center'>
+          <img className='rounded-full w-36 h-36' src={imagePrev || image} />
+        </div>
         <h2 className="my-2 text-main">My Orders</h2>
         {loadingOrders && <Loader />}
         {error && (

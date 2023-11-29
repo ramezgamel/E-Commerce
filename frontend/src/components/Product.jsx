@@ -18,8 +18,8 @@ function Product({ product }) {
       <div className="h-[55%]">
         <Link to={`/product/${product?._id}`}>
           <img
-            className="h-full rounded-t-lg"
-          src={import.meta.env.VITE_BASE_URL + product?.images[0]}
+            className="h-full rounded-t-lg w-full "
+          src={product?.images[0]}  
           />
         </Link>
       </div>

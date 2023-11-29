@@ -63,11 +63,11 @@ function ProductDetails() {
               product?.images.map((image) => (
                 <div
                   key={image}
-                  className="bd cursor-pointer	 rounded-md border p-1 text-main hover:backdrop-opacity-20"
-                >
+                  className="bd cursor-pointer h-[20%] rounded-md border   text-main hover:opacity-30"
+                >     
                   <img
-                    className="mb-2 h-full"
-                    src={import.meta.env.VITE_BASE_URL + image}
+                    className="mb-2 h-full w-full"
+                    src={image}
                     alt={product?.name}
                     onClick={() => setMainImage(image)}
                   />
@@ -77,8 +77,8 @@ function ProductDetails() {
           <div className="w-[80%]">
             <img
               className="h-full"
-              src={import.meta.env.VITE_BASE_URL + mainImage}
-              alt={product?.name}
+              src={mainImage}
+              alt={product?.name} 
             />
           </div>
         </div>

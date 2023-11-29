@@ -16,7 +16,7 @@ const signIn = async (res, user) => {
   });
   res.json({
     name: user.name,
-    id: user._id,
+    _id: user._id,
     image: user.image,
     email: user.email,
     role: user.role,
@@ -33,7 +33,7 @@ module.exports.register = asyncHandler(async (req, res) => {
     email,
   });
   if (req.file) {
-    user.image = "users/" + req.file.filename;
+    user.image = req.file.url;
   }
   await user.save();
   const url = `${req.protocol}://${req.get("host")}/profile`;
@@ -70,7 +70,6 @@ module.exports.myNotification = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError("Invalid user", 404);
   res.status(200).json({
     notifications: user.notifications,
-    sender: { id: user._id, name: user.name, image: user.image },
   });
 });
 // @desc    Update My profile
@@ -88,7 +87,7 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
     user[key] = req.body[key];
   });
   if (req.file) {
-    user.image = "users/" + req.file.filename;
+    user.image = req.file.url;
   }
   await user.save();
   res.status(200).json(user);
@@ -177,7 +176,7 @@ module.exports.resetPassword = asyncHandler(async (req, res) => {
 module.exports.pushNotification = asyncHandler(
   async (notification, receiver) => {
     if (!receiver) {
-      const users = await User.find({ role: "admin" });
+      const users = await User.find({ role: "admin" }).select("-password");
       users.forEach(async (user) => {
         user.notifications = [...user.notifications, notification];
         await user.save();
@@ -191,15 +190,15 @@ module.exports.pushNotification = asyncHandler(
 );
 // @desc function to push notification to users
 module.exports.getUsersQuery = asyncHandler(async (query) => {
-  return await User.find(query);
+  return await User.find(query).select("-password");
 });
 module.exports.publishNotification = asyncHandler(
   async (notification, receiver) => {
     let users = [];
     if (receiver == "all") {
-      users = await User.find({});
+      users = await User.find({}).select("-password");
     } else if (receiver == "users") {
-      users = await User.find({ role: "user" });
+      users = await User.find({ role: "user" }).select("-password");
     } else {
       usersPromise = receiver.map((id) => User.findById(id));
       users = await Promise.all(usersPromise);

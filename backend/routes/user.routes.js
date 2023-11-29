@@ -2,12 +2,12 @@ const router = require("express").Router();
 const controller = require("../controller/user.controller");
 const { protect, restrictTo } = require("../middleware/auth.middelware");
 const upload = require("../middleware/upload");
-const { resizeUserPhoto } = require("../middleware/resize");
+const cloudinary = require("../middleware/cloudinary");
 
 router.post(
   "/register",
   upload.single("image"),
-  resizeUserPhoto,
+  cloudinary,
   controller.register
 );
 router.post("/login", controller.login);
@@ -20,7 +20,7 @@ router.get("/notifications", protect, controller.myNotification);
 router.put(
   "/profile",
   upload.single("image"),
-  resizeUserPhoto,
+  cloudinary,
   protect,
   controller.updateUser
 );

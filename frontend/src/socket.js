@@ -9,7 +9,7 @@ export const publishNotification = (data) => {
   socket.emit("publish_notification",data)
 }
 export const getNotification = (cb) => {
-  socket.on("get_notification", cb);
+  socket.on("get_notification", cb );
 }
 export const setUser = (userInfo) => {
   socket.emit("set_user", userInfo);

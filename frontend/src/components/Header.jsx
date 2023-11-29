@@ -23,14 +23,14 @@ import { useMarkAsReadMutation } from '../store/userApiSlice';
 import { getNotification, setUser, socket } from '../socket';
 import SideBar from './SideBar';
 import Loader from './Loader';
-function Header() {
+function Header({theme, setTheme}) {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadNotification, setUnreadNotification] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const [show, setShow] = useState(false)
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('theme'));
+  // const [darkMode, setDarkMode] = useState(localStorage.getItem('theme'));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutCall] = useLogoutMutation();
@@ -52,14 +52,16 @@ function Header() {
   }
   },[data,isLoading]);
   useEffect(()=>{
-    if(!userInfo) return 
+    if(!isLoading){
     getNotification((res)=> {
       setNotifications([res,...data.notifications])
       setUnreadNotification([...unreadNotification, res]);
       refetch();
       toast.success(res.content)
-    });
-  },[data?.notifications, userInfo,refetch, unreadNotification]);
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[data?.notifications, isLoading]);
 
   const logoutHandler = async () => {
     try {
@@ -72,21 +74,13 @@ function Header() {
     }
   };
   // dark mode effect
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme == 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
   const toggleMode = () => {
-    if (darkMode == 'dark') {
+    if (theme == 'dark') {
       localStorage.setItem('theme', 'light');
-      setDarkMode('light');
+      setTheme('light');
     } else {
       localStorage.setItem('theme', 'dark');
-      setDarkMode('dark');
+      setTheme('dark');
     }
   };
   const handleDelete = (id) => {
@@ -149,7 +143,7 @@ function Header() {
               </div>
               
               <button onClick={toggleMode} >
-                {darkMode == 'dark' ? (
+                {theme == 'dark' ? (
                   <BsFillSunFill className="h-5 w-5 text-main" />
                 ) : (
                   <BsFillMoonFill className="h-5 w-5 text-main" />
@@ -174,7 +168,7 @@ function Header() {
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Menu.Items as="ul" className="absolute right-0 top-3 z-10 mt-2 w-60 origin-top-right rounded-md bg-gray-700 max-h-48 shadow-lg ring-1 ring-black ring-opacity-5 p-0 focus:outline-none overflow-y-auto">
+                  <Menu.Items as="ul" className="absolute right-0 top-3 z-10 mt-2 w-60 origin-top-right rounded-md p-1 bg-slate-50 dark:bg-gray-700 max-h-48 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto">
                     {isLoading && <Loader/>}
                     {notifications?.length > 0 && notifications?.map((notification, index) => 
                       <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}`:"" }`}>
@@ -273,7 +267,7 @@ function Header() {
                                           >
                                             <div className="col-span-4 overflow-hidden rounded-md border border-gray-200">
                                               <img
-                                                src={import.meta.env.VITE_BASE_URL+ item.images[0]}
+                                                src={item.images[0]}
                                                 alt={item.name}
                                                 className="h-full w-full object-cover object-center"
                                               />
@@ -346,7 +340,7 @@ function Header() {
                 <Menu.Button className="inline-flex w-full justify-center rounded-md bg-opacity-20  text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                   <img
                     className="h-8 w-8 rounded-full"
-                    src={import.meta.env.VITE_BASE_URL + `${userInfo?.image}`}
+                    src={ userInfo?.image}
                     alt=""
                   />
                 </Menu.Button>

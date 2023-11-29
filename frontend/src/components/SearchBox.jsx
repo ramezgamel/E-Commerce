@@ -1,16 +1,18 @@
 // import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
 
 function SearchBox() {
   const [keyword, setKeyword] = useState('');
-  const [searchProducts, { data, isLoading }] = useGetProductsFeaturesMutation();
+  const [searchProducts, { data, isLoading, isFetching }] = useGetProductsFeaturesMutation();
   const onSearch = (e) => {
     setKeyword(e.target.value);
-    searchProducts({ keyword });
   };
+  useEffect(()=>{
+    searchProducts({ keyword });
+  },[keyword, searchProducts])
   document.addEventListener('click', () => {
     setKeyword('');
   });
@@ -24,11 +26,11 @@ function SearchBox() {
           onChange={onSearch}
           className="mr-sm-2 ml-sm-5"
         ></input>
-        {keyword != '' && (
-          <div className='mt-2 overflow-auto'>
-            {isLoading? <div className='text-center my-auto'>
-              <Loader/>
-            </div> : data?.result.length > 0 &&
+      </form>
+      {keyword != '' && (
+          <div className='mt-2 '>
+            {isLoading || isFetching?
+              <Loader/>: data?.result.length > 0 &&
               data?.result?.map((item) => (
                 <Link
                   key={item._id}
@@ -53,7 +55,6 @@ function SearchBox() {
               ))}
           </div>
         )}
-      </form>
     </>
   );
 }

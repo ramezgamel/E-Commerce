@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [image, setImage] = useState({});
+  const [previewSource, setPreviewSource] = useState('')
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,6 +20,16 @@ function Login() {
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const redirect = searchParams.get('redirect') || '/';
+
+  const handleFileChange = (e)=>{
+    const file = e.target.files[0]
+    setImage(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPreviewSource(reader.result);
+    };
+  }
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -64,10 +75,14 @@ function Login() {
         </div>
         <div className="my-3">
           <label>Profile Image</label>
+          {previewSource && <div className='my-1 flex justify-center'>
+            <img className='rounded-full w-36 h-36' src={previewSource} />
+          </div> }
           <input
             type="file"
-            onChange={(e) => setImage(e.target.files[0]) }
+            onChange={handleFileChange}
           />
+          
         </div>
         <div className="my-3">
           <label>password</label>

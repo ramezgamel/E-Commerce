@@ -153,7 +153,7 @@ function AdminHeader() {
               <div>
                 <img
                   className="h-8 w-8 rounded-full focus:ring-1 focus:ring-white"
-                  src={import.meta.env.VITE_BASE_URL + userInfo?.image}
+                  src={userInfo?.image}
                 />
               </div>
               Ramez

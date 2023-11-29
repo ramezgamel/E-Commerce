@@ -26,10 +26,6 @@ function PlaceOrder() {
         ,
         paymentMethod: cart.paymentMethod,
         shippingAddress: cart.shippingAddress,
-        // itemsPrice: cart.itemsPrice,
-        // shippingPrice: cart.shippingPrice,
-        // taxPrice: cart.taxPrice,
-        // totalPrice: cart.totalPrice,
       }).unwrap();
 
       dispatch(clearCartItems());

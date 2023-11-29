@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const cloudinary = require("../middleware/cloudinary");
 const {
   createCategory,
   getCategories,
@@ -7,7 +8,6 @@ const {
   deleteCategory,
 } = require("../controller/category.controller");
 const upload = require("../middleware/upload");
-const { resizeCatPhoto } = require("../middleware/resize");
 const { protect, restrictTo } = require("../middleware/auth.middelware");
 
 router.post(
@@ -15,7 +15,7 @@ router.post(
   protect,
   restrictTo(["admin"]),
   upload.single("image"),
-  resizeCatPhoto,
+  cloudinary,
   createCategory
 );
 router.get("/", getCategories);
@@ -26,7 +26,7 @@ router
     protect,
     restrictTo(["admin"]),
     upload.single("image"),
-    resizeCatPhoto,
+    cloudinary,
     updateCategory
   )
   .delete(protect, restrictTo(["admin"]), deleteCategory);

@@ -1,13 +1,10 @@
 const {
   pushNotification,
-  publishNotification,
   getUsersQuery,
 } = require("./controller/user.controller");
 
-module.exports = (server) => {
-  const io = require("socket.io")(server, { cors: { origin: "*" } });
-
-  io.on("connection", (socket) => {
+module.exports = (io) => {
+  return io.on("connection", (socket) => {
     console.log("User connected " + socket.id);
 
     socket.on("set_user", (data) => {
@@ -16,7 +13,7 @@ module.exports = (server) => {
         socket.join("admins_room");
       } else {
         socket.join("users_room");
-        socket.join(data.id);
+        socket.join(data._id);
       }
     });
 
@@ -34,8 +31,8 @@ module.exports = (server) => {
         io.to("admins_room").emit("get_notification", notification);
       } else {
         notification.content = `Your order on deliver`;
-        const receiver = await getUsersQuery({ role: "admin" });
-        pushNotification(notification, data.receiver);
+        const receiver = await getUsersQuery({ _id: data.receiver });
+        pushNotification(notification, receiver);
         io.to(data.receiver).emit("get_notification", notification);
       }
     });
@@ -57,7 +54,7 @@ module.exports = (server) => {
       users.forEach(async (user) => {
         user.notifications = [...user.notifications, notification];
         io.to(user._id.toString()).emit("get_notification", user);
-        // await user.save();
+        await user.save();
       });
     });
 

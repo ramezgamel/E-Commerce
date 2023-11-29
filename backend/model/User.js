@@ -32,7 +32,8 @@ const userSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "users/default.jpeg",
+      default:  
+        "https://res.cloudinary.com/devvwsjbl/image/upload/v1700494906/default_oipfid.webp",
     },
     role: {
       type: String,

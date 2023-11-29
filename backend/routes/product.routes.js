@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const cloudinary = require("../middleware/cloudinary");
 const controller = require("../controller/products.controller");
 const { protect, restrictTo } = require("../middleware/auth.middelware");
 const upload = require("../middleware/upload");
@@ -13,7 +13,7 @@ router.post(
   protect,
   restrictTo(["admin"]),
   upload.array("images", 5),
-  resizePhotos,
+  cloudinary,
   controller.createProduct
 );
 router.delete("/:id", protect, restrictTo(["admin"]), controller.deleteProduct);
@@ -22,7 +22,7 @@ router.put(
   protect,
   restrictTo(["admin"]),
   upload.array("images", 5),
-  resizePhotos,
+  cloudinary,
   controller.updateProduct
 );
 

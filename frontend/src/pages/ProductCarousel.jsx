@@ -31,7 +31,7 @@ function ProductCarousel() {
             className={`${i != view ?"hidden":""} duration-700 ease-in-out`}
           >
             <img
-              src={import.meta.env.VITE_BASE_URL + prd.images[0]}
+              src={prd.images[0]}
               className="absolute left-1/2 top-1/2 block w-full -translate-x-1/2 -translate-y-1/2 text-main"
               alt={prd.name}
             />

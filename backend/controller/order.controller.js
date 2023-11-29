@@ -96,10 +96,7 @@ module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
   order.isDelivered = true;
   order.deliveredAt = Date.now();
   const updatedOrder = await order.save();
-  io.on("connection", (socket) => {
-    socket.emit("notification", "message");
-  });
-  res.status(200).send(updatedOrder);
+  res.status(200).json(updatedOrder);
 });
 // @desc    Get all orders
 // @route   GET /api/orders
@@ -128,5 +125,5 @@ module.exports.getOrderById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const order = await Order.findById(id).populate("user", "name email");
   if (!order) throw new ApiError("Order not found", 400);
-  res.send(order);
+  res.status(200).send(order);
 });
