@@ -13,7 +13,6 @@ module.exports = asyncHandler(async (req, res, next) => {
   if (req.files) {
     req.files = req.files.map((file) => cloudinary.uploader.upload(file.path));
     const results = await Promise.all(req.files);
-    console.log(results);
     if (!results) throw new ApiError("Error uploading images", 401);
     req.files.images = results.map((res) => res.secure_url);
   } else {

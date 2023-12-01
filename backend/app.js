@@ -32,9 +32,9 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/chart", chartRoutes);
 app.use("/api/category", categoryRoutes);
 
-// app.all("*", (req, res, next) => {
-//   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
-// });
+app.all("*", (req, res, next) => {
+  next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
+});
 
 app.use(globalError);
 const server = require("http").createServer(app);

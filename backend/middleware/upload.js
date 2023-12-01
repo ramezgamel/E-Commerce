@@ -5,21 +5,21 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     switch (req.baseUrl.split("/api/")[1]) {
       case "users":
-        cb(null, path.join(__dirname, "../../uploads/users"));
+        cb(null, path.join(__dirname, "../uploads/users"));
         break;
       case "products":
-        cb(null, path.join(__dirname, "../../uploads/products"));
+        cb(null, path.join(__dirname, "../uploads/products"));
         break;
       case "category":
         s;
-        cb(null, path.join(__dirname, "../../uploads/categories"));
+        cb(null, path.join(__dirname, "../uploads/categories"));
         break;
       default:
         break;
     }
   },
   filename: function (req, file, cb) {
-    file.filename = `user-${Math.round(
+    file.filename = `${req.baseUrl.split("/api/")[1]}-${Math.round(
       Math.random() * 1e9
     )}-${Date.now()}.jpeg`;
     cb(null, file.filename);

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
@@ -377,7 +378,7 @@ function Header({theme, setTheme}) {
                       {userInfo && userInfo.role == 'admin' && (
                         <Menu.Item>
                           <Link
-                            to="/admin/dashboard"
+                            to="/admin/users"
                             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             <MdOutlineSpaceDashboard className="h-5 w-5" />
