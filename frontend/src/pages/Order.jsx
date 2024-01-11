@@ -49,6 +49,7 @@ function Order() {
     });
   };
   const createOrder = (data, actions) => {
+    console.log(actions.order)
     return actions.order
       .create({
         purchase_units: [

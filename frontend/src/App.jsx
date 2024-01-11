@@ -1,11 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import './index.css';
-import { useEffect, useState } from 'react';
-import Header from "./components/Header";
+import { Suspense, useEffect, useState } from 'react';
+import  Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
+import Loader from './components/Loader';
 function App() {
-  const [theme, setTheme] = useState(localStorage.getItem('theme'));
-  useEffect(() => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme'));  
+  useEffect(() => { 
     // window.matchMedia("(prefers-color-scheme: dark)").matches
     if (theme == 'dark') {
       document.documentElement.classList.add('dark');
@@ -28,8 +29,12 @@ function App() {
           pauseOnHover
           theme={theme}
         />
-    <Header theme={theme} setTheme={setTheme}/>
-    <Outlet/>
+    <div className='fixed w-100 z-50 top-0'>
+      <Header theme={theme} setTheme={setTheme}/>
+    </div>
+    <Suspense fallback={<Loader/>}>
+      <Outlet/>
+    </Suspense>
   </> ;
 }
 

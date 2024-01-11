@@ -18,7 +18,7 @@ function ProductForm({ submit, btnName, product }) {
       setName(product?.name);
       setPrice(product?.price);
       setBrand(product?.brand);
-      setCategory(product?.category);
+      setCategory(product?.category._id);
       setCountInStock(product?.countInStock);
       setDescription(product?.description);
       setImages(product?.images);
@@ -85,7 +85,7 @@ function ProductForm({ submit, btnName, product }) {
           <label>Category:</label>
           <select className='hover:cursor-pointer' name="category" onChange={(e)=>setCategory(e.target.value)}>
             <option value="">Select Category</option>
-            {data?.result?.map(cat => <option key={cat._id} value={cat._id} >{cat.name}</option> )}
+            {data?.result?.map(cat => <option selected={cat._id == category} key={cat._id} value={cat._id} >{cat.name}</option> )}
           </select>
         </div>
       </div>
@@ -97,6 +97,7 @@ function ProductForm({ submit, btnName, product }) {
           multiple
           onChange={(e) => setImages(e.target.files)}
         />
+        {images && <progress id="progressBar" value="0" max="100" className='w-full px-2 py-1'></progress>}
       </div>
       <div>
         <label>Description:</label>

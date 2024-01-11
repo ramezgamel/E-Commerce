@@ -21,8 +21,8 @@ function CategoryForm({setShow ,category}) {
     reader.readAsDataURL(file);
     reader.onload = () => {
       setPreviewSource(reader.result);
-    }
-  }
+    };
+  } 
   const submitHandler = async (e)=>{
     e.preventDefault()
     const formData = new FormData();

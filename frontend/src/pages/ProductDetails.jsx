@@ -66,7 +66,7 @@ function ProductDetails() {
                   className="bd cursor-pointer h-[20%] rounded-md border   text-main hover:opacity-30"
                 >     
                   <img
-                    className="mb-2 h-full w-full"
+                    className="mb-2 h-full w-full "
                     src={image}
                     alt={product?.name}
                     onClick={() => setMainImage(image)}
@@ -76,7 +76,7 @@ function ProductDetails() {
           </div>
           <div className="w-[80%]">
             <img
-              className="h-full"
+              className="h-full text-main"
               src={mainImage}
               alt={product?.name} 
             />

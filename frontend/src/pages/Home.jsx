@@ -8,7 +8,7 @@ import Tabs from '../components/Tabs';
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
-  const { data: products, isLoading, error } = useGetProductQuery({page});
+  const { data: products, isLoading, error } = useGetProductQuery({page, category});
   if (isLoading) return <div className='h-full my-auto text-center'>
     <Loader/>
   </div> ;

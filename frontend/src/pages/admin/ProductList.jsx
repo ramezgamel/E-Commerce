@@ -183,7 +183,7 @@ function ProductList() {
                       <td className="p-2">{product._id}</td>
                       <td className="p-2">{product.name}</td>
                       <td className="p-2">{product.price}</td>
-                      <td className="p-2">{product.category}</td>
+                      <td className="p-2">{product.category.name}</td>
                       <td className="p-2">{product.brand}</td>
                       <td className="flex justify-center gap-1 py-2 pr-2">
                         <button

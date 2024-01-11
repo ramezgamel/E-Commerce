@@ -11,7 +11,6 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, "../uploads/products"));
         break;
       case "category":
-        s;
         cb(null, path.join(__dirname, "../uploads/categories"));
         break;
       default:

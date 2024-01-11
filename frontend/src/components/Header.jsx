@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+// import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,19 +25,20 @@ import { useMarkAsReadMutation } from '../store/userApiSlice';
 import { getNotification, setUser, socket } from '../socket';
 import SideBar from './SideBar';
 import Loader from './Loader';
-function Header({theme, setTheme}) {
+
+
+const Header = ({theme, setTheme}) => {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadNotification, setUnreadNotification] = useState([]);
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const [show, setShow] = useState(false)
-  // const [darkMode, setDarkMode] = useState(localStorage.getItem('theme'));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutCall] = useLogoutMutation();
   const {data, isLoading, refetch} = useGetNotificationQuery();
-  const [markAsRead] = useMarkAsReadMutation()
+  const [markAsRead] = useMarkAsReadMutation();
   useEffect(()=> {
     if(userInfo){
       socket.on("connect", ()=> 
@@ -95,7 +97,7 @@ function Header({theme, setTheme}) {
     }catch(err){
       toast.error(err.message| "Something went wrong")
     }
-  }
+  };
   return (
     <>
     <Modal show={show} header="Search" handleClose={()=>setShow(false)}>
@@ -400,4 +402,4 @@ function Header({theme, setTheme}) {
   );
 }
 
-export default Header;
+export default Header

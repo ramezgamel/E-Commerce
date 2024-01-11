@@ -28,11 +28,12 @@ function ProductCarousel() {
         {products.map((prd, i) => (
           <div
             key={prd._id}
-            className={`${i != view ?"hidden":""} duration-700 ease-in-out`}
+            className={`${i != view ?"hidden":""} duration-700 flex justify-center ease-in-out`}
           >
             <img
               src={prd.images[0]}
-              className="absolute left-1/2 top-1/2 block w-full -translate-x-1/2 -translate-y-1/2 text-main"
+              // className="absolute left-1/2 top-1/2 block w-fit -translate-x-1/2 -translate-y-1/2 text-main"
+              className="object-fill text-main"
               alt={prd.name}
             />
           </div>

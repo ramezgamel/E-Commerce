@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+
 const notificationSchema = new mongoose.Schema({
   senderId: {
     type: mongoose.SchemaTypes.ObjectId,
@@ -32,7 +33,7 @@ const userSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default:  
+      default:
         "https://res.cloudinary.com/devvwsjbl/image/upload/v1700494906/default_oipfid.webp",
     },
     role: {

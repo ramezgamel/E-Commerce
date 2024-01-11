@@ -8,10 +8,9 @@ const crypto = require("crypto");
 const signIn = async (res, user) => {
   const token = await user.generateToken();
   res.cookie("token", token, {
-    maxAge: 30 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
-    // secure: process.env.NODE_ENV !== "development",
     secure: true,
   });
   res.json({

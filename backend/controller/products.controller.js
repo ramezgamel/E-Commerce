@@ -8,7 +8,6 @@ const ApiFeatures = require("../utils/apiFeatures");
 // @access  admin
 module.exports.createProduct = asyncHandler(async (req, res) => {
   const { name, category, brand, price, countInStock, description } = req.body;
-
   const { _id } = req.user;
   const newProduct = new Product({
     user: _id,
@@ -55,7 +54,7 @@ module.exports.getProducts = asyncHandler(async (req, res) => {
     .fields()
     .filter()
     .paginate(countDocument);
-  const products = await features.query;
+  const products = await features.query.populate("category", "name");
   res.status(200).json({
     totalPages: features.totalPages,
     page: features.page,
@@ -105,10 +104,7 @@ module.exports.updateProduct = asyncHandler(async (req, res) => {
     product[key] = req.body[key];
   });
   if (req.files) {
-    product.images = [];
-    req.files.map((image) => {
-      product.images.push("products/" + image.filename);
-    });
+    product.images = req.files.images;
   }
   await product.save({ new: true });
   res.status(200).json(product);
