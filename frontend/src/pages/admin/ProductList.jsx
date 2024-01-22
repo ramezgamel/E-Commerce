@@ -40,17 +40,6 @@ function ProductList() {
   };
   const handleCreate = async (newPrd) => {
     try {
-      // const formData = new FormData();
-      // Object.keys(newPrd).map((key) => {
-      //   if (key == 'images') {
-      //     for (let i = 0; i < newPrd.images.length; i++) {
-      //       formData.append('images', newPrd.images[i]);
-      //     }
-      //   } else {
-      //     formData.append(key, newPrd[key]);
-      //   }
-      // });
-      // await createProduct(formData).unwrap();
       await createProduct(newPrd).unwrap();
       toast.success('Product created successfully');
     } catch (err) {
@@ -59,18 +48,7 @@ function ProductList() {
   };
   const editProduct = async (updatedPrd) => {
     try {
-      const formData = new FormData();
-      Object.keys(updatedPrd).map((key) => {
-        if (key == 'images') {
-          for (let i = 0; i < updatedPrd.images.length; i++) {
-            formData.append('images', updatedPrd.images[i]);
-          }
-        } else {
-          formData.append(key, updatedPrd[key]);
-        }
-      });
-      
-      await updateProduct(formData).unwrap();
+      await updateProduct(updatedPrd).unwrap();
       toast.success('Product updated');
     } catch (err) {
       toast.error(err?.message || 'Something went wrong..!');
