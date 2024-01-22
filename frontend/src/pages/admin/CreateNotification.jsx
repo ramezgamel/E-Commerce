@@ -25,7 +25,6 @@ function CreateNotification() {
         <label htmlFor="to">To</label>
         <select name="to" id="to" value={to} onChange={(e) => setTo(e.target.value)}>
           <option value="all">All</option>
-          <option value="users">Users</option>
           <option value="specific">Send by email</option>
         </select>
         {to === 'specific' && (<>

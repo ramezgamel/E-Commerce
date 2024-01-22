@@ -8,7 +8,7 @@ import {
   useDeliverOrderMutation,
   useGetOrdersQuery,
 } from '../../store/orderApiSlice';
-import { sendNotification } from '../../socket';
+import { deliverOrder } from '../../socket';
 
 function OrderList() {
   const [page, setPage] = useState(1);
@@ -20,7 +20,7 @@ function OrderList() {
   const [makeDelivered] = useDeliverOrderMutation();
   const markAsDelivered = async (id, userId) => {
     await makeDelivered(id);
-    sendNotification({
+    deliverOrder({
       receiver: userId, 
       type:"Deliver",
       date: Date.now(),

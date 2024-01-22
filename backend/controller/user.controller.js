@@ -25,15 +25,14 @@ const signIn = async (res, user) => {
 // @route   POST /api/users/register
 // @access  all
 module.exports.register = asyncHandler(async (req, res) => {
-  const { name, password, email } = req.body;
+  const { name, password, email, image } = req.body;
+  console.log(image);
   const user = new User({
     name,
     password,
     email,
+    image,
   });
-  if (req.file) {
-    user.image = req.file.url;
-  }
   await user.save();
   const url = `${req.protocol}://${req.get("host")}/profile`;
   await new Email(user, url).sendWelcome();
@@ -85,9 +84,6 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
   Object.keys(req.body).forEach(function (key) {
     user[key] = req.body[key];
   });
-  if (req.file) {
-    user.image = req.file.url;
-  }
   await user.save();
   res.status(200).json(user);
 });
@@ -187,10 +183,31 @@ module.exports.pushNotification = asyncHandler(
     }
   }
 );
-// @desc function to push notification to users
-module.exports.getUsersQuery = asyncHandler(async (query) => {
-  return await User.find(query).select("-password");
+module.exports.pushToAdmins = asyncHandler(async (notification) => {
+  const users = await User.find({ role: "admin" });
+  users.forEach(async (user) => {
+    addNotification(user, notification);
+  });
 });
+module.exports.pushToUser = asyncHandler(async (userId, notification) => {
+  const user = await User.findById(userId);
+  addNotification(user, notification);
+});
+module.exports.pushToSomeUsers = asyncHandler(async (usersId, notification) => {
+  const users = await User.find({ _id: { $in: usersId } });
+  users.forEach(async (user) => {
+    addNotification(user, notification);
+  });
+});
+module.exports.pushToAllUsers = asyncHandler(async (notification) => {
+  const users = await User.find({ role: "user" });
+  users.forEach(async (user) => {
+    user.notifications = [...user.notifications, notification];
+    await user.save();
+  });
+  return users;
+});
+
 module.exports.publishNotification = asyncHandler(
   async (notification, receiver) => {
     let users = [];
@@ -217,3 +234,8 @@ module.exports.markAsRead = asyncHandler(async (req, res) => {
   await user.save();
   res.status(200).json({ status: "success", data: user.notifications });
 });
+
+async function addNotification(user, notification) {
+  user.notifications = [...user.notifications, notification];
+  await user.save();
+}

@@ -1,38 +1,39 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetCatsQuery } from '../store/catApiSlice';
 import { toast } from 'react-toastify';
+import Progress from './Progress';
+import useUpload from '../hooks/useUpload';
 function ProductForm({ submit, btnName, product }) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [images, setImages] = useState([]);
-  const [brand, setBrand] = useState('');
-  const [category, setCategory] = useState('');
-  const [countInStock, setCountInStock] = useState('');
-  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState();
+  const nameInput = useRef();
+  const priceInput = useRef();
+  const countInStockInput = useRef();
+  const descriptionInput = useRef();
+  const brandInput = useRef();
+  const {images, error:uploadErr, preview, progress, isUploaded, uploadData} = useUpload();
   const {data} = useGetCatsQuery()
   const navigate = useNavigate();
   useEffect(() => {
     if (product) {
-      setName(product?.name);
-      setPrice(product?.price);
-      setBrand(product?.brand);
+      nameInput.current.value = product.name
+      priceInput.current.value = product.price
+      brandInput.current.value = product.brand
+      countInStockInput.current.value = product.countInStock
+      descriptionInput.current.value = product.description
       setCategory(product?.category._id);
-      setCountInStock(product?.countInStock);
-      setDescription(product?.description);
-      setImages(product?.images);
     }
   }, [product]);
   const submitHandler = (e) => {
     e.preventDefault();
     let newPrd = {
-      name,
-      price,
-      brand,
+      name: nameInput.current.value,
+      price: priceInput.current.value,
+      brand:brandInput.current.value,
       category,
-      countInStock,
-      description,
+      countInStock:countInStockInput.current.value,
+      description:descriptionInput.current.value,
       images,
     };
     if(category == "") return toast.error("Should select category");
@@ -44,14 +45,14 @@ function ProductForm({ submit, btnName, product }) {
     }
     navigate('/admin/products');
   };
+
   return (
     <form onSubmit={submitHandler}>
       <div>
         <label className="text-main">Name:</label>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          ref={nameInput}
         />
       </div>
       <div className="mt-2 flex items-center justify-between gap-2">
@@ -59,16 +60,14 @@ function ProductForm({ submit, btnName, product }) {
           <label className="text-main">Price:</label>
           <input
             type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            ref={priceInput}
           />
         </div>
         <div>
           <label>CountInStock:</label>
           <input
             type="number"
-            value={countInStock}
-            onChange={(e) => setCountInStock(e.target.value)}
+            ref={countInStockInput}
           />
         </div>
       </div>
@@ -77,8 +76,7 @@ function ProductForm({ submit, btnName, product }) {
           <label>Brand:</label>
           <input
             type="text"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
+            ref={brandInput}
           />
         </div>
         <div className='w-[50%]'>
@@ -89,22 +87,26 @@ function ProductForm({ submit, btnName, product }) {
           </select>
         </div>
       </div>
-
       <div>
         <label>Images:</label>
+        {uploadErr ? <div className="error">{uploadErr.message}</div>: preview &&
+            <div  className='my-2 grid grid-cols-5 gap-2 '>
+            {preview.map(i=> <img key={i} className='h-20 w-full rounded-lg' src={i} />)}
+            </div>
+        }
+        {(progress && !isUploaded) && <Progress progress={progress}/> }
         <input
           type="file"
           multiple
-          onChange={(e) => setImages(e.target.files)}
+          onChange={(e)=> uploadData(e.target.files)}
         />
-        {images && <progress id="progressBar" value="0" max="100" className='w-full px-2 py-1'></progress>}
+        
       </div>
       <div>
         <label>Description:</label>
         <textarea
           type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          ref={descriptionInput}
         />
       </div>
       <div className="mt-2 text-right">

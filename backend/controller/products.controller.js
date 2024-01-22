@@ -7,7 +7,8 @@ const ApiFeatures = require("../utils/apiFeatures");
 // @route   POST /api/products/
 // @access  admin
 module.exports.createProduct = asyncHandler(async (req, res) => {
-  const { name, category, brand, price, countInStock, description } = req.body;
+  const { name, category, brand, price, countInStock, description, images } =
+    req.body;
   const { _id } = req.user;
   const newProduct = new Product({
     user: _id,
@@ -17,10 +18,8 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
     price,
     countInStock,
     description,
+    images,
   });
-  if (req.files) {
-    newProduct.images = req.files.images;
-  }
   const product = await newProduct.save();
   res.status(201).json(product);
 });
@@ -103,9 +102,6 @@ module.exports.updateProduct = asyncHandler(async (req, res) => {
     if (unAvailable.includes(key)) throw new ApiError("Forbidden field", 403);
     product[key] = req.body[key];
   });
-  if (req.files) {
-    product.images = req.files.images;
-  }
   await product.save({ new: true });
   res.status(200).json(product);
 });

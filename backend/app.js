@@ -31,6 +31,10 @@ app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/chart", chartRoutes);
 app.use("/api/category", categoryRoutes);
+const cloudinary = require("./middleware/cloudinary");
+const upload = require("./middleware/upload");
+app.post("/api/uploadSingle", upload.single("image"), cloudinary);
+app.post("/api/uploadMulti", upload.array("images", 5), cloudinary);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));

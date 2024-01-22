@@ -8,7 +8,7 @@ import Loader from '../components/Loader';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import {sendNotification} from "../socket";
+import {paymentSuccess} from "../socket";
 import { useEffect, useState } from 'react';
 function Order() {
   const { id: orderId } = useParams();  
@@ -40,7 +40,7 @@ function Order() {
           date: Date.now(),
           refId:orderId,
         }
-        sendNotification(notification)
+        paymentSuccess(notification)
         refetch();
         toast.success('Order is paid');
       } catch (err) {
@@ -70,7 +70,7 @@ function Order() {
   const deliverHandler = async () => {
     try {
       await deliverOrder(orderId);
-      sendNotification({
+      deliverOrder({
       receiver: order.user._id, 
       type:"Deliver",
       date: Date.now(),

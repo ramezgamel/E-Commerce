@@ -5,6 +5,7 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from './ProductCarousel';
 import { useState } from 'react';
 import Tabs from '../components/Tabs';
+import Features from "../components/Features"
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
@@ -21,32 +22,41 @@ function Home() {
   return (
     <> 
       <Tabs category={category} setCategory={setCategory}/>
-      <ProductCarousel />
-      <h1 className="text-main mb-4">Latest Products</h1>
-      <div className=" grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {products?.result.length > 0 ? (
-          products?.result?.map((product) => (
-            <div key={product._id}>
-              <Product product={product} />
-            </div>
-          ))
-        ) : (
-          <div role="alert" className="alert">
-            No Data to Show
+      <div className='grid mt-7 grid-cols-12'>
+        <aside className='hidden md:block md:col-span-2 shadow-md'>
+          <Features />
+        </aside>
+        <main className='p-3 col-span-10'>
+          <ProductCarousel />
+          <h1 className="text-main mb-4">Latest Products</h1>
+          <div className=" grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {products?.result.length > 0 ? (
+              products?.result?.map((product) => (
+                <div key={product._id}>
+                  <Product product={product} />
+                </div>
+              ))
+            ) : (
+              <div role="alert" className="alert">
+                No Data to Show
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div className="text-center">
-        {products?.pages > 0 && (
-          <div className="d-flex justify-content-center mt-4">
-            <Paginate
-              pages={products?.totalPages}
-              pageNum={products?.page}
-              setPage={setPage}
-            />
+          <div className="text-center">
+            {products?.pages > 0 && (
+              <div className="d-flex justify-content-center mt-4">
+                <Paginate
+                  pages={products?.totalPages}
+                  pageNum={products?.page}
+                  setPage={setPage}
+                />
+              </div>
+            )}
           </div>
-        )}
+        </main>
       </div>
+      
+      
     </>
   );
 }

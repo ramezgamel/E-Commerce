@@ -1,7 +1,7 @@
 
-function Features() {
+function  Features() {
   return (
-    <form className="flex flex-col ml-2 mt-2 sticky top-16">
+    <form className="flex flex-col ml-2 sticky top-16 ">
       <div className="mb-2">
         <h2 className="text-main text-lg">Sort</h2>
         <div className="flex gap-2 ml-2">

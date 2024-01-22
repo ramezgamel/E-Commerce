@@ -22,11 +22,8 @@ module.exports.getCategories = asyncHandler(async (req, res) => {
 });
 
 module.exports.createCategory = asyncHandler(async (req, res) => {
-  const { name } = req.body;
-  const newCat = new Category({ name });
-  if (req.file) {
-    newCat.image = req.file.url;
-  }
+  const { name, image } = req.body;
+  const newCat = new Category({ name, image });
   await newCat.save();
   res.status(200).json({ status: "success", data: newCat });
 });
@@ -41,14 +38,12 @@ module.exports.getCategory = asyncHandler(async (req, res) => {
 
 module.exports.updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, image } = req.body;
   if (!id) throw new ApiError("ID not provide", 404);
   const category = await Category.findById(id);
   if (!category) throw new ApiError("No Category with this id", 404);
-  category.name = name;
-  if (req.file) {
-    category.image = req.file.url;
-  }
+  category.name = name | category.name;
+  category.image = image | category.image;
   await category.save();
   res.status(200).json({ status: "success", data: category });
 });

@@ -1,40 +1,53 @@
 const {
   pushNotification,
   getUsersQuery,
+  pushToAdmins,
+  pushToUser,
+  pushToSomeUsers,
+  pushToAllUsers,
 } = require("./controller/user.controller");
 
+function emitToSomeUsers(users, notification, io) {
+  users.forEach((user) => {
+    io.to(user._id.toString()).emit("get_notification", notification);
+  });
+}
+function setRooms(socket) {
+  if (socket.user.role == "admin") {
+    socket.join("admins_room");
+  } else {
+    socket.join("users_room");
+    socket.join(socket.user._id);
+  }
+}
 module.exports = (io) => {
   return io.on("connection", (socket) => {
-    console.log("User connected " + socket.id);
-
     socket.on("set_user", (data) => {
       socket.user = data;
-      if (data.role == "admin") {
-        socket.join("admins_room");
-      } else {
-        socket.join("users_room");
-        socket.join(data._id);
-      }
+      setRooms(socket);
     });
 
-    socket.on("send_notification", async (data) => {
+    socket.on("payment_success", (data) => {
       let notification = {
         date: data.date,
         refId: data.refId,
+        senderId: socket?.user?.id,
+        content: `${socket?.user?.name} has been paid for his order successfully`,
       };
-      if (data.type == "payment success") {
-        notification.senderId = socket?.user?.id;
-        notification.content = `${socket?.user?.name} has been paid for his order successfully`;
-        const receiver = await getUsersQuery({ role: "admin" });
-        pushNotification(notification, receiver);
-        notification.userInfo = socket.user;
-        io.to("admins_room").emit("get_notification", notification);
-      } else {
-        notification.content = `Your order on deliver`;
-        const receiver = await getUsersQuery({ _id: data.receiver });
-        pushNotification(notification, receiver);
-        io.to(data.receiver).emit("get_notification", notification);
-      }
+      pushToAdmins(notification);
+      notification.userInfo = socket.user;
+      io.to("admins_room").emit("get_notification", notification);
+    });
+
+    socket.on("deliver_order", () => {
+      let notification = {
+        date: data.date,
+        refId: data.refId,
+        senderId: socket?.user?.id,
+        content: `Your order on deliver`,
+      };
+      pushToUser(data.receiver, notification);
+      io.to(data.receiver).emit("get_notification", notification);
     });
 
     socket.on("publish_notification", async (data) => {
@@ -43,19 +56,13 @@ module.exports = (io) => {
         senderId: socket?.user?.id,
         content: data.content,
       };
-      let users = [];
+      let users;
       if (data.to == "all") {
-        users = await getUsersQuery({});
-      } else if (data.to == "users") {
-        users = await getUsersQuery({ role: "user" });
+        users = await pushToAllUsers(notification);
       } else {
-        users = await getUsersQuery({ _id: { $in: data.selectedUsers } });
+        users = await pushToSomeUsers(selectedUsers, notification);
       }
-      users.forEach(async (user) => {
-        user.notifications = [...user.notifications, notification];
-        io.to(user._id.toString()).emit("get_notification", user);
-        await user.save();
-      });
+      emitToSomeUsers(users, notification, io);
     });
 
     socket.on("disconnect", () =>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { useEffect, useRef, useState } from 'react';
+import { FaTimes, FaCamera  } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useUpdateUserMutation } from '../store/userApiSlice';
@@ -8,17 +8,21 @@ import { useGetMyOrdersQuery } from '../store/orderApiSlice';
 import Loader from '../components/Loader';
 import { LinkContainer } from 'react-router-bootstrap';
 import Paginate from '../components/Paginate';
+import useUpload from '../hooks/useUpload';
+import Progress from '../components/Progress';
+
+
 function Profile() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [image, setImage] = useState("");
-  const [imagePrev, setImagePrev] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const nameInput = useRef();
+  const emailInput = useRef();
+  const passwordInput = useRef();
+  const confirmPasswordInput = useRef();
+  const [image, setImage] = useState()
   const dispatch = useDispatch();
   const [updateUser, { isLoading: loadingUser }] = useUpdateUserMutation();
   const { userInfo } = useSelector((state) => state.auth);
   const [page, setPage] = useState(1);
+  const {images, error:uploadErr, preview, progress, isUploaded, uploadData} = useUpload()
   const {
     data: orders,
     isLoading: loadingOrders,
@@ -26,49 +30,32 @@ function Profile() {
   } = useGetMyOrdersQuery(page);
   useEffect(() => {
     if (userInfo) {
-      setName(userInfo.name);
-      setEmail(userInfo.email);
-      setImage(userInfo.image);
+      nameInput.current.value = userInfo.name
+      emailInput.current.value = userInfo.email
+      setImage(userInfo.image)
     }
   }, [userInfo, userInfo.email, userInfo.name]);
   const submitHandler = async (e) => {
     e.preventDefault();
-    const isMatch = password === confirmPassword;
+    const isMatch = passwordInput.current.value === confirmPasswordInput.current.value;
     if (!isMatch) return toast.error("Passwords didn't match");
     try {
       let res;
       const updatedUser = {
         _id: userInfo._id,
-        name,
-        email,
-        password,
+        name: nameInput.current.value,
+        email:emailInput.current.value,
+        password:passwordInput.current.value,
       };  
-      if(image) {
-        updatedUser.image = image;
-        const formData = new FormData();
-        Object.keys(updatedUser).map(key => formData.append(key, updatedUser[key]))
-        res = await updateUser(formData).unwrap();
-      }else {
-        res = await updateUser(updatedUser).unwrap();
-      }
+      if(images) updatedUser.image = images;
+      res = await updateUser(updatedUser).unwrap();
       dispatch(setCredentials(res));
       toast.success('Profile updated successfully');
     } catch (err) {
       toast.error(err?.data?.message || err?.error);
     }
   };
-  const imageChangeHandler = (e) => {
-    const file = e.target.files[0];
-    setImage(file)
-    prevImageHandler(file)
-  }
-  const prevImageHandler = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setImagePrev(reader.result);
-    };
-  }
+  if(uploadErr) toast.error(uploadErr.message)
   if (error)
     return (
       <div role="alert" className="alert">
@@ -79,43 +66,32 @@ function Profile() {
     <div className="grid-cols-12 gap-2 md:grid">
       <div className="col-span-4">
         <form onSubmit={submitHandler}>
-          <div className="my-2">
-            <label>Name:</label>
+          <div className="my-2">    
+            <label>Name:</label>  
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              ref={nameInput}
             />
           </div>
           <div className="my-2">
             <label>Email: </label>
             <input
               type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="my-2">
-            <label>Profile Image: </label>
-            <input
-              type="file"
-              onChange={imageChangeHandler}
+              ref={emailInput}
             />
           </div>
           <div className="my-2">
             <label>Password</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              ref={passwordInput}
             />
           </div>
           <div className="my-2">
             <label>Confirm Password</label>
             <input
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              ref={confirmPasswordInput}
             />
           </div>
           <button className="btn" type="submit">
@@ -126,8 +102,13 @@ function Profile() {
       </div>
       <div className="col-span-8">
         <div className='flex justify-center'>
-          <img className='rounded-full w-36 h-36' src={imagePrev || image} />
+          <img className='rounded-full w-36 h-36' src={preview ? preview[0]:image} />
+          <label className='relative'>
+            <FaCamera  className='absolute  bottom-0 w-7 h-7 text-main border rounded-full p-1 cursor-pointer hover:text-violet-800 hover:bg-main'/>
+            <input type="file" hidden onChange={(e)=> uploadData(e.target.files)}/>
+          </label>
         </div>
+          {progress & !isUploaded  && <Progress progress={progress}/> }
         <h2 className="my-2 text-main">My Orders</h2>
         {loadingOrders && <Loader />}
         {error && (

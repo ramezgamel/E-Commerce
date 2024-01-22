@@ -34,11 +34,15 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
       default:
-        "https://res.cloudinary.com/devvwsjbl/image/upload/v1700494906/default_oipfid.webp",
+        "https://res.cloudinary.com/dfv2vlj7u/image/upload/f_auto,q_auto/k7ayyu7n0orspymdwoe4",
     },
     role: {
       type: String,
-      default: "user",
+      enum: {
+        values: ["admin", "user"],
+        message: "{VALUE} is not supported",
+        default: "user",
+      },
     },
     notifications: [notificationSchema],
     passwordResetToken: String,

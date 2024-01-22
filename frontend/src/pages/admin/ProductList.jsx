@@ -40,17 +40,18 @@ function ProductList() {
   };
   const handleCreate = async (newPrd) => {
     try {
-      const formData = new FormData();
-      Object.keys(newPrd).map((key) => {
-        if (key == 'images') {
-          for (let i = 0; i < newPrd.images.length; i++) {
-            formData.append('images', newPrd.images[i]);
-          }
-        } else {
-          formData.append(key, newPrd[key]);
-        }
-      });
-      await createProduct(formData).unwrap();
+      // const formData = new FormData();
+      // Object.keys(newPrd).map((key) => {
+      //   if (key == 'images') {
+      //     for (let i = 0; i < newPrd.images.length; i++) {
+      //       formData.append('images', newPrd.images[i]);
+      //     }
+      //   } else {
+      //     formData.append(key, newPrd[key]);
+      //   }
+      // });
+      // await createProduct(formData).unwrap();
+      await createProduct(newPrd).unwrap();
       toast.success('Product created successfully');
     } catch (err) {
       toast.error(err?.data?.message || err?.error);

@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
-const fs = require("fs");
 
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
@@ -10,8 +9,8 @@ cloudinary.config({
   secure: true,
 });
 
-module.exports = asyncHandler(async (req, res, next) => {
-  if (!req.file || !req.files) next();
+module.exports = asyncHandler(async (req, res) => {
+  if (!req.file && !req.files) return;
   if (req.files) {
     req.files = req.files.map(async (file) =>
       cloudinary.uploader.upload(file.path)
@@ -20,9 +19,11 @@ module.exports = asyncHandler(async (req, res, next) => {
 
     if (!results) throw new ApiError("Error uploading images", 401);
     req.files.images = results.map((res) => res.secure_url);
+    res.status(200).json({ success: true, data: req.files.images });
   } else {
     const result = await cloudinary.uploader.upload(req.file.path);
     req.file.url = result.secure_url;
+    console.log(req.file.url);
+    res.status(200).json({ success: true, data: req.file.url });
   }
-  next();
 });

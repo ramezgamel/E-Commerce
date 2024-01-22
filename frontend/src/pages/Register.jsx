@@ -1,67 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import FormContainer from '../components/FormContainer';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import { toast } from 'react-toastify';
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [image, setImage] = useState({});
-  const [previewSource, setPreviewSource] = useState('')
+// import axios from 'axios';
+import Progress from '../components/Progress';
+import useUpload from '../hooks/useUpload';
 
+
+function Login() {
+  const emailInput = useRef();
+  const passwordInput = useRef();
+  const nameInput = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
   const [register, { isLoading }] = useRegisterMutation();
-
+  const {images, error, preview, progress, isUploaded, uploadData} = useUpload()
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
   const redirect = searchParams.get('redirect') || '/';
-
-  const handleFileChange = (e)=>{
-    const file = e.target.files[0]
-    setImage(file);
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setPreviewSource(reader.result);
-    };
-  }
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append("email", email)
-      formData.append("password", password)
-      formData.append("name", name);
-      formData.append("image", image);
-
-      const res = await register(formData).unwrap();
+      const data ={
+        email:emailInput.current.value, 
+        password: passwordInput.current.value,
+        name: nameInput.current.value,
+        image:images
+      }
+      const res = await register(data).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
-
   useEffect(() => {
     if (userInfo) navigate(redirect);
   }, [userInfo, navigate, redirect]);
-
   return (
     <FormContainer>
-      <h1 className="text-main">Sign Up</h1>
+      <h1 className="text-main mt-16">Sign Up</h1>
       <form onSubmit={submitHandler}>
         <div className="my-3">
           <label>Name</label>
           <input
             type="name"
             placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            ref={nameInput}
           />
         </div>
         <div className="my-3">
@@ -69,18 +58,21 @@ function Login() {
           <input
             type="email"
             placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailInput}
           />
         </div>
         <div className="my-3">
           <label>Profile Image</label>
-          {previewSource && <div className='my-1 flex justify-center'>
-            <img className='rounded-full w-36 h-36' src={previewSource} />
-          </div> }
+          {error ? <div className="alert">{error.message}</div> : 
+            preview  && 
+              <div className='my-2 flex justify-center'>
+                <img className='rounded-full w-36 h-36' src={preview[0]} />
+              </div>
+          }
+          {progress & images & !isUploaded && <Progress progress={progress}/> }
           <input
             type="file"
-            onChange={handleFileChange}
+            onChange={(e)=>uploadData(e.target.files)}
           />
           
         </div>
@@ -89,11 +81,10 @@ function Login() {
           <input
             type="password"
             placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordInput}
           />
         </div>
-        <button type="submit" className="btn my-3 " disabled={isLoading}>
+        <button type="submit" className="btn my-3 " disabled={isLoading | progress != 100}>
           Sign Up
         </button>
       </form>
