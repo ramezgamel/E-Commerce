@@ -4,7 +4,6 @@ import {
   useGetProductByIdQuery,
   useUpdateProductMutation,
 } from "../../store/productsApiSlice";
-import { Alert } from "bootstrap";
 import ProductForm from "../../components/ProductForm";
 import { toast } from "react-toastify";
 function ProductEdit() {
@@ -37,7 +36,7 @@ function ProductEdit() {
       <h1>Edit Product</h1>
       {isLoading && <Loader />}
       {updateLoading && <Loader />}
-      {error && <Alert variant="danger">{error.message}</Alert>}
+      {error && <div className="alert">{error.message}</div>}
       <ProductForm
         submit={updateHandler}
         product={product}

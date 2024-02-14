@@ -6,10 +6,10 @@ import { useUpdateUserMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import { useGetMyOrdersQuery } from '../store/orderApiSlice';
 import Loader from '../components/Loader';
-import { LinkContainer } from 'react-router-bootstrap';
 import Paginate from '../components/Paginate';
 import useUpload from '../hooks/useUpload';
 import Progress from '../components/Progress';
+import { Link } from 'react-router-dom';
 
 
 function Profile() {
@@ -55,7 +55,7 @@ function Profile() {
       toast.error(err?.data?.message || err?.error);
     }
   };
-  if(uploadErr) toast.error(uploadErr.message)
+  if(uploadErr) toast.error(uploadErr.message);
   if (error)
     return (
       <div role="alert" className="alert">
@@ -108,7 +108,7 @@ function Profile() {
             <input type="file" hidden onChange={(e)=> uploadData(e.target.files)}/>
           </label>
         </div>
-          {progress & !isUploaded  && <Progress progress={progress}/> }
+          {(Boolean(progress) && !isUploaded) && <Progress progress={progress}/> }
         <h2 className="my-2 text-main">My Orders</h2>
         {loadingOrders && <Loader />}
         {error && (
@@ -166,9 +166,9 @@ function Profile() {
                       )}
                     </td>
                     <td className="p-2">
-                      <LinkContainer to={`/order/${order._id}`}>
+                      <Link to={`/order/${order._id}`}>
                         <button className="btn">Details</button>
-                      </LinkContainer>
+                      </Link>
                     </td>
                   </tr>
                 ))}

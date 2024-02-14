@@ -90,7 +90,7 @@ function UserList() {
                     <td className="p-2">{user.name}</td>
                     <td className="p-2">{user.email}</td>
                     <td className="p-2">{user.role}</td>
-                    <td className="flex items-center justify-center gap-1">
+                    <td className="flex items-center justify-center p-2 gap-1">
                       <button className="rounded-md bg-green-500 px-2 py-1 text-white hover:bg-green-400">
                         <FaEdit />
                       </button>

@@ -34,12 +34,13 @@ module.exports = (io) => {
         senderId: socket?.user?.id,
         content: `${socket?.user?.name} has been paid for his order successfully`,
       };
-      pushToAdmins(notification);
+      // pushToAdmins(notification);
       notification.userInfo = socket.user;
       io.to("admins_room").emit("get_notification", notification);
     });
 
-    socket.on("deliver_order", () => {
+    socket.on("deliver_order", (data) => {
+      console.log(data.receiver);
       let notification = {
         date: data.date,
         refId: data.refId,
@@ -64,9 +65,5 @@ module.exports = (io) => {
       }
       emitToSomeUsers(users, notification, io);
     });
-
-    socket.on("disconnect", () =>
-      console.log("User disconnected " + socket.id)
-    );
   });
 };

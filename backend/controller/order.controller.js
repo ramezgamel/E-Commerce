@@ -96,7 +96,7 @@ module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
   order.isDelivered = true;
   order.deliveredAt = Date.now();
   const updatedOrder = await order.save();
-  res.status(200).json(updatedOrder);
+  res.status(200).json({ updatedOrder: "sa" });
 });
 // @desc    Get all orders
 // @route   GET /api/orders

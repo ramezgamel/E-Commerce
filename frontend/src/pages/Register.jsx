@@ -1,27 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import FormContainer from '../components/FormContainer';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import { toast } from 'react-toastify';
 // import axios from 'axios';
 import Progress from '../components/Progress';
 import useUpload from '../hooks/useUpload';
+import useLoggedIn from '../hooks/useLoggedIn';
 
 
-function Login() {
+function Register() {
   const emailInput = useRef();
   const passwordInput = useRef();
   const nameInput = useRef();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.auth);
+  useLoggedIn()
   const [register, { isLoading }] = useRegisterMutation();
   const {images, error, preview, progress, isUploaded, uploadData} = useUpload()
-  const { search } = useLocation();
-  const searchParams = new URLSearchParams(search);
-  const redirect = searchParams.get('redirect') || '/';
+  
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -33,17 +31,13 @@ function Login() {
       }
       const res = await register(data).unwrap();
       dispatch(setCredentials({ ...res }));
-      navigate(redirect);
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
-  useEffect(() => {
-    if (userInfo) navigate(redirect);
-  }, [userInfo, navigate, redirect]);
   return (
     <FormContainer>
-      <h1 className="text-main mt-16">Sign Up</h1>
+      <h1 className="text-main text-center font-bold text-3xl mt-16">Sign Up</h1>
       <form onSubmit={submitHandler}>
         <div className="my-3">
           <label>Name</label>
@@ -69,7 +63,7 @@ function Login() {
                 <img className='rounded-full w-36 h-36' src={preview[0]} />
               </div>
           }
-          {progress & images & !isUploaded && <Progress progress={progress}/> }
+          {Boolean(progress) &&  images &&  !isUploaded && <Progress progress={progress}/> }
           <input
             type="file"
             onChange={(e)=>uploadData(e.target.files)}
@@ -89,10 +83,10 @@ function Login() {
         </button>
       </form>
       <div className="py-3 text-main">
-        Already have an account? <Link to="/login">Login</Link>
+        Already have an account? <Link to="/login" className='text-blue-500'>Login</Link>
       </div>
     </FormContainer>
   );
 }
 
-export default Login;
+export default Register;

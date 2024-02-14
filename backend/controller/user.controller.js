@@ -26,7 +26,6 @@ const signIn = async (res, user) => {
 // @access  all
 module.exports.register = asyncHandler(async (req, res) => {
   const { name, password, email, image } = req.body;
-  console.log(image);
   const user = new User({
     name,
     password,
@@ -67,7 +66,7 @@ module.exports.myNotification = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) throw new ApiError("Invalid user", 404);
   res.status(200).json({
-    notifications: user.notifications,
+    notifications: user.notifications.reverse(),
   });
 });
 // @desc    Update My profile

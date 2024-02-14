@@ -14,10 +14,10 @@ function Product({ product }) {
   };
   return (
     <div
-      className="h-[25rem] max-w-sm rounded-lg border 
+      className="h-[23rem] max-w-sm rounded-lg border 
     border-gray-200 bg-slat e-50 shadow transition-colors hover:bg-gray-400 dark:border-gray-700 dark:bg-gray-800  dark:transition-colors dark:hover:bg-gray-600"
     >
-      <div className="h-[17rem]">
+      <div className="h-[15rem]">
         <Link to={`/product/${product?._id}`}>
           <img
             className="h-full rounded-t-lg w-full "

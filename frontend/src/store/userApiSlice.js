@@ -37,7 +37,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
       providesTags:['Notification'],
-      invalidatesTags:['Order'],
     }),
     getUsers: builder.query({
       query: ({ keyword, page = 1, sort = '', dec = '+' }) => ({

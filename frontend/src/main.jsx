@@ -1,162 +1,27 @@
-  import React from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import ProductDetails from "./pages/ProductDetails.jsx";
-import { Provider } from "react-redux";
-import store from "./store/store.js";
-import NewProduct from "./pages/NewProduct.jsx";
-import Cart from "./pages/Cart.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Shipping from "./pages/Shipping.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
-import Order from "./pages/Order.jsx";
-import Payment from "./pages/Payment.jsx";
-import PlaceOrder from "./pages/PlaceOrder.jsx";
+import { RouterProvider } from "react-router-dom";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import Profile from "./pages/Profile.jsx";
-import UserLayout from "./pages/UserLayout.jsx";
-import AdminLayout from "./pages/admin/AdminLayout.jsx";
-import OrderList from "./pages/admin/OrderList.jsx";
-import AdminRoute from "./components/AdminRoute.jsx";
-import UserList from "./pages/admin/UserList.jsx";
-import ProductList from "./pages/admin/ProductList.jsx";
-import ProductEdit from "./pages/admin/ProductEdit.jsx";
 import { HelmetProvider } from "react-helmet-async";
-import DashBoard from "./pages/admin/DashBoard.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import ResetPassword from "./pages/ResetPassword.jsx";
-import CreateNotification from "./pages/admin/CreateNotification.jsx";
-import CategoryList from "./pages/admin/CategoryList.jsx";
+import {disableReactDevTools} from '@fvilers/disable-react-devtools';
+import router from "./routers.jsx";
+import StoreProvider from "./store/store.jsx";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-      {
-        path: "/resetPassword/:token",
-        element: <ResetPassword />,
-      },
-      {
-        path: "/",
-        element: <UserLayout />,
-        children: [
-          {
-            path: "/",
-            element: <Home />,
-          },
-          {
-            path: "/cart",
-            element: <Cart />,
-          },
-          {
-            path: "/product/new",
-            element: <NewProduct />,
-          },
-          {
-            path: "/product/:id",
-            element: <ProductDetails />,
-          },
-          {
-            path: "/",
-            element: <PrivateRoute />,
-            children: [
-              {
-                path: "/profile",
-                element: <Profile />,
-              },
-              {
-                path: "/shipping",
-                element: <Shipping />,
-              },
-              {
-                path: "/payment",
-                element: <Payment />,
-              },
-              {
-                path: "/placeorder",
-                element: <PlaceOrder />,
-              },
-              {
-                path: "/order/:id",
-                element: <Order />,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: "/admin",
-        element: <AdminLayout />,
-        children: [
-          {
-            path: "",
-            element: <AdminRoute />,
-          },
-          {
-            path: "dashboard",
-            element: <DashBoard />,
-          },
-          {
-            path: "orders",
-            element: <OrderList />,
-          },
-          {
-            index: true,
-            path: "users",
-            element: <UserList />,
-          },
-          {
-            path: "products",
-            element: <ProductList />,
-          },
-          {
-            path: "notifications",
-            element: <CreateNotification />,
-          },
-          {
-            path: "categories",
-            element: <CategoryList />,
-          },
-          {
-            path: "product/:id/edit",
-            element: <ProductEdit />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path:"*",
-    element: <NotFound/>
-  }
-]);
+if (import.meta.env.VITE_ENV === 'production'){ disableReactDevTools() }
 const clientId = import.meta.env.VITE_APP_CLIENT_ID;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HelmetProvider>
-      <Provider store={store}>
-        <PayPalScriptProvider
+      <PayPalScriptProvider
           options={{ clientId, currency: "USD", intent: "capture" }}
-          // deferLoading={true} 
+          // deferLoading={true}  
         >
-        
+        <StoreProvider >
           <RouterProvider router={router} />
-        </PayPalScriptProvider>
-      </Provider>
+        </StoreProvider>
+      </PayPalScriptProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

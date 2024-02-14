@@ -3,10 +3,10 @@ import { apiSlice } from './apiSlice';
 export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProduct: builder.query({
-      query: ({keyword, page=1, sort, dec, category }) => ({
+      query: ({keyword, page=1, sort, dec, category, features }) => ({
         url: `/products?page=${page}&limit=${import.meta.env.VITE_LIMIT}${
           keyword ? `&keyword=${keyword}` : ''
-        }${sort && sort != '' ? `&sort=${dec}${sort}` : ''}${category && category!=''?`&category=${category}`:""}`,
+        }${sort && sort != '' ? `&sort=${dec?dec:''}${sort}` : ''}${category && category!=''?`&category=${category}`:""}${features}`,
         method: 'GET',
       }),
         providesTags: ['Product'],
@@ -37,8 +37,8 @@ export const productsApiSlice = apiSlice.injectEndpoints({
     }),
     updateProduct: builder.mutation({
       query: (data) =>({
-        url: `/products/${data.get("_id")}`,
-        method: 'PUT',
+        url: `/products/${data._id}`,
+        method: 'PUT',  
         body: data,
       }),
       invalidatesTags: ['Product'],
@@ -65,7 +65,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       }),
     }),
   }),
-});
+});   
 export const {
   useGetProductsFeaturesMutation,
   useGetProductQuery,

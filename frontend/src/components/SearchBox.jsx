@@ -1,23 +1,46 @@
 // import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
 
-function SearchBox() {
+const product = (item) => {
+  return (
+    <div className="grid grid-cols-12 p-2 gap-2 hover:cursor-pointer hover:bg-gray-500">
+      <div className="col-span-3">
+        <img
+          className="rounded-md h-20 w-full"
+          src={item.images[0]}
+          alt={item.name}
+        />
+      </div>
+      <div className="col-span-9">
+        <p className='text-main mb-1'>{item.name}</p>
+        <div className='flex justify-between'> 
+          <p className='text-main mb-1 text-sm'>{item.category.name}</p>
+          <p className='text-main mb-1 text-sm'>{item.price}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const SearchBox = memo(function SearchBox() {
   const [keyword, setKeyword] = useState('');
-  const [searchProducts, { data, isLoading, isFetching }] = useGetProductsFeaturesMutation();
+  const [searchProducts, { data, isLoading }] = useGetProductsFeaturesMutation();
   const onSearch = (e) => {
     setKeyword(e.target.value);
   };
+
   useEffect(()=>{
     searchProducts({ keyword });
-  },[keyword, searchProducts])
+  },[keyword, searchProducts]);
+
   document.addEventListener('click', () => {
     setKeyword('');
   });
   return (
-    <>
+    <div className='h-[60vh]'>
       <form >
         <input
           type="text"
@@ -28,35 +51,24 @@ function SearchBox() {
         ></input>
       </form>
       {keyword != '' && (
-          <div className='mt-2 '>
-            {isLoading || isFetching?
-              <Loader/>: data?.result.length > 0 &&
-              data?.result?.map((item) => (
+          <div className='mt-2 content-center'>
+            {isLoading && <Loader/>}
+            {(!isLoading && data?.result.length == 0 ) && <div className='alert text-center'>No Data</div> }
+            {data?.result.length > 0 && 
+              data.result.map((item) =>  (
                 <Link
                   key={item._id}
                   to={`/product/${item._id}`}
                   onClick={() => setKeyword('')}
                 >
-                  <div className="grid grid-cols-12 p-2 gap-2 hover:cursor-pointer hover:bg-gray-500">
-                    <div className="col-span-3">
-                      <img
-                        className="rounded-md"
-                        src={item.image}
-                        alt={item.name}
-                      />
-                    </div>
-                    <div className="col-span-9">
-                      <p className='text-main mb-1'>{item.name}</p>
-                      <p className='text-main mb-1 text-sm'>{item.price}</p>
-                      <p className='text-main mb-1 text-sm'>{item.category}</p>
-                    </div>
-                  </div>
+                  {product(item)}
                 </Link>
-              ))}
+              ))
+            }
           </div>
         )}
-    </>
+    </div>
   );
-}
+})
 
 export default SearchBox;

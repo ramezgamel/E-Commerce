@@ -13,7 +13,7 @@ function Shipping() {
     shippingAddress?.postalCode || '',
   );
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
   const submitHandler = () => {
     dispatch(saveShippingAddress({ address, country, city, postalCode }));
     navigate('/payment');

@@ -41,7 +41,7 @@ function Login() {
 
   return (
     <FormContainer>
-      <h1 className="text-main">{formType == 'forgetPassword'? "Forget Password": formType == 'login'&&"Sign in" }</h1>
+      <h1 className="text-main text-center font-bold text-3xl">{formType == 'forgetPassword'? "Forget Password": formType == 'login'&&"Sign in" }</h1>
       <form onSubmit={submitHandler}>
         <div className="my-2">
           <label>Email</label>
@@ -74,7 +74,7 @@ function Login() {
         {formType == 'login'? "Forget Password" : formType == 'forgetPassword' && "Login"}
       </button>
       <div className="py-1 text-main">
-        Create new account <Link to="/register">Register</Link>
+        Create new account <Link to="/register" className='text-blue-500'>Register</Link>
       </div>
     </FormContainer>
   );

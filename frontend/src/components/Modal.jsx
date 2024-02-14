@@ -2,7 +2,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-function Model({ children, show, handleClose, header }) {
+function Model({ children, show, setShow, header }) {
+  const handleClose = () => {
+    setShow(false)
+  }
   return (
     <>
       <Transition appear show={show} as={Fragment}>

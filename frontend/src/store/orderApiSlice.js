@@ -31,7 +31,7 @@ const orderApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: { ...details },
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order', 'Notification'],
     }),
     getOrders: builder.query({
       query: ({ keyword, page, sort = '', dec = '+' }) => ({

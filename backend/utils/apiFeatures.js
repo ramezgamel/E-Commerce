@@ -3,6 +3,7 @@ class ApiFeatures {
     this.query = query;
     this.queryParams = queryParams;
   }
+
   sort() {
     if (this.queryParams.sort) {
       const sortBy = this.queryParams.sort.split(",").join(" ");
@@ -27,7 +28,7 @@ class ApiFeatures {
     const excludedFields = ["sort", "page", "limit", "fields", "keyword"];
     excludedFields.forEach((q) => delete qParams[q]);
     let queryStr = JSON.stringify(qParams);
-    queryStr = queryStr.replace(/\b{gt|gte|lt|lte}\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
     if (queryStr != "") {
       this.query = this.query.find(JSON.parse(queryStr));
     }

@@ -22,6 +22,7 @@ function Order() {
   const [order, setOrder] = useState({})
   const [{ isPending }] = usePayPalScriptReducer();
   const { userInfo } = useSelector((state) => state.auth);
+
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [deliverOrder, { isLoading: loadingDeliver }] =
     useDeliverOrderMutation();  
@@ -30,6 +31,7 @@ function Order() {
       setOrder(data)
     }
   },[data, isLoading]);
+
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async function (details) {
       try {
@@ -48,22 +50,23 @@ function Order() {
       }
     });
   };
-  const createOrder = (data, actions) => {
-    console.log(actions.order)
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: { 
-              value: order.totalPrice 
-            }
-          },
-        ],
-      })
-      .then((orderId) => {
-        return orderId;
-      })
-  };  
+  // const createOrder = (data, actions) => {
+    // console.log(actions.order )
+  //   return actions.orders  
+  //     .create({
+  //       purchase_units: [
+  //         {
+  //           amount: { 
+  //             "currency_code" :  "USD",
+  //             "value": order.totalPrice 
+  //           }
+  //         },
+  //       ],
+  //     })
+  //     .then((orderId) => {
+  //       return orderId;
+  //     })
+  // };  
   const onError = (err) => {
     toast.error(err.message);
   };
@@ -184,8 +187,8 @@ function Order() {
                 ) : (
                   <div>
                     <PayPalButtons
-                      createOrder={createOrder}
-                      onApprove={onApprove}
+                      // createOrder={createOrder}  
+                      onApprove={onApprove} 
                       onError={onError}
                     />
                   </div>

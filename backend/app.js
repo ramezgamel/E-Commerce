@@ -26,13 +26,13 @@ const usersRoutes = require("./routes/user.routes");
 const orderRoutes = require("./routes/order.routes");
 const chartRoutes = require("./routes/chart.routes");
 const categoryRoutes = require("./routes/category.routes");
+const cloudinary = require("./middleware/cloudinary");
+const upload = require("./middleware/upload");
 app.use("/api/products", productsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/chart", chartRoutes);
 app.use("/api/category", categoryRoutes);
-const cloudinary = require("./middleware/cloudinary");
-const upload = require("./middleware/upload");
 app.post("/api/uploadSingle", upload.single("image"), cloudinary);
 app.post("/api/uploadMulti", upload.array("images", 5), cloudinary);
 
