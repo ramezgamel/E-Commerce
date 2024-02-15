@@ -15,7 +15,6 @@ function ProductForm({ submit, btnName, product }) {
   const {images, error:uploadErr, preview, progress, isUploaded, uploadData} = useUpload();
   const {data} = useGetCatsQuery()
   const navigate = useNavigate();
-  console.log(isUploaded)
   useEffect(() => {
     if (product) {
       nameInput.current.value = product.name
@@ -111,7 +110,7 @@ function ProductForm({ submit, btnName, product }) {
         />
       </div>
       <div className="mt-2 text-right">
-        <button type="submit" className="btn " disabled={!isUploaded}>
+        <button type="submit" className="btn " disabled={!isUploaded && !product.images}>
           {btnName}
         </button>
       </div>

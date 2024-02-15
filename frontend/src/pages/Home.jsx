@@ -11,7 +11,7 @@ function Home() {
   const [category, setCategory] = useState('');
   const [features, setFeatures] = useState('');
   const [sort, setSort] = useState('');
-  const { data: products, isLoading, error } = useGetProductQuery({page, category, sort,features});
+  const { data: products, isLoading, error } = useGetProductQuery({page, category, sort, features});
   if (isLoading) return <div className='h-full my-auto text-center'>  
     <Loader/>
   </div> ;
