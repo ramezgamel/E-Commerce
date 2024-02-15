@@ -60,10 +60,11 @@ function ProductList() {
     <>
       <Model
         show={show}
-        handleClose={() => {
-          setShow(false)
-          Object.keys(product).length !== 0 && setProduct({})
-        }}
+        setShow={setShow}
+        // handleClose={() => {
+        //   setShow(false)
+        //   Object.keys(product).length !== 0 && setProduct({})
+        // }}
         header={Object.keys(product).length !== 0 ? 'Update Product' : 'Create Product'}
       >
         {loadingCreate || loadingUpdate ? (

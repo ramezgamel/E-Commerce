@@ -22,7 +22,7 @@ a {
     @apply border-slate-900/10 dark:border-slate-50/[0.06];
   }
   button.btn {
-    @apply rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:hover:text-white dark:focus:ring-blue-800;
+    @apply rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:hover:text-white dark:focus:ring-blue-800 disabled:!bg-gray-400 disabled:!text-black disabled:!cursor-not-allowed;
   }
   .badge {
     @apply inline-flex items-center rounded-md bg-sec px-2 py-1 text-xs font-medium text-sec ring-1 ring-inset ring-clicked;

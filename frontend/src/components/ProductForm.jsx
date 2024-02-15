@@ -15,6 +15,7 @@ function ProductForm({ submit, btnName, product }) {
   const {images, error:uploadErr, preview, progress, isUploaded, uploadData} = useUpload();
   const {data} = useGetCatsQuery()
   const navigate = useNavigate();
+  console.log(isUploaded)
   useEffect(() => {
     if (product) {
       nameInput.current.value = product.name
@@ -94,7 +95,7 @@ function ProductForm({ submit, btnName, product }) {
             {preview.map(i=> <img key={i} className='h-20 w-full rounded-lg' src={i} />)}
             </div>
         }
-        {(progress && !isUploaded) && <Progress progress={progress}/> }
+        {(Boolean(progress) && !isUploaded) && <Progress progress={progress}/> }
         <input
           type="file"
           multiple
@@ -110,7 +111,7 @@ function ProductForm({ submit, btnName, product }) {
         />
       </div>
       <div className="mt-2 text-right">
-        <button type="submit" className="btn">
+        <button type="submit" className="btn " disabled={!isUploaded}>
           {btnName}
         </button>
       </div>
