@@ -34,7 +34,7 @@ function ProductForm({ submit, btnName, product }) {
       category,
       countInStock:countInStockInput.current.value,
       description:descriptionInput.current.value,
-      images,
+      images: product?.images || images
     };
     if(category == "") return toast.error("Should select category");
     if (product) {
@@ -110,7 +110,7 @@ function ProductForm({ submit, btnName, product }) {
         />
       </div>
       <div className="mt-2 text-right">
-        <button type="submit" className="btn " disabled={!isUploaded && !product.images}>
+        <button type="submit" className="btn " disabled={!isUploaded && !product?.images}>
           {btnName}
         </button>
       </div>
