@@ -52,8 +52,8 @@ const Header = memo(function Header ()  {
               <Link to="/">
                 <div className="flex items-center">
                   <img
-                    className="h-8 w-auto"
-                    src="../../public/images/logo.png"
+                    className="h-16  w-auto "
+                    src="https://res.cloudinary.com/dfv2vlj7u/image/upload/v1708256865/logo.png"
                     alt="MHP"
                   />
                 </div>
