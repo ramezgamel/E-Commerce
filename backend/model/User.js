@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/dfv2vlj7u/image/upload/f_auto,q_auto/k7ayyu7n0orspymdwoe4",
     },
+    phoneNumber: {
+      type: Number,
+      required: true,
+    },
     role: {
       type: String,
       enum: {

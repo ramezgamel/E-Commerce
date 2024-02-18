@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import FormContainer from '../components/FormContainer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
@@ -12,9 +12,11 @@ import useLoggedIn from '../hooks/useLoggedIn';
 
 
 function Register() {
+  const navigate = useNavigate()
   const emailInput = useRef();
-  const passwordInput = useRef();
+  const passwordInput = useRef();   
   const nameInput = useRef();
+  const PhoneNumberInput = useRef();
   const dispatch = useDispatch();
   useLoggedIn()
   const [register, { isLoading }] = useRegisterMutation();
@@ -27,10 +29,13 @@ function Register() {
         email:emailInput.current.value, 
         password: passwordInput.current.value,
         name: nameInput.current.value,
+        phoneNumber: PhoneNumberInput.current.value,
         image:images
       }
       const res = await register(data).unwrap();
       dispatch(setCredentials({ ...res }));
+      toast.success("Successfully")
+      navigate("/")
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -56,6 +61,14 @@ function Register() {
           />
         </div>
         <div className="my-3">
+          <label>Phone number</label>
+          <input
+            type="tel"
+            placeholder="Enter your phone number"
+            ref={PhoneNumberInput}
+          />
+        </div>
+        <div className="my-3">
           <label>Profile Image</label>
           {error ? <div className="alert">{error.message}</div> : 
             preview  && 
@@ -78,7 +91,7 @@ function Register() {
             ref={passwordInput}
           />
         </div>
-        <button type="submit" className="btn my-3 " disabled={isLoading | progress != 100}>
+        <button type="submit" className="btn my-3 " disabled={isLoading}>
           Sign Up
         </button>
       </form>

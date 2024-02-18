@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 import { useEffect, useMemo, useState } from "react";
 import { useGetNotificationQuery, useMarkAsReadMutation } from "../store/userApiSlice";
 import { Menu, Transition } from "@headlessui/react";
@@ -60,6 +61,7 @@ useEffect(()=>{
                 >
                   <Menu.Items as="ul" className="absolute right-0 top-3 z-10 mt-2 w-60 origin-top-right rounded-md p-1 bg-slate-50 dark:bg-gray-700 max-h-48 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto">
                     {isLoading && <Loader/>}
+                    {!Boolean(data?.notifications?.length)&& <div className="alert m-2 p-2">No Notifications</div> }
                     {data?.notifications?.length > 0 && data?.notifications?.map((notification, index) => 
                       <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}`:"" }`}>
                       <Menu.Item as="li"

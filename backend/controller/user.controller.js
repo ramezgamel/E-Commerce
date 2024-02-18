@@ -11,6 +11,7 @@ const signIn = async (res, user) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
+    // secure: process.env.NODE_ENV !== "development" ? true : false,
     secure: true,
   });
   res.json({
@@ -25,12 +26,13 @@ const signIn = async (res, user) => {
 // @route   POST /api/users/register
 // @access  all
 module.exports.register = asyncHandler(async (req, res) => {
-  const { name, password, email, image } = req.body;
+  const { name, password, email, image, phoneNumber } = req.body;
   const user = new User({
     name,
     password,
     email,
     image,
+    phoneNumber,
   });
   await user.save();
   const url = `${req.protocol}://${req.get("host")}/profile`;
