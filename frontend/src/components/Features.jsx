@@ -48,7 +48,7 @@ function  Features({setFeatures, setSort,sort}) {
         </div>
       </div>
       <div className="w-[70%] bg-gray-700 h-[1px] mx-auto my-2"></div>
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <button className="btn" type="submit">Apply</button>
         <button type="button" className="btn !bg-red-400 hover:!bg-red-500" onClick={handleCancel}>Cancel</button>
       </div>

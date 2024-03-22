@@ -2,8 +2,8 @@
 import { Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 import {lazy } from "react";
 import App from "./App.jsx";
+import Auth from "./pages/Auth.jsx";
 const ResetPassword =lazy(()=>import( "./pages/ResetPassword.jsx"));
-const Register =lazy(()=>import( "./pages/Register.jsx"))
 const ProductDetails =lazy(()=>import( "./pages/ProductDetails.jsx"));
 const PrivateRoute =lazy(()=>import( "./components/PrivateRoute.jsx"));
 const Profile =lazy(()=>import( "./pages/Profile.jsx"));
@@ -18,11 +18,11 @@ const ProductList =lazy(()=>import( "./pages/admin/ProductList.jsx"));
 const CreateNotification =lazy(()=>import( "./pages/admin/CreateNotification.jsx"));
 const CategoryList =lazy(()=>import( "./pages/admin/CategoryList.jsx"));
 const ProductEdit =lazy(()=>import( "./pages/admin/ProductEdit.jsx"));
-const Login = lazy(()=>import( "./pages/Login.jsx"));
 const Home = lazy(()=>import('./pages/Home.jsx'));
 const UserLayout = lazy(()=>import('./pages/UserLayout.jsx'));
 const AdminLayout = lazy(()=>import('./pages/admin/AdminLayout.jsx'));
 const Cart = lazy(()=>import('./pages/Cart.jsx'));
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App/>}>
@@ -47,8 +47,7 @@ const router = createBrowserRouter(
         <Route path="categories" element={<CategoryList/>}/>
         <Route path="product/:id/list" element={<ProductEdit/>}/>
       </Route>
-      <Route path="login" element={<Login/>} />
-      <Route path="register" element={<Register/>} />
+      <Route path="auth" element={ <Auth/> }/>
       <Route path="resetPassword" element={<ResetPassword/>} />
     </Route>
   )

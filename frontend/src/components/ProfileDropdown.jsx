@@ -22,7 +22,7 @@ function ProfileDropdown({isLoggedIn,userInfo}) {
       await logoutCall().unwrap();
       socket.disconnect()
       dispatch(logout());
-      navigate('/login');
+      navigate('/auth');
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }

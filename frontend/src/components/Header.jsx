@@ -63,7 +63,7 @@ const Header = memo(function Header ()  {
               className="absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
             >
               <div className='relative' >
-                <input type="text" className='h-7' onClick={()=>setShow(true)} placeholder='Search..'/>
+                <input type="text" className='h-7 w-20 sm:w-44' onClick={()=>setShow(true)} placeholder='Search..'/>
                 <AiOutlineSearch className='absolute top-1 right-1 text-main w-5 h-5 hover:cursor-pointer'/>
               </div>
               <div className='h-10 w-[1px] bg-slate-900/10 dark:bg-slate-50/[0.06]  py-3'/>
@@ -72,7 +72,7 @@ const Header = memo(function Header ()  {
               <CartPanel/>
               {isLoggedIn?(
                 <ProfileDropdown isLoggedIn={isLoggedIn} userInfo={ userInfo} />
-              ): <Link to="/login" className='text-main'>Sign in</Link> }
+              ): <Link to="/auth" className='text-main hover:text-blue-700'>Sign in</Link> }
             </div>
           </div>
         </div>

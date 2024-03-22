@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { addToCart } from '../store/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Meta from '../components/Meta';
+import NavAnimation from '../animation/NavAnimation';
 function ProductDetails() {
   const [mainImage, setMainImage] = useState('');
   const [qty, setQty] = useState(1);
@@ -54,7 +55,7 @@ function ProductDetails() {
   if (error) return <div className="alert">Error: {error.message || "Something went wrong"}</div>;
 
   return (
-    <>
+    <NavAnimation>
       <Meta title={product.name} />
       <div className="gap-1 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
@@ -224,7 +225,7 @@ function ProductDetails() {
           </div>
         </div>
       </div>
-    </>
+    </NavAnimation>
   );
 }
 

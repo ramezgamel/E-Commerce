@@ -1,14 +1,14 @@
 import { useRef } from 'react';
-import FormContainer from '../components/FormContainer';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import { toast } from 'react-toastify';
-// import axios from 'axios';
 import Progress from '../components/Progress';
 import useUpload from '../hooks/useUpload';
 import useLoggedIn from '../hooks/useLoggedIn';
+import Loader from '../components/Loader';
+import {motion as m} from "framer-motion"
 
 
 function Register() {
@@ -41,10 +41,15 @@ function Register() {
     }
   };
   return (
-    <FormContainer>
-      <h1 className="text-main text-center font-bold text-3xl mt-16">Sign Up</h1>
-      <form onSubmit={submitHandler}>
-        <div className="my-3">
+    <m.form 
+      layoutScroll 
+      // initial={{y:-450}}
+      // animate={{y:0}}
+      transition={{
+        duration:2
+      }}
+      onSubmit={submitHandler} className='mt-10'>
+        <div className="my-2">
           <label>Name</label>
           <input
             type="name"
@@ -52,7 +57,7 @@ function Register() {
             ref={nameInput}
           />
         </div>
-        <div className="my-3">
+        <div className="my-2">
           <label>Email</label>
           <input
             type="email"
@@ -60,7 +65,7 @@ function Register() {
             ref={emailInput}
           />
         </div>
-        <div className="my-3">
+        <div className="my-2">
           <label>Phone number</label>
           <input
             type="tel"
@@ -68,7 +73,7 @@ function Register() {
             ref={PhoneNumberInput}
           />
         </div>
-        <div className="my-3">
+        <div className="my-2">
           <label>Profile Image</label>
           {error ? <div className="alert">{error.message}</div> : 
             preview  && 
@@ -83,7 +88,7 @@ function Register() {
           />
           
         </div>
-        <div className="my-3">
+        <div className="my-2">
           <label>password</label>
           <input
             type="password"
@@ -91,14 +96,13 @@ function Register() {
             ref={passwordInput}
           />
         </div>
-        <button type="submit" className="btn my-3 " disabled={isLoading}>
-          Sign Up
-        </button>
-      </form>
-      <div className="py-3 text-main">
-        Already have an account? <Link to="/login" className='text-blue-500'>Login</Link>
-      </div>
-    </FormContainer>
+        <div className='text-center px-14 mt-5'>
+          <button type="submit" className="btn w-full" disabled={isLoading}>
+            {isLoading && <Loader />}
+            {!isLoading && 'Sign up'}
+          </button>
+        </div>
+    </m.form>
   );
 }
 

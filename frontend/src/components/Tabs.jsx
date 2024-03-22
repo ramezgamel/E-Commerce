@@ -5,7 +5,7 @@ import Loader from "./Loader"
 function Tabs({setCategory,category}) {
   const {data} = useGetCatsQuery(1);
   return (
-    <div className="fixed top-16 w-full z-40 text-sm font-medium text-gray-500 border-b pt-2 w-100 border-gray-200 dark:text-gray-400 dark:border-gray-700 bg-slate-50 dark:bg-gray-800">
+    <div className="w-full text-sm font-medium text-gray-500 border-b w-100 border-gray-200 dark:text-gray-400 dark:border-gray-700 bg-slate-50 dark:bg-gray-800">
       <ul className="flex flex-wrap -mb-px">
             <li 
                 onClick={()=>setCategory("")}

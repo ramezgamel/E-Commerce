@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
-
+import {motion as m} from "framer-motion"
 function ModeToggler() {
   const [theme, setTheme] = useState(localStorage.getItem('theme'))
   const toggleMode = () => {
@@ -23,13 +23,15 @@ function ModeToggler() {
   }, [theme]);
 
   return (
-    <button onClick={toggleMode} >
+    <m.button   
+      whileTap={{ scale: 1.2  }}
+      onClick={toggleMode} >
       {theme == 'dark' ? (
         <BsFillSunFill className="h-5 w-5 text-main" />
       ) : (
         <BsFillMoonFill className="h-5 w-5 text-main" />
       )}
-    </button>
+    </m.button>
   )
 }
 

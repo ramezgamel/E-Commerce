@@ -23,6 +23,7 @@ function App() {
     <Suspense fallback={<FullPageLoader/>}>
       <Outlet/>
     </Suspense>
+    
   </> ;
 }
 

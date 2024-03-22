@@ -7,6 +7,8 @@ import { HelmetProvider } from "react-helmet-async";
 import {disableReactDevTools} from '@fvilers/disable-react-devtools';
 import router from "./routers.jsx";
 import StoreProvider from "./store/store.jsx";
+import { AnimatePresence } from "framer-motion";
+
 
 if (import.meta.env.VITE_ENV === 'production'){ disableReactDevTools() }
 const clientId = import.meta.env.VITE_APP_CLIENT_ID;
@@ -19,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           // deferLoading={true}  
         >
         <StoreProvider >
-          <RouterProvider router={router} />
+          <AnimatePresence mode="wait">
+            <RouterProvider router={router} />
+          </AnimatePresence>
         </StoreProvider>
       </PayPalScriptProvider>
     </HelmetProvider>

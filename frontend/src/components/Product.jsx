@@ -14,8 +14,8 @@ function Product({ product }) {
   };
   return (
     <div
-      className="h-[23rem] max-w-sm rounded-lg border 
-    border-gray-200 bg-slat e-50 shadow transition-colors hover:bg-gray-400 dark:border-gray-700 dark:bg-gray-800  dark:transition-colors dark:hover:bg-gray-600"
+      className="h-[23rem] max-w-sm rounded-lg border transition-all hover:scale-105
+    border-gray-200 bg-slat e-50 shadow  hover:bg-gray-400 dark:border-gray-700 dark:bg-gray-800  dark:transition-colors dark:hover:bg-gray-600"
     >
       <div className="h-[15rem]">
         <Link to={`/product/${product?._id}`}>
