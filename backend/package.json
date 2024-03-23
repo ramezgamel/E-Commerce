@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon server",
-    "production": "NODE_ENV=production node server"
+    "build": "npm run vercel-build",
+    "start": "NODE_ENV=production node server"
   },
   "author": "",
   "license": "ISC",
