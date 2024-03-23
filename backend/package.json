@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon server",
-    "build": "npm run vercel-build",
     "start": "NODE_ENV=production node server"
   },
   "author": "",
