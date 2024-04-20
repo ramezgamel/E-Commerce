@@ -10,6 +10,7 @@ const globalError = require("./middleware/globalError");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
 app.use(cookieParser());
 app.use(express.static("../uploads"));
 app.use(express.json());
@@ -28,6 +29,8 @@ const chartRoutes = require("./routes/chart.routes");
 const categoryRoutes = require("./routes/category.routes");
 const cloudinary = require("./middleware/cloudinary");
 const upload = require("./middleware/upload");
+const { resolve } = require("path");
+const { rejects } = require("assert");
 app.use("/api/products", productsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
@@ -44,4 +47,5 @@ app.use(globalError);
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
 require("./socket")(io);
-module.exports = { server, io };
+
+module.exports = server;

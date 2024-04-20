@@ -15,6 +15,7 @@ function Register() {
   const navigate = useNavigate()
   const emailInput = useRef();
   const passwordInput = useRef();   
+  const passwordConfirmationInput = useRef();   
   const nameInput = useRef();
   const PhoneNumberInput = useRef();
   const dispatch = useDispatch();
@@ -30,12 +31,13 @@ function Register() {
         password: passwordInput.current.value,
         name: nameInput.current.value,
         phoneNumber: PhoneNumberInput.current.value,
-        image:images
+        image:images,
+        passwordConfirmation: passwordConfirmationInput.current.value
       }
       const res = await register(data).unwrap();
       dispatch(setCredentials({ ...res }));
+      navigate("/");
       toast.success("Successfully")
-      navigate("/")
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -43,8 +45,6 @@ function Register() {
   return (
     <m.form 
       layoutScroll 
-      // initial={{y:-450}}
-      // animate={{y:0}}
       transition={{
         duration:2
       }}
@@ -94,6 +94,14 @@ function Register() {
             type="password"
             placeholder="Enter password"
             ref={passwordInput}
+          />
+        </div>
+        <div className="my-2">
+          <label>password confirmation</label>
+          <input
+            type="password"
+            placeholder="Enter password"
+            ref={passwordConfirmationInput}
           />
         </div>
         <div className='text-center px-14 mt-5'>

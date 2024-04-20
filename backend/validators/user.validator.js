@@ -16,6 +16,19 @@ exports.registerValidator = [
     .notEmpty()
     .withMessage("Phone number is required")
     .isMobilePhone("ar-EG"),
+  check("password")
+    .notEmpty()
+    .withMessage("password is required")
+    .isLength({ min: 6 })
+    .withMessage("Min length is 6 character.")
+    .custom((password, { req }) => {
+      if (password != req.passwordConfirmation)
+        throw new Error("Password Confirmation is incorrect.");
+      return true;
+    }),
+  check("passwordConfirmation")
+    .notEmpty()
+    .withMessage("password confirmation is required"),
   validator,
 ];
 

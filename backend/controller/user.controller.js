@@ -26,7 +26,9 @@ const signIn = async (res, user) => {
 // @route   POST /api/users/register
 // @access  all
 module.exports.register = asyncHandler(async (req, res) => {
-  const { name, password, email, image, phoneNumber } = req.body;
+  const { name, password, email, image, phoneNumber, passwordConfirmation } =
+    req.body;
+
   const user = new User({
     name,
     password,

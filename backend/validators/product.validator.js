@@ -8,7 +8,6 @@ const baseSchema = checkSchema({
   },
   images: {
     notEmpty: { errorMessage: "Images are required" },
-    isArray: { errorMessage: "Max length 5" },
   },
   category: {
     notEmpty: { errorMessage: "Category is required" },

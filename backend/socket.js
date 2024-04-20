@@ -1,7 +1,4 @@
 const {
-  pushNotification,
-  getUsersQuery,
-  pushToAdmins,
   pushToUser,
   pushToSomeUsers,
   pushToAllUsers,

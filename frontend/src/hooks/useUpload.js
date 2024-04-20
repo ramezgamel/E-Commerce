@@ -24,7 +24,7 @@ async function readImage(image, arr){
 
 
 async function uploadImage(data, setProgress, setImages, setErr){
-  const path = data['length'] > 1 ? 'uploadMulti':'uploadSingle'
+  const path = data['length'] > 1 ? 'uploadMulti': 'uploadSingle'
   const formData = getFormData(data)
   try {
     const {data:res} = await axios.post(`${import.meta.env.VITE_BASE_URL}api/${path}`,formData,{

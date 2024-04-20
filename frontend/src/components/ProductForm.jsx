@@ -27,6 +27,7 @@ function ProductForm({ submit, btnName, product }) {
   }, [product]);
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(images)
     let newPrd = {
       name: nameInput.current.value,
       price: priceInput.current.value,
@@ -34,7 +35,7 @@ function ProductForm({ submit, btnName, product }) {
       category,
       countInStock:countInStockInput.current.value,
       description:descriptionInput.current.value,
-      images: product?.images || images
+      images: images ? images : (product?.images || [])
     };
     if(category == "") return toast.error("Should select category");
     if (product) {

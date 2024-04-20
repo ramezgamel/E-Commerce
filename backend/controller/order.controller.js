@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Order = require("../model/Order");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
-const { io } = require("../app");
+
 const Product = require("../model/Product");
 // @desc    Create Order
 // @route   POST /api/orders

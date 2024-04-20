@@ -20,7 +20,7 @@ function CartPanel() {
             className=" h-7 w-7 text-main cursor-pointer hover:text-violet-600"
             onClick={() => setOpen(true)}
           />
-          {cartItems?.length > 0 && (
+          {cartItems && cartItems?.length > 0 && (
               <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-slate-50 rounded-full -top-2 -right-1 dark:border-gray-800">{cartItems?.length}</div>
             )}  
         </div>
@@ -127,7 +127,7 @@ function CartPanel() {
                           <div  >
                             <Link
                               to="/cart"
-                              onClick={()=>setOpen(false)} disabled={cartItems.length == 0}
+                              onClick={()=>setOpen(false)} disabled={cartItems?.length == 0}
                               className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                             >
                               Checkout

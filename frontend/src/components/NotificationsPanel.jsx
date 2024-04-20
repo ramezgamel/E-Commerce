@@ -43,15 +43,15 @@ useEffect(()=>{
   
   return (
     <Menu as="div" className="relative">
-                <Menu.Button className="relative flex rounded-full bg-back text-main focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <AiOutlineBell 
-                  onClick={()=>setUnreadNotification([])}
-                  className="h-7 w-7 cursor-pointer hover:text-violet-600" aria-hidden="true" />
-                  {unreadNotification?.length > 0 && (
-                    <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-slate-50 rounded-full -top-2 -right-1 dark:border-gray-800">{unreadNotification?.length}</div>
-                  )} 
-                </Menu.Button>
-                <Transition
+      <Menu.Button className="relative flex rounded-full bg-back text-main focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+        <AiOutlineBell 
+        onClick={()=>setUnreadNotification([])}
+        className="h-7 w-7 cursor-pointer hover:text-violet-600" aria-hidden="true" />
+        {unreadNotification?.length > 0 && (
+          <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-slate-50 rounded-full -top-2 -right-1 dark:border-gray-800">{unreadNotification?.length}</div>
+        )} 
+      </Menu.Button>
+      <Transition
                   enter="transition duration-100 ease-out"
                   enterFrom="transform scale-95 opacity-0"
                   enterTo="transform scale-100 opacity-100"
@@ -85,8 +85,8 @@ useEffect(()=>{
                       </Link>
                     )}
                   </Menu.Items>
-                </Transition>
-                </Menu>
+      </Transition>
+    </Menu>
   )
 }
 
