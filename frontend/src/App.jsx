@@ -1,10 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import './index.css';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import  Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import FullPageLoader from './components/FullPageLoader';
 function App() {
+  useEffect(()=>{
+    setTimeout(() => {
+      fetch(`${import.meta.env.VITE_BASE_URL}api/products`)
+    }, 10000);
+  },[])
   return <>
   <ToastContainer
     position="bottom-center"
