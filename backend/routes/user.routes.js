@@ -9,9 +9,10 @@ const {
 
 router.post("/register", registerValidator, controller.register);
 router.post("/login", loginValidator, controller.login);
-router.post("/logout", protect, controller.logout);
 router.post("/forgetPassword", controller.forgetPassword);
-router.post("/resetPassword/:resetToken", controller.resetPassword);
+router.post("/verifyCode", controller.verifyResetCode);
+router.put("/resetPassword", controller.resetPassword);
+router.post("/logout", protect, controller.logout);
 // auth
 router.post("/notifications/:id", protect, controller.markAsRead);
 router.get("/notifications", protect, controller.myNotification);

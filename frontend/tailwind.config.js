@@ -3,9 +3,10 @@ export default {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    container:{
-      center: true
-    },
+    // container:{
+    //   // center: true,
+    //   padding: "px-8"
+    // },
     extend: {
       colors: {
         main: "var(--color-main)",

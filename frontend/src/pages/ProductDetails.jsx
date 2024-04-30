@@ -57,6 +57,7 @@ function ProductDetails() {
   return (
     <NavAnimation>
       <Meta title={product.name} />
+      <div className="container mx-auto">
       <div className="gap-1 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
           <div className="bd flex w-[20%] flex-col gap-1">
@@ -224,6 +225,7 @@ function ProductDetails() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </NavAnimation>
   );

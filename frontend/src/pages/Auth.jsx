@@ -47,7 +47,7 @@ function Auth() {
         </div>
       </AnimatePresence>
       {formType == 'login' && <div className="mt-4 text-center">
-        <Link to='/forget' className="text-main hover:text-blue-700">Forget your password?</Link>
+        <Link to='/resetPassword' className="text-main hover:text-blue-700">Forget your password?</Link>
       </div> }
     </FormContainer>
     </NavAnimation>

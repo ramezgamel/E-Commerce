@@ -13,6 +13,7 @@ class ApiFeatures {
     }
     return this;
   }
+
   fields() {
     if (this.queryParams.fields) {
       const fields = this.queryParams.fields.split(",").join(" ");
@@ -45,6 +46,7 @@ class ApiFeatures {
     }
     return this;
   }
+
   paginate(countDocument) {
     const page = this.queryParams.page * 1 || 1;
     const limit = this.queryParams.limit * 1 || 10;

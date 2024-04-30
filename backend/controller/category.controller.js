@@ -2,7 +2,9 @@ const Category = require("../model/Category");
 const asyncHandler = require("express-async-handler");
 const ApiFeatures = require("../utils/apiFeatures");
 const ApiError = require("../utils/apiError");
-
+// @desc    get all categories
+// @route   GET /api/categories
+// @access  public
 module.exports.getCategories = asyncHandler(async (req, res) => {
   const countDocument = await Category.countDocuments();
   const features = new ApiFeatures(Category.find(), req.query)
@@ -20,14 +22,18 @@ module.exports.getCategories = asyncHandler(async (req, res) => {
     result: categories,
   });
 });
-
+// @desc    add new category
+// @route   POST /api/categories
+// @access  Admin
 module.exports.createCategory = asyncHandler(async (req, res) => {
   const { name, image } = req.body;
   const newCat = new Category({ name, image });
   await newCat.save();
   res.status(200).json({ status: "success", data: newCat });
 });
-
+// @desc    get a category
+// @route   GET /api/categories/:id
+// @access  public
 module.exports.getCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) throw new ApiError("ID not provide", 404);
@@ -35,7 +41,9 @@ module.exports.getCategory = asyncHandler(async (req, res) => {
   if (!category) throw new ApiError("No Category with this id", 404);
   res.status(200).json({ status: "success", data: category });
 });
-
+// @desc    update Category
+// @route   PUT /api/categories/:id
+// @access  Admin
 module.exports.updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { name, image } = req.body;
@@ -47,7 +55,9 @@ module.exports.updateCategory = asyncHandler(async (req, res) => {
   await category.save();
   res.status(200).json({ status: "success", data: category });
 });
-
+// @desc    delete Category
+// @route   DELETE /api/categories/:id
+// @access  Admin
 module.exports.deleteCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) throw new ApiError("ID not provide", 404);

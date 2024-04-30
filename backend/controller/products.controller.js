@@ -2,46 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Product = require("../model/Product");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
+const { createOne, updateOne, deleteOne, getOne } = require("./factory");
 
-// @desc    Create new product
-// @route   POST /api/products/
-// @access  admin
-module.exports.createProduct = asyncHandler(async (req, res) => {
-  const { name, category, brand, price, countInStock, description, images } =
-    req.body;
-  const { _id } = req.user;
-  const newProduct = new Product({
-    user: _id,
-    name,
-    category,
-    brand,
-    price,
-    countInStock,
-    description,
-    images,
-  });
-  const product = await newProduct.save();
-  res.status(201).json(product);
-});
-// @desc    Get all products
-// @route   GET /api/products/
-// @access  All
-module.exports.getProducts = asyncHandler(async (req, res) => {
-  const countDocument = await Product.countDocuments();
-  const features = new ApiFeatures(Product.find({}), req.query)
-    .sort()
-    .search()
-    .fields()
-    .filter()
-    .paginate(countDocument);
-  const products = await features.query.populate("category", "name");
-  res.status(200).json({
-    totalPages: features.totalPages,
-    page: features.page,
-    limit: features.limit,
-    result: products,
-  });
-});
 // @desc    Get products by category
 // @route   GET /api/products/category
 // @access  All
@@ -61,6 +23,27 @@ module.exports.getProducts = asyncHandler(async (req, res) => {
     result: products,
   });
 });
+
+// @desc    Create new product
+// @route   POST /api/products/
+// @access  admin
+module.exports.createProduct = createOne(Product);
+
+// @desc    Get specific products
+// @route   GET /api/products/:id
+// @access  All
+module.exports.getProduct = getOne(Product);
+
+// @desc    Delete specific products
+// @route   DELETE /api/products/:id
+// @access  Admin
+module.exports.deleteProduct = deleteOne(Product);
+
+// @desc    Update specific products
+// @route   PUT /api/products/:id
+// @access  Admin
+module.exports.updateProduct = updateOne(Product);
+
 // @desc    Get top products
 // @route   GET /api/products/top
 // @access  All
@@ -69,42 +52,7 @@ module.exports.getTopProduct = asyncHandler(async (req, res) => {
   if (!products) throw new ApiError("No Products to show", 400);
   res.status(200).json(products);
 });
-// @desc    Get specific products
-// @route   GET /api/products/:id
-// @access  All
-module.exports.getProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const product = await Product.findById(id);
-  if (!product) throw new ApiError("Invalid product id", 404);
-  res.status(200).json(product);
-});
-// @desc    Delete specific products
-// @route   DELETE /api/products/:id
-// @access  Admin
-module.exports.deleteProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  await Product.findByIdAndDelete(id);
-  res.status(200).json({ status: "success", data: "product deleted" });
-});
-// @desc    Update specific products
-// @route   PUT /api/products/:id
-// @access  Admin
-module.exports.updateProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { _id, role } = req.user;
 
-  const unAvailable = ["rating", "user", "numReviews", "review"];
-  const product = await Product.findById(id);
-  if (!product) throw new ApiError("Invalid product id", 404);
-  if (_id !== product.user && role !== "admin")
-    throw new Error("Only creator can update");
-  Object.keys(req.body).forEach((key) => {
-    if (unAvailable.includes(key)) throw new ApiError("Forbidden field", 403);
-    product[key] = req.body[key];
-  });
-  await product.save({ new: true });
-  res.status(200).json(product);
-});
 // @desc    Create review to specific products
 // @route   POST /api/products/:id/review
 // @access  user

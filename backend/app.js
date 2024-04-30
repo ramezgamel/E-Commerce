@@ -21,31 +21,16 @@ app.use(
     credentials: true,
   })
 );
-
-const productsRoutes = require("./routes/product.routes");
-const usersRoutes = require("./routes/user.routes");
-const orderRoutes = require("./routes/order.routes");
-const chartRoutes = require("./routes/chart.routes");
-const categoryRoutes = require("./routes/category.routes");
-const cloudinary = require("./middleware/cloudinary");
-const upload = require("./middleware/upload");
-const { resolve } = require("path");
-const { rejects } = require("assert");
-app.use("/api/products", productsRoutes);
-app.use("/api/users", usersRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/chart", chartRoutes);
-app.use("/api/category", categoryRoutes);
-app.post("/api/uploadSingle", upload.single("image"), cloudinary);
-app.post("/api/uploadMulti", upload.array("images", 5), cloudinary);
+const mountRoutes = require("./routes/mountRoutes");
+mountRoutes(app);
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`can't find this route: ${req.originalUrl}`, 500));
 });
-
 app.use(globalError);
+
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
-require("./socket")(io);
+require("./socket/socket")(io);
 
 module.exports = server;

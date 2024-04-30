@@ -16,6 +16,7 @@ const notificationSchema = new mongoose.Schema({
     default: false,
   },
 });
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -48,9 +49,31 @@ const userSchema = new mongoose.Schema(
         default: "user",
       },
     },
+    wishList: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Product",
+      },
+    ],
+    addresses: [
+      {
+        alias: {
+          type: String,
+          unique: true,
+        },
+        details: String,
+        phone: String,
+        city: String,
+        postalCode: String,
+      },
+    ],
     notifications: [notificationSchema],
-    passwordResetToken: String,
-    passwordResetTokenExpires: Date,
+    passwordResetCode: String,
+    passwordResetVerified: {
+      type: Boolean,
+      default: false,
+    },
+    passwordResetCodeExpires: Date,
   },
   { timestamps: true }
 );
@@ -64,20 +87,20 @@ userSchema.methods.checkPass = async function (pass) {
   const isCorrect = await bcrypt.compare(pass, this.password);
   return isCorrect;
 };
-userSchema.methods.generateToken = async function (pass) {
+userSchema.methods.generateToken = async function () {
   const sec = process.env.SEC_JWT;
   const token = await jwt.sign({ id: this._id, role: this.role }, sec);
   return token;
 };
 
-userSchema.methods.resetToken = function () {
-  const resToken = crypto.randomBytes(32).toString("hex");
-  this.passwordResetToken = crypto
+userSchema.methods.resetCode = function () {
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+  this.passwordResetCode = crypto
     .createHash("sha256")
-    .update(resToken)
+    .update(resetCode)
     .digest("hex");
-  this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
-  return resToken;
+  this.passwordResetCodeExpires = Date.now() + 5 * 60 * 1000;
+  return resetCode;
 };
 
 module.exports = mongoose.model("User", userSchema);

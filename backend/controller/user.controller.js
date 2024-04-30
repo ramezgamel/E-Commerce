@@ -11,8 +11,8 @@ const signIn = async (res, user) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
-    // secure: process.env.NODE_ENV !== "development" ? true : false,
-    secure: true,
+    secure: process.env.NODE_ENV !== "development" ? true : false,
+    // secure: true,
   });
   res.json({
     name: user.name,
@@ -137,98 +137,62 @@ module.exports.forgetPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) throw new ApiError("No user with this email", 404);
-  const resetToken = user.resetToken();
-  if (!resetToken) throw new ApiError("Cannot generate reset token", 400);
-  await user.save({ validateBeforeSave: false });
-  const resetUrl = `${process.env.CLIENT_URL}/resetPassword/${resetToken}`;
-  await new Email(user, resetUrl).sendPasswordReset();
+  const resetCode = user.resetCode();
+  if (!resetCode) throw new ApiError("Cannot generate reset token", 400);
+  try {
+    await new Email(user, resetCode).sendPasswordReset(user.name);
+    await user.save();
+  } catch (error) {
+    user.passwordResetCode = undefined;
+    user.passwordResetCodeExpires = undefined;
+    await user.save();
+    throw new ApiError("There is an error in sending email", 500);
+  }
   res.status(200).json({
     status: "success",
-    message: "Token sent to email",
+    message: "Reset code sent to email",
   });
+});
+// @desc    verify reset code
+// @route   POST /api/users/verifyCode
+// @access  user
+module.exports.verifyResetCode = asyncHandler(async (req, res) => {
+  const { resetCode } = req.body;
+  const hashedResetCode = crypto
+    .createHash("sha256")
+    .update(resetCode)
+    .digest("hex");
+  const user = await User.findOne({
+    passwordResetCode: hashedResetCode,
+    passwordResetCodeExpires: { $gt: Date.now() },
+  });
+  if (!user) throw new ApiError("Code is invalid or has expired", 400);
+  user.passwordResetVerified = true;
+  await user.save();
+  res.status(200).json({ status: "success" });
 });
 // @desc    reset password
 // @route   POST /api/users/resetPassword
 // @access  user
 module.exports.resetPassword = asyncHandler(async (req, res) => {
-  const { resetToken } = req.params;
-  const { password, confirmPassword } = req.body;
-  if (password !== confirmPassword)
+  const { newPassword, confirmPassword, email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user)
+    throw new ApiError(`There is no user with this email: ${email}`, 404);
+  if (!user.passwordResetVerified)
+    throw new ApiError("Reset code not verified", 400);
+  if (newPassword !== confirmPassword)
     throw new ApiError("Passwords doesn't match", 400);
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetTokenExpires: { $gt: Date.now() },
-  });
-  if (!user) throw new ApiError("Token is invalid or has expired", 400);
-  user.password = password;
-  user.passwordResetToken = undefined;
-  user.passwordResetTokenExpires = undefined;
+  user.password = newPassword;
+  user.passwordResetCode = undefined;
+  user.passwordResetCodeExpires = undefined;
+  user.passwordResetVerified = undefined;
   await user.save();
   await signIn(res, user);
 });
-// @desc function to push notification to admins
-module.exports.pushNotification = asyncHandler(
-  async (notification, receiver) => {
-    if (!receiver) {
-      const users = await User.find({ role: "admin" }).select("-password");
-      users.forEach(async (user) => {
-        user.notifications = [...user.notifications, notification];
-        await user.save();
-      });
-    } else {
-      const user = await User.findById(receiver);
-      user.notifications = [...user.notifications, notification];
-      await user.save();
-    }
-  }
-);
-module.exports.pushToAdmins = asyncHandler(async (notification) => {
-  const users = await User.find({ role: "admin" });
-  users.forEach(async (user) => {
-    addNotification(user, notification);
-  });
-});
-module.exports.pushToUser = asyncHandler(async (userId, notification) => {
-  const user = await User.findById(userId);
-  addNotification(user, notification);
-});
-module.exports.pushToSomeUsers = asyncHandler(async (usersId, notification) => {
-  const users = await User.find({ _id: { $in: usersId } });
-  users.forEach(async (user) => {
-    addNotification(user, notification);
-  });
-});
-module.exports.pushToAllUsers = asyncHandler(async (notification) => {
-  const users = await User.find({ role: "user" });
-  users.forEach(async (user) => {
-    user.notifications = [...user.notifications, notification];
-    await user.save();
-  });
-  return users;
-});
-
-module.exports.publishNotification = asyncHandler(
-  async (notification, receiver) => {
-    let users = [];
-    if (receiver == "all") {
-      users = await User.find({}).select("-password");
-    } else if (receiver == "users") {
-      users = await User.find({ role: "user" }).select("-password");
-    } else {
-      usersPromise = receiver.map((id) => User.findById(id));
-      users = await Promise.all(usersPromise);
-    }
-    users.forEach(async (user) => {
-      user.notifications = [...user.notifications, notification];
-      await user.save();
-    });
-    return users;
-  }
-);
+// @desc    mark as read
+// @route   POST /api/users/notifications/:id
+// @access  user
 module.exports.markAsRead = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { _id } = req.user;
@@ -237,8 +201,3 @@ module.exports.markAsRead = asyncHandler(async (req, res) => {
   await user.save();
   res.status(200).json({ status: "success", data: user.notifications });
 });
-
-async function addNotification(user, notification) {
-  user.notifications = [...user.notifications, notification];
-  await user.save();
-}

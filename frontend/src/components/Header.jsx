@@ -34,7 +34,7 @@ const Header = memo(function Header ()  {
     </Modal>
     <header className="sticky top-0 z-50">
       <Disclosure as="nav" className="bd border-b bg-slate-50 dark:bg-gray-800">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="mx-auto container">
           <div className="relative flex h-16 items-center justify-between">
             <div className="inset-y-0 left-0 flex items-center gap-2">
               <Disclosure>

@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 module.exports = class Email {
-  constructor(user, url) {
+  constructor(user, resetCode) {
     this.to = user.email;
     this.name = user.name.split(" ")[0];
-    this.url = url;
+    this.resetCode = resetCode;
     this.from = process.env.EMAIL_NAME;
   }
   newTransport() {
@@ -36,8 +36,8 @@ module.exports = class Email {
     );
   }
 
-  async sendPasswordReset() {
-    const message = `Forgot your password? Submit a PATCH request with your new password and password confirm to: ${this.url}.\n if you didn't forget your password, please ignore this message.`;
-    await this.send("Your password reset token valid for 5min.", message);
+  async sendPasswordReset(userName) {
+    const message = `Hi ${userName}, \n we received a request to reset the password in your MHP Store account. \n ${this.resetCode} \n Enter this code to reset password. \n Thanks for helping us to keep your account secure.`;
+    await this.send("Your password reset code valid for 5min.", message);
   }
 };

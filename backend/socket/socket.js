@@ -2,7 +2,7 @@ const {
   pushToUser,
   pushToSomeUsers,
   pushToAllUsers,
-} = require("./controller/user.controller");
+} = require("./socketFunctions");
 
 function emitToSomeUsers(users, notification, io) {
   users.forEach((user) => {

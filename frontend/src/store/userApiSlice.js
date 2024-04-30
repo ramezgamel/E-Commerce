@@ -16,11 +16,32 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    logout: builder.mutation({
-      query: () => ({
-        url: '/users/logout',
+    forgetPassword: builder.mutation({
+      query: (email) => ({
+        url: `/users/forgetPassword`,
         method: 'POST',
+        body:{email}
       }),
+    }),
+    verifyCode: builder.mutation({
+      query: (resetCode) => ({
+        url: '/users/verifyCode',
+        method: 'POST',
+        body: {resetCode},
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({password,confirmPassword, email}) => ({
+        url: '/users/resetPassword',
+        method: 'PUT',
+        body: {password,confirmPassword, email}
+      }),
+    }),
+    logout:builder.mutation({
+      query:()=>({
+        url:"/users/logout",
+        method:"POST"
+      })
     }),
     updateUser: builder.mutation({
       query: (data) =>({
@@ -55,20 +76,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['User'],
     }),
-    forgetPassword: builder.mutation({
-      query: (email) => ({
-        url: `/users/forgetPassword`,
-        method: 'POST',
-        body:email
-      }),
-    }),
-    resetPassword: builder.mutation({
-      query: (data) => ({
-        url: `/users/resetPassword/${data.token}`,
-        method: 'POST',
-        body: {password: data.password, confirmPassword: data.confirmPassword}
-      }),
-    }),
     markAsRead: builder.mutation({
       query: (id)=>({
         url: `/users/notifications/${id}`,
@@ -87,6 +94,7 @@ export const {
   useGetUsersQuery,
   useDeleteUserMutation,
   useForgetPasswordMutation,
+  useVerifyCodeMutation,
   useResetPasswordMutation,
   useGetNotificationQuery,
   useMarkAsReadMutation

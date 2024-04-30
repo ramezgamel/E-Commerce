@@ -7,9 +7,12 @@ import FullPageLoader from './components/FullPageLoader';
 function App() {
   useEffect(()=>{
     setTimeout(() => {
-      fetch(`${import.meta.env.VITE_BASE_URL}api/products`)
-    }, 10000);
-  },[])
+      fetch(`${import.meta.env.VITE_BASE_URL}api/products`,{
+        method:"GET"
+      });
+      console.log('sent')
+    }, 100000);
+  },[]);
   return <>
   <ToastContainer
     position="bottom-center"
