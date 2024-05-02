@@ -1,48 +1,34 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/Product");
 const ApiError = require("../utils/apiError");
-const ApiFeatures = require("../utils/apiFeatures");
-const { createOne, updateOne, deleteOne, getOne } = require("./factory");
+const factory = require("./factory");
 
 // @desc    Get products by category
 // @route   GET /api/products/category
 // @access  All
-module.exports.getProducts = asyncHandler(async (req, res) => {
-  const countDocument = await Product.countDocuments();
-  const features = new ApiFeatures(Product.find(), req.query)
-    .sort()
-    .search()
-    .fields()
-    .filter()
-    .paginate(countDocument);
-  const products = await features.query.populate("category", "name");
-  res.status(200).json({
-    totalPages: features.totalPages,
-    page: features.page,
-    limit: features.limit,
-    result: products,
-  });
+module.exports.getProducts = factory.getAll(Product, {
+  path: "category",
+  select: "name",
 });
-
 // @desc    Create new product
 // @route   POST /api/products/
 // @access  admin
-module.exports.createProduct = createOne(Product);
+module.exports.createProduct = factory.createOne(Product);
 
 // @desc    Get specific products
 // @route   GET /api/products/:id
 // @access  All
-module.exports.getProduct = getOne(Product);
+module.exports.getProduct = factory.getOne(Product);
 
 // @desc    Delete specific products
 // @route   DELETE /api/products/:id
 // @access  Admin
-module.exports.deleteProduct = deleteOne(Product);
+module.exports.deleteProduct = factory.deleteOne(Product);
 
 // @desc    Update specific products
 // @route   PUT /api/products/:id
 // @access  Admin
-module.exports.updateProduct = updateOne(Product);
+module.exports.updateProduct = factory.updateOne(Product);
 
 // @desc    Get top products
 // @route   GET /api/products/top
@@ -61,7 +47,6 @@ module.exports.createReview = asyncHandler(async (req, res) => {
   const { rating, comment } = req.body;
   const product = await Product.findById(id);
   if (!product) throw new ApiError("Invalid product id", 404);
-
   alreadyReviewed = product.reviews.find(
     (review) => review.user.toString() === req.user._id.toString()
   );

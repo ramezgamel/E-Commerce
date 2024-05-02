@@ -4,7 +4,7 @@ const {
   addToAddresses,
   removeFromAddresses,
   getUserAddresses,
-} = require("../controller/addresses.controlle");
+} = require("../controller/addresses.controller");
 router.use(protect);
 router
   .route("/")

@@ -2,7 +2,7 @@ const User = require("../model/User");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
-const { updateOne, deleteOne, getOne } = require("./factory");
+const { updateOne, deleteOne, getOne, getAll } = require("./factory");
 
 // @desc    Get user by id
 // @route   GET /api/users/:id
@@ -27,23 +27,7 @@ module.exports.changePassword = asyncHandler(async (req, res) => {
 // @desc    Get all users
 // @route   GET /api/users/
 // @access  admin
-module.exports.getUsers = asyncHandler(async (req, res) => {
-  const countDocuments = await User.countDocuments();
-  const features = new ApiFeatures(User.find({}), req.query)
-    .sort()
-    .search()
-    .fields()
-    .filter()
-    .paginate(countDocuments);
-  const users = await features.query.select("-password");
-  if (!users) throw new ApiError("No users found", 404);
-  res.status(200).json({
-    totalPages: features.totalPages,
-    page: features.page,
-    limit: features.limit,
-    result: users,
-  });
-});
+module.exports.getUsers = getAll(User);
 // @desc    Update user
 // @route   POST /api/users/:userId
 // @access  admin

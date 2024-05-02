@@ -39,16 +39,19 @@ exports.getOne = (Model, populationOpt) =>
     res.status(200).json({ data: document });
   });
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, populationOpt) =>
   asyncHandler(async (req, res) => {
     const documentsCounts = await Model.countDocuments();
     const apiFeatures = new ApiFeatures(Model.find(), req.query)
       .paginate(documentsCounts)
       .filter()
       .search()
-      .limitFields()
+      .fields()
       .sort();
-    const { mongooseQuery, paginationResult } = apiFeatures;
+    let { mongooseQuery, paginationResult } = apiFeatures;
+    if (populationOpt) {
+      mongooseQuery = mongooseQuery.populate(populationOpt);
+    }
     const documents = await mongooseQuery;
     res
       .status(200)

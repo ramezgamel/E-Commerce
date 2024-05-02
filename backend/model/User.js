@@ -92,7 +92,6 @@ userSchema.methods.generateToken = async function () {
   const token = await jwt.sign({ id: this._id, role: this.role }, sec);
   return token;
 };
-
 userSchema.methods.resetCode = function () {
   const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
   this.passwordResetCode = crypto

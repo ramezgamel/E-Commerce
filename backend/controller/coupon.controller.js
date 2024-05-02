@@ -1,18 +1,14 @@
 const Coupon = require("../model/Coupon");
-const asyncHandler = require("express-async-handler");
+const {
+  getOne,
+  createOne,
+  updateOne,
+  deleteOne,
+  getAll,
+} = require("./factory");
 
-exports.getCoupons = asyncHandler(async (req, res) => {
-  res.status().json();
-});
-exports.getCoupon = asyncHandler(async (req, res) => {
-  res.status().json();
-});
-exports.createCoupon = asyncHandler(async (req, res) => {
-  res.status().json();
-});
-exports.updateCoupon = asyncHandler(async (req, res) => {
-  res.status().json();
-});
-exports.deleteCoupon = asyncHandler(async (req, res) => {
-  res.status().json();
-});
+exports.getCoupons = getAll(Coupon);
+exports.getCoupon = getOne(Coupon);
+exports.createCoupon = createOne(Coupon);
+exports.updateCoupon = updateOne(Coupon);
+exports.deleteCoupon = deleteOne(Coupon);
