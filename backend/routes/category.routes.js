@@ -6,13 +6,16 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../controller/category.controller");
-const { protect, restrictTo } = require("../middleware/auth.middelware");
+const validator = require("../validators/category.validator");
+const { protect, restrictTo } = require("../middleware/auth.middleware");
 
-router.post("/", protect, restrictTo(["admin"]), createCategory);
 router.get("/", getCategories);
+router.get("/:id", validator.getCatValidator, getCategory);
+router.use(protect, restrictTo(["admin"]));
+router.post("/", validator.createCatValidator, createCategory);
+
 router
   .route("/:id")
-  .get(getCategory)
-  .put(protect, restrictTo(["admin"]), updateCategory)
-  .delete(protect, restrictTo(["admin"]), deleteCategory);
+  .put(validator.updateCatValidator, updateCategory)
+  .delete(deleteCategory);
 module.exports = router;

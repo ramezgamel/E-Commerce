@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const controller = require("../controller/order.controller");
-const { protect, restrictTo } = require("../middleware/auth.middelware");
+const { protect, restrictTo } = require("../middleware/auth.middleware");
 router.post("/", protect, controller.createOrder);
 router.get("/mine", protect, controller.getMyOrders);
 router.get("/:id", protect, controller.getOrderById);

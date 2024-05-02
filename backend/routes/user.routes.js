@@ -1,36 +1,26 @@
 const router = require("express").Router();
 const controller = require("../controller/user.controller");
-const { protect, restrictTo } = require("../middleware/auth.middelware");
+const { protect, restrictTo } = require("../middleware/auth.middleware");
 const {
-  registerValidator,
-  loginValidator,
   updateUserValidator,
+  updateUserRoleValidator,
+  changePassValidator,
 } = require("../validators/user.validator");
+const authRoutes = require("./auth.routes");
 
-router.post("/register", registerValidator, controller.register);
-router.post("/login", loginValidator, controller.login);
-router.post("/forgetPassword", controller.forgetPassword);
-router.post("/verifyCode", controller.verifyResetCode);
-router.put("/resetPassword", controller.resetPassword);
-router.post("/logout", protect, controller.logout);
+router.use(authRoutes);
+router.get("/:id", controller.getUser);
 // auth
-router.post("/notifications/:id", protect, controller.markAsRead);
-router.get("/notifications", protect, controller.myNotification);
-router.put("/profile", protect, updateUserValidator, controller.updateUser);
+router.use(protect);
+router.post("/logout", controller.logout);
+router.put("/changePass", changePassValidator, controller.changePassword);
+router.post("/notifications/:id", controller.markAsRead);
+router.get("/notifications", controller.myNotification);
+router.put("/profile", updateUserValidator, controller.updateUser);
 //admin
-router.get("/", protect, restrictTo(["admin"]), controller.getUsers);
-router.put(
-  "/:id",
-  protect,
-  updateUserValidator,
-  restrictTo(["admin"]),
-  controller.updateUserById
-);
-router.delete(
-  "/:id",
-  protect,
-  restrictTo(["admin"]),
-  controller.deleteUserById
-);
+router.use(restrictTo(["admin"]));
+router.get("/", controller.getUsers);
+router.put("/:id", updateUserRoleValidator, controller.updateUserRole);
+router.delete("/:id", controller.deleteUserById);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { protect, restrictTo } = require("../middleware/auth.middelware");
+const { protect, restrictTo } = require("../middleware/auth.middleware");
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/Product");
 const User = require("../model/User");

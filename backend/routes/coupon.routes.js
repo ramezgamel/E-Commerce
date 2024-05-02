@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { protect, restrictTo } = require("../middleware/auth.middelware");
+const { protect, restrictTo } = require("../middleware/auth.middleware");
 const {
   getCoupons,
   createCoupon,

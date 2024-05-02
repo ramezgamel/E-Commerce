@@ -2,16 +2,7 @@ const validator = require("../middleware/validator");
 const { check, param, checkExact } = require("express-validator");
 const Category = require("../model/Category");
 const ApiError = require("../utils/apiError");
-
-const isArrayOfStringValidator = (value) => {
-  if (!Array.isArray(value)) {
-    throw new Error("Field must be an array");
-  }
-  if (value.some((item) => typeof item !== "string")) {
-    throw new Error("Each element in the array must be a string");
-  }
-  return true;
-};
+const isArrayOfStringValidator = require("./isArrayOfString");
 const checkCategory = async (val, { req }) => {
   const cat = await Category.findById(req.body.category);
   if (!cat) throw new ApiError("No category with this id", 400);
