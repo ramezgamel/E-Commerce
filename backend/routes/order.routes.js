@@ -1,17 +1,14 @@
 const router = require("express").Router();
 const controller = require("../controller/order.controller");
 const { protect, restrictTo } = require("../middleware/auth.middleware");
-router.post("/", protect, controller.createOrder);
-router.get("/mine", protect, controller.getMyOrders);
-router.get("/:id", protect, controller.getOrderById);
-router.put("/:id/pay", protect, controller.updateOrderToPaid);
+router.use(protect);
+router.post("/", controller.createOrder);
+router.get("/mine", controller.getMyOrders);
+router.get("/:id", controller.getOrderById);
+router.put("/:id/pay", controller.updateOrderToPaid);
 
 //admin
-router.get("/", protect, restrictTo(["admin"]), controller.getOrders);
-router.put(
-  "/:id/deliver",
-  protect,
-  restrictTo(["admin"]),
-  controller.updateOrderToDelivered
-);
+router.use(restrictTo(["admin"]));
+router.get("/", controller.getOrders);
+router.put("/:id/deliver", controller.updateOrderToDelivered);
 module.exports = router;

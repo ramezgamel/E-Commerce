@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Order = require("../model/Order");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
+const factory = require("./factory");
 
 const Product = require("../model/Product");
 // @desc    Create Order
@@ -101,29 +102,8 @@ module.exports.updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  admin
-module.exports.getOrders = asyncHandler(async (req, res) => {
-  const countDocuments = await Order.countDocuments();
-  const features = new ApiFeatures(Order.find({}), req.query)
-    .sort()
-    .search()
-    .filter()
-    .fields()
-    .paginate(countDocuments);
-  const orders = await features.query.populate("user", "name");
-  if (!orders) throw new ApiError("No orders to show", 404);
-  res.status(200).send({
-    totalPages: features.totalPages,
-    page: features.page,
-    limit: features.limit,
-    result: orders,
-  });
-});
+module.exports.getOrders = factory.getAll(Order);
 // @desc    Get specific order
 // @route   GET /api/orders/:id
 // @access  admin
-module.exports.getOrderById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const order = await Order.findById(id).populate("user", "name email");
-  if (!order) throw new ApiError("Order not found", 400);
-  res.status(200).send(order);
-});
+module.exports.getOrderById = factory.getOne(Order);

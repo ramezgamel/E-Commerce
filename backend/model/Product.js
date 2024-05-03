@@ -26,6 +26,8 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    color: String,
+    size: String,
     brand: {
       type: String,
       required: true,
@@ -42,6 +44,10 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     rating: {
+      type: Number,
+      default: 0,
+    },
+    shipping: {
       type: Number,
       default: 0,
     },

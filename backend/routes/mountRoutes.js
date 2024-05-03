@@ -6,6 +6,7 @@ const categoryRoutes = require("./category.routes");
 const wishListRoutes = require("./wishList.routes");
 const addressesRoutes = require("./addresses.routes");
 const couponsRoutes = require("./coupon.routes");
+const cartRoutes = require("./cart.routes");
 const cloudinary = require("../middleware/cloudinary");
 const upload = require("../middleware/upload");
 
@@ -18,6 +19,7 @@ const mountRoutes = (app) => {
   app.use("/api/wishList", wishListRoutes);
   app.use("/api/addresses", addressesRoutes);
   app.use("/api/coupons", couponsRoutes);
+  app.use("/api/cart", cartRoutes);
   app.post("/api/uploadSingle", upload.single("image"), cloudinary);
   app.post("/api/uploadMulti", upload.array("images", 5), cloudinary);
 };

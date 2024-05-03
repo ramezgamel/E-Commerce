@@ -15,6 +15,7 @@ exports.createValidator = [
     .withMessage("Name is required")
     .isLength({ min: 3, max: 32 })
     .withMessage("Name length must be 3 min and 32 max"),
+  check("shipping").optional(),
   check("images")
     .custom(isArrayOfStringValidator)
     .withMessage("Accept images as array of string")
@@ -58,6 +59,7 @@ exports.updateValidator = [
     .withMessage("ID is required")
     .isMongoId()
     .withMessage("Invalid ID"),
+  check("shipping").optional(),
   check("name")
     .optional()
     .isLength({ min: 3, max: 32 })
