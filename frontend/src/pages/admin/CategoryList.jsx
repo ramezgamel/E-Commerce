@@ -11,7 +11,7 @@ function CategoryList() {
   const [show, setShow ] = useState(false)
   const [page, setPage] = useState(1);
   const [category, setCategory]= useState('');
-  const {data, isLoading, isFetching, error} = useGetCatsQuery({page});
+  const {data:categories, isLoading, isFetching, error} = useGetCatsQuery({page});
   const [deleteCat]= useDeleteCatMutation();
   const deleteCategory= async (id) => {
     try {
@@ -65,7 +65,7 @@ function CategoryList() {
             ) : (
               <tbody>
                 { !isFetching &&
-                  data?.result?.map((cat) => (
+                  categories.data.map((cat) => (
                     <tr
                       key={cat._id}
                       className="border-b dark:border-gray-700"
@@ -100,18 +100,18 @@ function CategoryList() {
               <Loader />
             </div>
           ) : (
-            data?.data?.result?.length === 0 && (
+            categories.data.length === 0 && (
               <div className="py-5 text-center">
                 <strong className="text-main">Not Found</strong>
               </div>
             )
           )}
         {/* PAGINATE  */}
-        {data?.data?.totalPages > 1 &&(
+        {categories?.paginationResult?.totalPages > 1 &&(
         <div className="d-flex justify-content-center">
           <Paginate
-            pages={data?.data?.totalPages}
-            pageNum={data?.data?.page}
+            pages={categories?.paginationResult?.totalPages}
+            pageNum={categories?.paginationResult?.currentPage}
             setPage={setPage}
           />
         </div>

@@ -6,12 +6,12 @@ const crypto = require("crypto");
 
 const signIn = async (res, user) => {
   const token = await user.generateToken();
-  res.cookie("token", token, {
+  res.cookie("mhp_token", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "None",
-    secure: process.env.NODE_ENV !== "development" ? true : false,
-    // secure: true,
+    // secure: process.env.NODE_ENV !== "development" ? true : false,
+    secure: true,
   });
   res.json({
     name: user.name,

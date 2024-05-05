@@ -36,6 +36,9 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    priceAfterDiscount: {
+      type: Number,
+    },
     discount: {
       type: Number,
     },
@@ -81,5 +84,15 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+productSchema.pre("save", function (next) {
+  if (this.discount) {
+    this.priceAfterDiscount = (
+      this.price -
+      this.price * (this.discount / 100)
+    ).toFixed(2);
+  }
+  next();
+});
 
 module.exports = mongoose.model("Product", productSchema);

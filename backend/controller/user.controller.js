@@ -1,7 +1,6 @@
 const User = require("../model/User");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
-const ApiFeatures = require("../utils/apiFeatures");
 const { updateOne, deleteOne, getOne, getAll } = require("./factory");
 
 // @desc    Get user by id
@@ -40,7 +39,7 @@ module.exports.deleteUserById = deleteOne(User);
 // @route   POST /api/users/logout
 // @access  user
 module.exports.logout = asyncHandler(async (req, res) => {
-  res.cookie("token", "", {
+  res.cookie("mhp_token", "", {
     httpOnly: true,
     secure: true,
     sameSite: "None",

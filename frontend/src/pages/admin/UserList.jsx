@@ -26,7 +26,6 @@ function UserList() {
       }
     }
   };
-
   return (
     <div className="max-w-screen-xl bg-gray-50 dark:bg-gray-800">
       <div className="relative mx-3 mt-3 overflow-hidden bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
@@ -84,7 +83,7 @@ function UserList() {
               </div>
             ) : ( 
               <tbody>
-                {!isFetching && users?.result.map((user) => (
+                {!isFetching && users?.data?.map((user) => (
                   <tr key={user._id} className="border-b dark:border-gray-700">
                     <td className="p-2">{user._id}</td>
                     <td className="p-2">{user.name}</td>
@@ -111,18 +110,18 @@ function UserList() {
               <Loader />
             </div>
           ) : (
-            users?.result.length === 0 && (
+            users?.data.length === 0 && (
               <div className="py-5 text-center">
                 <strong className="text-main">Not Found</strong>
               </div>
             )
           )}
         </div>
-        {users?.totalPages > 1 &&(
+        {users?.paginationResult.totalPages > 1 &&(
         <div className="d-flex justify-content-center">
           <Paginate
-            pages={users?.totalPages}
-            pageNum={users?.page}
+            pages={users?.paginationResult.totalPages}
+            pageNum={users?.paginationResult.currentPage}
             setPage={setPage}
           />
         </div>

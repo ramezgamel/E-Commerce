@@ -15,7 +15,6 @@ function OrderList() {
   const [sort, setSort] = useState('');
   const [keyword, setKeyword] = useState('');
   const [toggle, setToggle] = useState('+');
-  // const [orders, setOrders] = useState({});
   const {data:orders, isLoading, isFetching, error} = useGetOrdersQuery({page, sort, keyword, toggle});
   const [makeDelivered] = useDeliverOrderMutation();
   const markAsDelivered = async (id, userId) => {
@@ -91,7 +90,7 @@ function OrderList() {
             ) : (
               <tbody>
                 {!isFetching &&
-                  orders?.result?.map((order) => (
+                  orders?.data?.map((order) => (
                     <tr
                       key={order._id}
                       className="border-b dark:border-gray-700"
@@ -140,18 +139,18 @@ function OrderList() {
               <Loader />
             </div>
           ) : (
-            orders?.data?.result.length === 0 && (
+            orders?.data?.length === 0 && (
               <div className="py-5 text-center">
                 <strong className="text-main">Not Found</strong>
               </div>
             )
           )}
         </div>
-        {orders?.totalPages > 1 &&(
+        {orders?.paginationResult.totalPages > 1 &&(
           <div className="d-flex justify-content-center">
             <Paginate
-              pages={orders?.totalPages}
-              pageNum={orders?.page}
+              pages={orders?.paginationResult.totalPages}
+              pageNum={orders?.paginationResult.currentPage}
               setPage={setPage}
             />
           </div>

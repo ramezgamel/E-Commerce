@@ -155,7 +155,7 @@ function ProductList() {
             ) : (
               <tbody>
                 { !isFetching &&
-                  products?.result.map((product) => (
+                  products?.data.map((product) => (
                     <tr
                       key={product._id}
                       className="border-b dark:border-gray-700"
@@ -193,18 +193,18 @@ function ProductList() {
               <Loader />
             </div>
           ) : (
-            products?.result.length === 0 && (
+            products?.data.length === 0 && (
               <div className="py-5 text-center">
                 <strong className="text-main">Not Found</strong>
               </div>
             )
           )}
         {/* PAGINATE  */}
-        {products?.totalPages > 1 &&(
+        {products?.paginationResult.totalPages > 1 &&(
         <div className="d-flex justify-content-center">
           <Paginate
-            pages={products?.data?.totalPages}
-            pageNum={products?.data?.page}
+            pages={products?.paginationResult.totalPages}
+            pageNum={products?.paginationResult.currentPage}
             setPage={setPage}
           />
         </div>

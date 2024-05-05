@@ -27,15 +27,15 @@ function ProductDetails() {
     refetch,
   } = useGetProductByIdQuery(id);
   useEffect(() => {
-    setMainImage(product?.images[0]);
-  }, [product]);
+    setMainImage(product?.data?.images[0]);
+  }, [product?.data]);
   const addQty = (e) => {
-    if (e.target.value > product?.countInStock)
+    if (e.target.value > product.data?.countInStock)
       return toast.warn('Out of stock');
     setQty(e.target.value);
   };
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
+    dispatch(addToCart({ ...product?.data, qty }));
   };
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -53,16 +53,16 @@ function ProductDetails() {
     <Loader/>
   </div>;
   if (error) return <div className="alert">Error: {error.message || "Something went wrong"}</div>;
-
+  console.log(product.data)
   return (
     <NavAnimation>
-      <Meta title={product.name} />
+      <Meta title={product.data.name} />
       <div className="container mx-auto">
       <div className="gap-1 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
           <div className="bd flex w-[20%] flex-col gap-1">
-            {product?.images &&
-              product?.images.map((image) => (
+            {product.data?.images &&
+              product.data?.images.map((image) => (
                 <div
                   key={image}
                   className="bd cursor-pointer h-[20%] rounded-md border   text-main hover:opacity-30"
@@ -70,7 +70,7 @@ function ProductDetails() {
                   <img
                     className="mb-2 h-full w-full "
                     src={image}
-                    alt={product?.name}
+                    alt={product.data?.name}
                     onClick={() => setMainImage(image)}
                   />
                 </div>
@@ -80,31 +80,31 @@ function ProductDetails() {
             <img
               className="h-full text-main"
               src={mainImage}
-              alt={product?.name} 
+              alt={product.data?.name} 
             />
           </div>
         </div>
         <div className="md:col-span-4">
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
-            <h3 className="text-main">{product?.name}</h3>
+            <h3 className="text-main">{product.data?.name}</h3>
             <Rating
-              value={product?.rating}
-              text={`${product?.numReviews} reviews`}
+              value={product.data?.rating}
+              text={`${product.data?.numReviews} reviews`}
             />
           </div>
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
             <p className="text-main">
-              <strong>Price:</strong> ${product?.price}
+              <strong>Price:</strong> ${product.data?.price}
             </p>
             <p className="text-main">
-              <strong>Brand:</strong> {product?.brand}
+              <strong>Brand:</strong> {product.data?.brand}
             </p>
             <p className="text-main">
-              <strong>Category:</strong> {product?.category}
+              <strong>Category:</strong> {product.data?.category}
             </p>
           </div>
           <p className="text-main">
-            <strong>Description:</strong> {product?.description}
+            <strong>Description:</strong> {product.data?.description}
           </p>
         </div>
         {/* BUY CARD  */}
@@ -116,7 +116,7 @@ function ProductDetails() {
                 <strong>Price:</strong>{' '}
               </p>
               <p className="text-main">
-                <strong>${product?.price}</strong>
+                <strong>${product.data?.price}</strong>
               </p>
             </div>
             <div className="flex items-center justify-between">
@@ -126,11 +126,11 @@ function ProductDetails() {
               </p>
               <p className="text-main">
                 <strong>
-                  {product?.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                  {product.data?.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
                 </strong>{' '}
               </p>
             </div>
-            {product?.countInStock > 0 && (
+            {product.data?.countInStock > 0 && (
               <div className="flex items-center justify-between">
                 <p className="text-main">
                   {' '}
@@ -148,7 +148,7 @@ function ProductDetails() {
           <button
             className="btn w-100 mt-2"
             type="button"
-            disabled={product?.countInStock === 0}
+            disabled={product.data?.countInStock === 0}
             onClick={addToCartHandler}
           >
             Add To Cart
@@ -158,16 +158,16 @@ function ProductDetails() {
       <div className="review">
         <div>
           <h2 className="text-main">Reviews</h2>
-          {product.reviews.length === 0 && (
+          {product.data?.reviews?.length == 0 ? (
             <p
               role="info"
               className="border-collapse rounded-md border-red-400 bg-red-400 py-2 pl-5 text-white"
             >
               No reviews
             </p>
-          )}
+          ):
           <div className="text-main">
-            {product.reviews.map((review) => (
+            {product.data?.data.reviews.map((review) => (
               <div key={review._id} className="mb-2">
                 <div className="flex items-center justify-between border-b border-slate-900/10 dark:border-slate-50/[0.06] ">
                   <strong>{review.name}</strong>
@@ -224,6 +224,7 @@ function ProductDetails() {
               )}
             </div>
           </div>
+          }
         </div>
       </div>
       </div>

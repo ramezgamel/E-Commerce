@@ -58,14 +58,12 @@ module.exports.getMyOrders = asyncHandler(async (req, res) => {
     .sort()
     .search()
     .paginate(countDocuments);
-  const orders = await features.query;
-  if (!orders) throw new ApiError("Don't have any orders yet", 404);
+  const orders = await features.mongooseQuery;
 
   res.status(200).json({
-    totalPages: features.totalPages,
-    page: features.page,
-    limit: features.limit,
-    result: orders,
+    results: orders.length,
+    paginationResult: features.paginationResult,
+    data: orders,
   });
 });
 

@@ -56,7 +56,7 @@ class ApiFeatures {
     const pagination = {};
     pagination.currentPage = page;
     pagination.limit = limit;
-    pagination.numberOfPages = Math.ceil(countDocuments / limit);
+    pagination.totalPages = Math.ceil(countDocuments / limit);
 
     if (endIndex < countDocuments) {
       pagination.next = page + 1;
@@ -69,15 +69,6 @@ class ApiFeatures {
     this.paginationResult = pagination;
     return this;
   }
-  //   const page = this.queryParams.page * 1 || 1;
-  //   const limit = this.queryParams.limit * 1 || 10;
-  //   const skip = (page - 1) * limit;
-  //   this.query = this.query.skip(skip).limit(limit);
-  //   this.page = page;
-  //   this.limit = limit;
-  //   this.totalPages = Math.ceil(countDocument / limit);
-  //   return this;
-  // }
 }
 
 module.exports = ApiFeatures;

@@ -17,7 +17,7 @@ function CreateNotification() {
     }
     publishNotification(notification)
   };
-  const values = users?.result.map(user => {return {label:user.email, value:user._id}});
+  const values = users?.data.map(user => {return {label:user.email, value:user._id}});
   return (
     <FormContainer >
       <h1 className="text-main text-center">Notifications</h1>

@@ -4,9 +4,9 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 
 module.exports.protect = asyncHandler(async (req, res, next) => {
-  const { token } = req.cookies;
-  if (!token) throw new ApiError("Not Authorized, no token", 401);
-  const decoded = jwt.verify(token, process.env.SEC_JWT);
+  const { mhp_token } = req.cookies;
+  if (!mhp_token) throw new ApiError("Not Authorized, no token", 401);
+  const decoded = jwt.verify(mhp_token, process.env.SEC_JWT);
   const user = await User.findById(decoded.id).select("-password");
   if (user == null) throw new ApiError("User not found");
   req.user = user;

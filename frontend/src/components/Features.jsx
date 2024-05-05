@@ -20,19 +20,19 @@ function  Features({setFeatures, setSort,sort}) {
       <div className="mb-2">
         <h2 className="text-main text-lg">Sort</h2>
         <div className="flex gap-2 ml-2">
-          <input onClick={()=>setSort('')} checked={sort == ""} className="w-fit" type="radio" id="name" value=""/>
+          <input onChange={()=>setSort('')} checked={sort == ""} className="w-fit" type="radio" id="name" value=""/>
           <label htmlFor="name" className="m-0 text-sm">None</label>
         </div>
         <div className="flex gap-2 ml-2">
-          <input onClick={(e)=>setSort(e.target.value)} checked={sort == "name"} className="w-fit" type="radio" name="sort" id="name" value="name"/>
+          <input onChange={(e)=>setSort(e.target.value)} checked={sort == "name"} className="w-fit" type="radio" name="sort" id="name" value="name"/>
           <label htmlFor="name" className="m-0 text-sm">Name</label>
         </div>
         <div className="flex gap-2 ml-2"> 
-          <input onClick={(e)=>setSort(e.target.value)} checked={sort == "price"} className="w-fit" type="radio" name="sort" id="price" value="price"/>
+          <input onChange={(e)=>setSort(e.target.value)} checked={sort == "price"} className="w-fit" type="radio" name="sort" id="price" value="price"/>
           <label htmlFor="price" className="m-0 text-sm">Price</label>
         </div>
         <div className="flex gap-2 ml-2">
-          <input onClick={(e)=>setSort(e.target.value)} checked={sort == "-rating"} className="w-fit" type="radio" name="sort" id="rating" value="-rating"/>
+          <input onChange={(e)=>setSort(e.target.value)} checked={sort == "-rating"} className="w-fit" type="radio" name="sort" id="rating" value="-rating"/>
           <label htmlFor="rating" className="m-0 text-sm">Rating</label>
         </div>
       </div>

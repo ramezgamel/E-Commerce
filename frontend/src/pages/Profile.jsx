@@ -26,7 +26,6 @@ function Profile() {
   const {
     data: orders,
     isLoading: loadingOrders,
-    error,
   } = useGetMyOrdersQuery(page);
   useEffect(() => {
     if (userInfo) {
@@ -56,12 +55,7 @@ function Profile() {
     }
   };
   if(uploadErr) toast.error(uploadErr.message);
-  if (error)
-    return (
-      <div role="alert" className="alert">
-        {error?.status == 401 ? 'Unauthorized' : 'Some thing went wrong'}
-      </div>
-    );
+  console.log(orders)
   return (
     <div className="grid-cols-12 gap-2 md:grid">
       <div className="col-span-4">
@@ -111,12 +105,8 @@ function Profile() {
           {(Boolean(progress) && !isUploaded) && <Progress progress={progress}/> }
         <h2 className="my-2 text-main">My Orders</h2>
         {loadingOrders && <Loader />}
-        {error && (
-          <h3 role="alert" className="alert">
-            {error}
-          </h3>
-        )}
-        {orders?.result?.length == 0 ? (
+        {orders && 
+          orders?.data?.length == 0 ? (
           <div role="alert" className="alert">
             No Orders yet
           </div>
@@ -146,7 +136,7 @@ function Profile() {
                 </tr>
               </thead>
               <tbody>
-                {orders?.result?.map((order) => (
+                {orders?.data?.map((order) => (
                   <tr key={order._id} className="border-b dark:border-gray-700">
                     <td className="p-2">{order._id}</td>
                     <td className="p-2">{order.createdAt.substring(0, 10)}</td>
@@ -174,15 +164,17 @@ function Profile() {
                 ))}
               </tbody>
             </table>
-            <div className="d-flex justify-content-center mt-2">
+            {orders.paginationResult.totalPages > 1 && (<div className="flex justify-center mt-2">
               <Paginate
-                pages={orders?.totalPages}
-                pageNum={orders?.page}
+                pages={orders?.paginationResult.totalPages}
+                pageNum={orders?.paginationResult.currentPage}
                 setPage={setPage}
               />
-            </div>
+            </div>)
+            }
           </div>
-        )}
+        )
+        }
       </div>
     </div>
   );
