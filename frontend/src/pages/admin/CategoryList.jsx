@@ -22,7 +22,7 @@ function CategoryList() {
     }
   }
   return (
-    <div className="px-4 mt-3 overflow-auto bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
+    <div className="p-4 mt-3 overflow-auto bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
     <div className="mb-5 flex justify-between">
       <h2 className="text-main">Categories</h2>
       <button 

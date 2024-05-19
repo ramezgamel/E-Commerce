@@ -11,16 +11,16 @@ import { socket } from "../socket";
 import { toast } from "react-toastify";
 import { logout } from "../store/authSlice";
 
-function ProfileDropdown({isLoggedIn,userInfo}) {
+function ProfileDropdown({ isLoggedIn, userInfo }) {
   const dispatch = useDispatch();
-  const navigate= useNavigate();
-  const [logoutCall]= useLogoutMutation();
-  
+  const navigate = useNavigate();
+  const [logoutCall] = useLogoutMutation();
+
 
   const logoutHandler = async () => {
     try {
       await logoutCall().unwrap();
-      socket.disconnect()
+      socket.disconnect();
       dispatch(logout());
       navigate('/auth');
     } catch (err) {
@@ -29,13 +29,13 @@ function ProfileDropdown({isLoggedIn,userInfo}) {
   };
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative z-50 inline-block text-left">
       <Menu.Button className="inline-flex w-full justify-center rounded-md bg-opacity-20  text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src={ userInfo?.image}
-                    alt=""
-                  />
+        <img
+          className="h-8 w-8 rounded-full"
+          src={userInfo?.image}
+          alt=""
+        />
       </Menu.Button>
       <Transition
         as={Fragment}
@@ -50,11 +50,11 @@ function ProfileDropdown({isLoggedIn,userInfo}) {
           <div className="px-1 py-1">
             <Menu.Item>
               <Link
-                  to="/profile"
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                to="/profile"
+                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 <AiOutlineUser className="h-5 w-5" />
-                  Your Profile
+                Your Profile
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -63,16 +63,16 @@ function ProfileDropdown({isLoggedIn,userInfo}) {
                 className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
               >
                 <CiLogout className="h-5  w-5" />
-                  Logout
+                Logout
               </button>
             </Menu.Item>
-            {(isLoggedIn && userInfo?.role == 'admin' )&& (
+            {(isLoggedIn && userInfo?.role == 'admin') && (
               <Menu.Item>
                 <Link
                   to="/admin/users"
                   className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  <MdOutlineSpaceDashboard className="h-5 w-5" /> 
+                  <MdOutlineSpaceDashboard className="h-5 w-5" />
                   Dashboard
                 </Link>
               </Menu.Item>
@@ -81,7 +81,7 @@ function ProfileDropdown({isLoggedIn,userInfo}) {
         </Menu.Items>
       </Transition>
     </Menu>
-  )
+  );
 }
 
-export default ProfileDropdown
+export default ProfileDropdown;

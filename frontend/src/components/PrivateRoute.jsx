@@ -6,10 +6,9 @@ import Loader from "./Loader";
 
 function PrivateRoute() {
   const { userInfo } = useSelector((state) => state.auth);
-  console.log(userInfo)
   return userInfo ? <Suspense fallback={<Loader/>}>
       <Outlet/>
-    </Suspense> : <Navigate to="/login" replace />;
+    </Suspense> : <Navigate to="/auth" replace />;
 }
 
 export default PrivateRoute;

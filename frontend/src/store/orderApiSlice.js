@@ -8,7 +8,7 @@ const orderApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: { ...order },
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order', "Cart"],
     }),
     getOrderById: builder.query({
       query: (id) => ({
@@ -30,6 +30,12 @@ const orderApiSlice = apiSlice.injectEndpoints({
         url: `/orders/${orderId}/pay`,
         method: 'PUT',
         body: { ...details },
+      }),
+      invalidatesTags: ['Order', 'Notification'],
+    }),
+    checkoutSession: builder.query({
+      query: (cartId) => ({
+        url: `/orders/checkout-session/${cartId}`,
       }),
       invalidatesTags: ['Order', 'Notification'],
     }),
@@ -59,4 +65,5 @@ export const {
   useGetMyOrdersQuery,
   useGetOrdersQuery,
   useDeliverOrderMutation,
+  useLazyCheckoutSessionQuery
 } = orderApiSlice;

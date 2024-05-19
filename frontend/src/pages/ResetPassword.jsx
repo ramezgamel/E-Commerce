@@ -40,7 +40,7 @@ function ResetPassword() {
     if(password !== confirmPassword) return toast.error("Password dos not match.")
   try {
     await setNewPassword({password, confirmPassword, email}).unwrap();
-    navigate("/login")
+    navigate("/auth")
   } catch (err) {
     toast.error(err?.data?.message)
   }

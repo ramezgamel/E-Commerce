@@ -5,6 +5,7 @@ const {
   removeFromWishList,
   getUserWishList,
 } = require("../controller/wishList.controller");
+
 router.use(protect);
 router
   .route("/")

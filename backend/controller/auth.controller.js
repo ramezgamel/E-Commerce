@@ -18,6 +18,7 @@ const signIn = async (res, user) => {
     _id: user._id,
     image: user.image,
     email: user.email,
+    addresses: user.addresses,
     role: user.role,
   });
 };

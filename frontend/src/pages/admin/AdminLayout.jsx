@@ -13,11 +13,9 @@ function AdminLayout() {
     }
   },[userInfo,navigate])
   return (
-    <div className='grid grid-cols-12'>
-      <div className='hidden sm:block sm:col-span-3 md:col-span-2'>
-        <SideBar/>
-      </div>
-      <main className="max-h-screen mt-16 bg-slate-50 dark:bg-gray-800 col-span-12 sm:col-span-9 md:col-span-10">
+    <div className='h-[calc(100vh - 100px)] sm:flex'>
+      <SideBar/>
+      <main className="flex-grow px-2 overflow-hidden">
         <Outlet />
       </main>
     </div>

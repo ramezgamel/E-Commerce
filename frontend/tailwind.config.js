@@ -4,14 +4,22 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      container:{
+        center:true,
+        mb:"620px"
+      },
+      screens:{
+        'mb':"321px"
+      },
       colors: {
         main: "var(--color-main)",
         sec: "var(--color-sec)",
         clicked: "var(--color-clicked)",
-        back: "var(--color-bg)",
+        back: "var(--color-back)",
         content: "var(--color-content)",
       },
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 };

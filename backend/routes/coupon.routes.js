@@ -5,7 +5,10 @@ const {
   createCoupon,
   updateCoupon,
   deleteCoupon,
+  getCoupon,
 } = require("../controller/coupon.controller");
+
+router.get("/getOne", getCoupon);
 router.use(protect, restrictTo("admin"));
 router.route("/").get(getCoupons).post(createCoupon);
 router.route("/:id").put(updateCoupon).delete(deleteCoupon);

@@ -1,78 +1,92 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../store/orderApiSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { clearCartItems } from "../store/cartSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import { setCart } from "../store/offlineSlice";
+import {useLazyCheckoutSessionQuery} from "../store/orderApiSlice";
 function PlaceOrder() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart);
+  const [address] = useState(JSON.parse(localStorage.getItem("address")))
+  const [paymentMethod] = useState(localStorage.getItem("paymentMethod"))
+  const {cart} = useSelector((state) => state.offline);
+  const dispatch = useDispatch()
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const [checkoutSession, {isLoading:checkoutLoading}] = useLazyCheckoutSessionQuery();
   useEffect(() => {
-    if (!cart.shippingAddress.address) {
-      navigate("/shipping");
-    } else if (!cart.paymentMethod) {
-      navigate("/payment");
+    if(!cart) {
+      navigate("/")
     }
-  }, [cart.shippingAddress.address, cart.paymentMethod, navigate]);
+    if (!address) {
+      navigate("/shipping");
+    } 
+    if (!paymentMethod) {
+      navigate("/payment");
+    } 
+  }, [navigate, cart,address,paymentMethod]);
   
-  const placeOrderHandler = async () => {
-    try {
-      const res = await createOrder({
-        orderItems: cart.cartItems.map(item=> ({_id:item._id, qty:item.qty}))
-        ,
-        paymentMethod: cart.paymentMethod,
-        shippingAddress: cart.shippingAddress,
-      }).unwrap();
 
-      dispatch(clearCartItems());
-      navigate(`/order/${res._id}`);
+  const placeOrderHandler = async () => {
+    const cartId =  localStorage.getItem("cartID");
+    console.log(cartId)
+    try {
+      let res;
+      if(paymentMethod == "cash"){
+        res =await createOrder({
+          cartId,
+          address,
+          paymentMethod
+        }).unwrap();  
+        dispatch(setCart({}))
+        localStorage.removeItem("cartID");
+        navigate(`/order/${res.data._id}`);
+      }
+      if(paymentMethod == "card"){
+        res = await checkoutSession(cartId).unwrap();
+        dispatch(setCart({}))
+        localStorage.removeItem("cartID");
+        window.location.href = res.url
+      }
     } catch (error) {
       toast.error(error);
     }
   };
+  console.log(cart)
   return (
-    <div className="container text-main">
+    <div className="mx-16 text-main ">
       <CheckoutSteps step1 step2 step3 />
-      <div className="grid grid-cols-12">
-        <div className="col-span-8">
+      <div className="grid grid-cols-12 mt-4 ">
+        <div className="col-span-8 pr-4">
             <div>
-              <h2>Shipping</h2>
+              <h2 className="text-2xl text-center my-3 font-extrabold">Shipping</h2>
               <p>
                 <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city}
-                {cart.shippingAddress.postalCode},{" "}
-                {cart.shippingAddress.country}
               </p>
             </div>
+            <p> <strong>Payment Method:</strong> {paymentMethod}</p>
             <div>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
-              {cart.paymentMethod}
-            </div>
-            <div>
-              <h2>Order Items</h2>
-              {cart.cartItems.length == 0 ? (
+              <hr />
+              <h2 className="text-xl font-bold">Order Items</h2>
+              {cart?.cartItems?.length == 0 ? (
                 <div role="alert" className="alert">Your cart is Empty</div>
               ) : (
                 <div className="px-3">
-                  {cart?.cartItems?.map((item, index) => (
-                    <div key={index} className="grid grid-cols-12 shadow-md my-2 p-2">
+                  {cart?.cartItems?.map((item) => (
+                    <div key={item.product._id} className="grid grid-cols-12 gap-2 shadow-md my-2 p-2">
                         <div className="col-span-2">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={item.product.images[0]}
+                            alt={item.product.name}
                             className="rounded-md"
                           />
                         </div>
                         <div className="col-span-5">
-                          <Link to={`/products/${item._id}`}>{item.name}</Link>
+                          <Link className="line-clamp-2" to={`/products/${item.product._id}`}>{item.product.name}</Link>
                         </div>
                         <div className="col-span-4">
-                          {item.qty} * ${item.price} = ${item.qty * item.price}
+                          {item.quantity} * {item.price} = {item.quantity * item.price}
                         </div>
                     </div>
                   ))}
@@ -84,33 +98,30 @@ function PlaceOrder() {
           <h2>Order Summary</h2>
           <div className="flex justify-between items-center">
                   <p>Items price:</p>
-                  <p>{cart.itemsPrice}</p>
+                  <p>{cart?.totalPriceAfterDisCount ? cart?.totalPriceAfterDisCount :cart?.totalPrice}</p>
           </div>
           <div className="flex justify-between items-center">
                   <p>Shipping:</p>
-                  <p>{cart.shippingPrice}</p>
+                  <p>{cart?.shipping}</p>
           </div>
           <div className="flex justify-between items-center">
             <p>Tax:</p>
-            <p>{cart.taxPrice}</p>
+            <p>{cart?.tax}</p>
           </div>
           <div className="flex justify-between items-center">
-                  <p>Total:</p>
-                  <p>{cart.totalPrice}</p>
+            <p>Total:</p>
+            <p>{cart?.totalPriceAfterDisCount ? cart?.totalPriceAfterDisCount :cart?.totalPrice}</p>
           </div>
           <div className="flex justify-between items-center">
-                {error && <h3 role="alert" className="alert">{error}</h3>}
+            {error && <h3 role="alert" className="alert">{error}</h3>}
           </div>
           <div className="flex justify-between items-center">
-                <button
-                  type="button"
-                  className="btn"
-                  disabled={cart.cartItems.length === 0}
-                  onClick={placeOrderHandler}
-                >
-                  Place Order
-                </button>
-                {isLoading && <Loader />}
+            <button
+              type="button"
+              className="btn"
+              onClick={placeOrderHandler}
+            >
+              {isLoading || checkoutLoading ? <Loader />:"Place Order"}          </button>
           </div>
         </div>
       </div>

@@ -1,20 +1,34 @@
-const Cart = require("../model/Cart");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const Product = require("../model/Product");
 const Coupon = require("../model/Coupon");
 const factory = require("./factory");
+const Cart = require("../model/Cart");
 
 // url    POST    api/cart?cartId=
 exports.addProductToCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
   const { cartId } = req.query;
   const product = await Product.findById(productId);
-  let cart = await Cart.findById(cartId);
   if (!product) throw new ApiError("Invalid product id", 404);
-  if (!cart) {
+  if (product.countInStock < quantity) throw new ApiError("Out of Stock", 400);
+  let cart;
+  if (cartId) {
+    cart = await Cart.findById(cartId);
+    if (cart.readOnly) throw new ApiError("Can't update this cart", 400);
+  }
+  if (!cartId) {
     cart = await Cart.create({
-      cartItems: [{ product: product._id, quantity: 1, price: product.price }],
+      cartItems: [
+        {
+          product: product._id,
+          quantity: 1,
+          price: product.priceAfterDiscount
+            ? product.priceAfterDiscount
+            : product.price,
+          shipping: product.shipping,
+        },
+      ],
     });
   } else {
     const productIndex = cart.cartItems.findIndex(
@@ -30,25 +44,34 @@ exports.addProductToCart = asyncHandler(async (req, res) => {
       cart.cartItems.push({
         product: product._id,
         quantity: 1,
-        price: product.price,
+        price: product.priceAfterDiscount
+          ? product.priceAfterDiscount
+          : product.price,
+        shipping: product.shipping,
       });
     }
   }
+
   cart.totalPriceAfterDisCount = undefined;
   await cart.save();
   res.status(200).json(cart);
 });
 // url    GET     api/cart/:id
-exports.getUserCart = factory.getOne(Cart);
+exports.getUserCart = factory.getOne(Cart, {
+  path: "cartItems",
+  populate: {
+    path: "product",
+  },
+});
 // url    DELETE  api/cart/:id
 exports.clearCart = factory.deleteOne(Cart);
 // url    DELETE  api/cart/:cartId/:itemId
 exports.deleteItem = asyncHandler(async (req, res) => {
-  const { itemId, cartId } = req.params;
+  const { productId, cartId } = req.params;
   const cart = await Cart.findById(cartId);
   if (!cart) throw new ApiError("There is no cart for this id", 404);
   cart.cartItems = cart.cartItems.filter(
-    (item) => item._id.toString() !== itemId.toString()
+    (item) => item.product.toString() !== productId.toString()
   );
   await cart.save();
   res.status(200).json(cart);
@@ -61,10 +84,15 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
     expire: { $gt: Date.now() },
   });
   if (!coupon) throw new ApiError("Invalid coupon or expired", 404);
-  const cart = await Cart.findById(req.params.cartId);
-  if (!cart) throw new ApiError("No cart fort this user");
+  const cart = await Cart.findById(req.params.cartId).populate(
+    "cartItems.product"
+  );
+  if (!cart) throw new ApiError("No cart for this user");
+  if (cart.isCoupon == true)
+    throw new ApiError("You have a discount already", 400);
   cart.totalPriceAfterDisCount =
     cart.totalPrice - cart.totalPrice * (coupon.discount / 100).toFixed(2);
+  cart.isCoupon = true;
   await cart.save();
-  res.status(200).json({ numOfCartItems: cart.cartItems.length, data: cart });
+  res.status(200).json({ data: cart });
 });

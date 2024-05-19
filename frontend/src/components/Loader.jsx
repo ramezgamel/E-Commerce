@@ -1,6 +1,6 @@
 function Loader() {
   return (
-    <div className=" bg-blend-overlay text-main">
+    <div className="bg-blend-overlay text-main">
       <div  
         className="my-auto justify-center flex"
       >

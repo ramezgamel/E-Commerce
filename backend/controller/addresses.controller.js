@@ -13,6 +13,7 @@ module.exports.addToAddresses = asyncHandler(async (req, res) => {
     postalCode: req.body.postalCode,
   };
   const user = await User.findById(req.user._id);
+
   user.addresses.map((ad) => {
     if (ad.alias == address.alias)
       throw new ApiError("Alias is already exist", 400);

@@ -48,7 +48,7 @@ function AdminHeader() {
     try {
       await logoutCall().unwrap();
       dispatch(logout());
-      navigate('/login');
+      navigate('/auth');
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }

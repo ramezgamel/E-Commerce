@@ -7,14 +7,12 @@ import {
 import Loader from '../components/Loader';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { addToCart } from '../store/cartSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Meta from '../components/Meta';
+import {useAddToCartMutation} from "../store/cartApiSlice"
 import NavAnimation from '../animation/NavAnimation';
 function ProductDetails() {
   const [mainImage, setMainImage] = useState('');
-  const [qty, setQty] = useState(1);
-  const dispatch = useDispatch();
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -26,17 +24,45 @@ function ProductDetails() {
     error,
     refetch,
   } = useGetProductByIdQuery(id);
+  const [addToCart] = useAddToCartMutation();
+
   useEffect(() => {
     setMainImage(product?.data?.images[0]);
   }, [product?.data]);
-  const addQty = (e) => {
-    if (e.target.value > product.data?.countInStock)
-      return toast.warn('Out of stock');
-    setQty(e.target.value);
+
+  const changeQtyHandler = async (e, product) => {
+    const quantity = e.target.value
+    if(quantity > product.countInStock) return toast.error("Out of stock")
+    if(quantity <= 0 ) return toast.error('Invalid quantity value')
+      try {
+      const cartId = localStorage.getItem("cartID");
+      if(cartId) {
+        await addToCart({productId:product._id, cartId}).unwrap()
+      }else {
+        const res = await addToCart({productId:product._id}).unwrap()
+        localStorage.setItem('cartID', res._id);
+      }
+      toast.success("Added to cart")
+    } catch (err) {
+      toast.error(err)
+    }
   };
-  const addToCartHandler = () => {
-    dispatch(addToCart({ ...product?.data, qty }));
+
+  const addToCartHandler = async () => {
+    try {
+      const cartId = localStorage.getItem("cartID");
+      if(cartId) {
+        await addToCart({productId:product._id, cartId}).unwrap()
+      }else {
+        const res = await addToCart({productId:product._id}).unwrap()
+        localStorage.setItem('cartID', res._id);
+      }
+      toast.success("Added to cart")
+    } catch (err) {
+      toast.error(err)
+    }
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -49,16 +75,18 @@ function ProductDetails() {
       toast.error(err?.data?.message || err.error);
     }
   };
+
   if (isLoading) return  <div className='h-full my-auto text-center'>
     <Loader/>
   </div>;
+
   if (error) return <div className="alert">Error: {error.message || "Something went wrong"}</div>;
-  console.log(product.data)
+
   return (
     <NavAnimation>
       <Meta title={product.data.name} />
-      <div className="container mx-auto">
-      <div className="gap-1 md:grid md:grid-cols-12">
+      <div className="md:container md:mx-auto mt-4">
+      <div className="gap-2 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
           <div className="bd flex w-[20%] flex-col gap-1">
             {product.data?.images &&
@@ -84,7 +112,7 @@ function ProductDetails() {
             />
           </div>
         </div>
-        <div className="md:col-span-4">
+        <div className="md:col-span-7">
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
             <h3 className="text-main">{product.data?.name}</h3>
             <Rating
@@ -93,66 +121,39 @@ function ProductDetails() {
             />
           </div>
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
-            <p className="text-main">
-              <strong>Price:</strong> ${product.data?.price}
+            <p className="text-main flex justify-between">
+              <strong>Price:</strong>EGP {product.data?.price}
             </p>
-            <p className="text-main">
+            <p className="text-main flex justify-between">
               <strong>Brand:</strong> {product.data?.brand}
             </p>
-            <p className="text-main">
-              <strong>Category:</strong> {product.data?.category}
+            <p className="text-main flex justify-between">
+              <strong>Category:</strong> {product.data?.category.name}
             </p>
           </div>
           <p className="text-main">
             <strong>Description:</strong> {product.data?.description}
           </p>
-        </div>
-        {/* BUY CARD  */}
-        <div className="md:col-span-3">
-          <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
-            <div className="flex justify-between">
-              <p className="text-main">
-                {' '}
-                <strong>Price:</strong>{' '}
-              </p>
-              <p className="text-main">
-                <strong>${product.data?.price}</strong>
-              </p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-main">
-                {' '}
-                <strong>Status:</strong>{' '}
-              </p>
-              <p className="text-main">
-                <strong>
-                  {product.data?.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
-                </strong>{' '}
-              </p>
-            </div>
-            {product.data?.countInStock > 0 && (
-              <div className="flex items-center justify-between">
-                <p className="text-main">
-                  {' '}
-                  <strong>Quantity: </strong>{' '}
-                </p>
+          <div className="flex items-center mt-3 justify-between md:px-10">
+            {product.data?.countInStock > 0 ? (
+              <>
                 <input
-                  className="w-16"
-                  value={qty}
-                  type="number"
-                  onChange={addQty}
-                />
-              </div>
-            )}
-          </div>
-          <button
-            className="btn w-100 mt-2"
-            type="button"
-            disabled={product.data?.countInStock === 0}
-            onClick={addToCartHandler}
-          >
-            Add To Cart
-          </button>
+                    className="w-14 py-2"
+                    placeholder='1'
+                    type="number"
+                    onChange={(e)=>changeQtyHandler(e,product.data)}
+                  />
+                <button
+              className="btn w-100"
+              type="button"
+              disabled={product.data?.countInStock === 0}
+              onClick={addToCartHandler}
+            >
+              Add To Cart
+                </button>
+              </>
+            ): <p className='text-red-500 text-2xl'>Out of Stock</p> }
+        </div>
         </div>
       </div>
       <div className="review">

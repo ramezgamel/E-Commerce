@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.no-scrollbar::-webkit-scrollbar{
+  display:"none"
+}
+.no-scrollbar{
+  -ms-overflow-style:none;
+  scrollbar-width:none
+}
+
 ul {
   list-style: none;
 }
@@ -11,7 +19,7 @@ a {
 
 @layer components {
   body {
-    @apply bg-slate-50 dark:bg-gray-800;
+    @apply bg-slate-50 text-main dark:bg-gray-900;
   }
   div.alert {
     @apply rounded-md border border-red-400 bg-red-400 text-white;
@@ -43,14 +51,14 @@ a {
 }
 @layer base {
   :root {
-    --color-bg: rgb(248 250 252);
+    --color-back: rgb(248 250 252);
     --color-content: rgb(31 41 55);
     --color-main: #000000;
     --color-sec: #eeeeee;
     --color-selected: rgb(37 99 235)
   }
   :root.dark {
-    --color-bg: rgb(31 41 55);
+    --color-back: rgba(31 41 55);
     --color-content: #585858;
     --color-main: #eeeeee;
     --color-sec: rgb(51 65 85);

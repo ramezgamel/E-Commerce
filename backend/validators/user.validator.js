@@ -2,6 +2,7 @@ const validator = require("../middleware/validator");
 const { check, param, checkExact } = require("express-validator");
 const isArrayOfString = require("./isArrayOfString");
 const isEnumValue = require("./isEnumValue");
+const isArrayOfObjects = require("./isArrayOfObject");
 
 exports.registerValidator = [
   check("name").isString().notEmpty().withMessage("User name is required"),
@@ -59,7 +60,20 @@ exports.loginValidator = [
 exports.updateUserValidator = [
   check("name").optional().isString(),
   check("phoneNumber").optional().isMobilePhone("ar-EG"),
-  check("addresses").optional().custom(isArrayOfString),
+  // check("addresses").custom(isArrayOfObjects),
+  // check("addresses.*.details")
+  //   .notEmpty()
+  //   .withMessage("Address details is required"),
+  // check("addresses.*.alias")
+  //   .notEmpty()
+  //   .withMessage("Address alias is required"),
+  // check("addresses.*.phone")
+  //   .notEmpty()
+  //   .withMessage("Address phone is required")
+  //   .isMobilePhone("ar-EG")
+  //   .withMessage("Invalid phone number"),
+  // check("addresses.*.city").notEmpty().withMessage("Address city is required"),
+  // check("addresses.*.postalCode").optional(),
   check("password")
     .notEmpty()
     .withMessage("Should provide password to update profile"),

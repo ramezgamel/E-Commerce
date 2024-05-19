@@ -4,11 +4,14 @@ const http = require("http");
 
 const express = require("express");
 const app = express();
+const compression = require("compression");
 const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const ApiError = require("./utils/apiError");
 const globalError = require("./middleware/globalError");
+const mountRoutes = require("./routes/mountRoutes");
+const { webhookCheckOut } = require("./controller/order.controller");
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -36,6 +39,7 @@ app.get("/keep-alive", (req, res) => {
 });
 
 app.use(cookieParser());
+app.use(compression());
 app.use(express.static("../uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,7 +49,13 @@ app.use(
     credentials: true,
   })
 );
-const mountRoutes = require("./routes/mountRoutes");
+
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckOut
+);
+
 mountRoutes(app);
 
 app.all("*", (req, res, next) => {

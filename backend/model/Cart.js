@@ -7,27 +7,51 @@ const cartSchema = mongoose.Schema(
         product: {
           type: mongoose.Schema.ObjectId,
           ref: "Product",
+          require: true,
         },
         quantity: {
           type: Number,
           default: 1,
         },
-        price: Number,
+        price: {
+          type: Number,
+          require: true,
+        },
+        shipping: {
+          type: Number,
+          default: 0,
+        },
+        tax: {
+          type: Number,
+          default: 0,
+        },
       },
     ],
     totalPrice: Number,
     totalPriceAfterDisCount: Number,
-    user: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
+    shipping: {
+      type: Number,
+      default: 0,
+      max: 100,
     },
-    shipping: Number,
-    tax: Number,
+    isCoupon: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
 cartSchema.pre("save", function (next) {
+  this.shipping = this.cartItems.reduce(
+    (acc, curr) => (acc += curr.shipping),
+    0
+  );
+  if (this.shipping > 100) this.shipping = 100;
   this.totalPrice = this.cartItems.reduce(
     (acc, curr) => (acc += curr.price * curr.quantity),
     0

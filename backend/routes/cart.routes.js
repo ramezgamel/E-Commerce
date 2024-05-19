@@ -7,9 +7,9 @@ const {
   clearCart,
 } = require("../controller/cart.controller");
 
-router.post("/", addProductToCart);
 router.route("/:id").get(getUserCart).delete(clearCart);
-router.delete("/:cartId/:itemId", deleteItem);
+router.post("/", addProductToCart);
+router.delete("/:cartId/:productId", deleteItem);
 router.put("/:cartId/applyCoupon", applyCoupon);
 
 module.exports = router;

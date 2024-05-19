@@ -1,99 +1,110 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeItem } from '../store/cartSlice';
+import { useRef } from 'react';
+import {useDeleteFromCartMutation} from '../store/cartApiSlice'
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
+import { useApplyCouponMutation } from '../store/cartApiSlice';
+import {useAddToCartMutation} from "../store/cartApiSlice"
+import { setCart } from '../store/offlineSlice';
 function Cart() {
-  const dispatch = useDispatch();
-  const {
-    cartItems,
-    itemsPrice,
-    itemsQuantity,
-    shippingPrice,
-    taxPrice,
-    totalPrice,
-  } = useSelector((state) => state.cart);
-  const updateCart = (item, qty) => {
-    dispatch(addToCart({ ...item, qty }));
+  const couponRef = useRef();
+  const quantityRef = useRef();
+  const {userInfo} = useSelector(state => state.auth);
+  const dispatch = useDispatch()
+  const {cart} = useSelector((state) => state.offline);
+  const [applyCoupon, {isLoading:couponLoader, isError:isCouponError}] = useApplyCouponMutation();
+  const [removeFromCart] = useDeleteFromCartMutation()
+  const [addToCart, {isLoading:addToCartLoading}] = useAddToCartMutation();
+  const removeFromCartHandler = async(productId) =>{
+    try {
+      await removeFromCart({cartId:cart._id,productId}).unwrap();
+      toast.success("Removed successfully");
+    } catch (err) {
+      toast.error(err)
+    }
   };
-  const handleDelete = (id) => {
-    dispatch(removeItem(id));
+
+  const changeQtyHandler = async (e,product) => {
+    if(addToCartLoading) return null
+    const quantity = e.target.value
+    if(quantity > product.countInStock) return toast.error("Out of stock")
+    if(quantity <= 0 ) return toast.error('Invalid quantity value')
+    try {
+      const cartId = localStorage.getItem("cartID");
+        if(cartId) {
+          await addToCart({productId:product._id, quantity, cartId}).unwrap()
+        }else {
+            const res = await addToCart({productId:product._id, quantity}).unwrap()
+          localStorage.setItem('cartID', res._id);
+        }
+        toast.success("Added to cart")
+    } catch (err) {
+      toast.error(err)
+    } 
   };
+
+  const applyCouponHandler = async () => {
+    try {
+      const res = await applyCoupon({cartId:cart?._id, couponName:couponRef.current.value});
+      dispatch(setCart(res.data.data))
+    } catch (err) {
+      toast.error(err?.error.data.message)
+    }
+  };
+  if(!cart ) return <Navigate to={"/"} />
   return (
-    <>
-      <h1 className="mb-2 text-main">Shopping Cart</h1>
-      <div className="grid-cols-12 gap-3 md:grid">
-        <div className="col-span-8">
-          {cartItems.length == 0 ? (
-            <div role="alert" className="alert">
-              Cart is Empty
-            </div>
-          ) : (
-            <div>
-              {cartItems.map((i) => (
-                <div
-                  key={i?._id}
-                  className="bd grid grid-cols-12 gap-2 border-b py-2"
-                >
-                  <div className="col-span-3">
-                    <img
-                      src={i?.image}
-                      alt={i?.name}
-                      className="h-full rounded-lg"
-                    />
-                  </div>
-                  <div className="col-span-9">
-                    <Link to={`/product/${i?._id}`}>{i?.name}</Link>
-                    <p className="text-main">${i?.price}</p>
-                    <div className="flex justify-between">
-                      <input
-                        className="w-50"
-                        type="number"
-                        defaultValue={i?.qty}
-                        onChange={(e) => updateCart(i, Number(e.target.value))}
-                      />
-                      <button
-                        type="button"
-                        className="btn"
-                        onClick={() => handleDelete(i?._id)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </div>
+    <div className='mx-auto max-w-3xl'>
+      <h1 className="mb-2 text-3xl text-main py-4">Cart <span className='text-gray-400 text-sm'>({cart?.cartItems.length} item)</span> </h1>
+      <section className='flex justify-between gap-5'>
+        <div >
+          {cart?.cartItems?.length && cart?.cartItems?.map(item=>
+            <div className='grid grid-cols-4 rounded-md mb-3 bg-back py-3 px-2 gap-2' key={item._id}> 
+              <Link className='col-span-1' to={`/product/${item.product._id}`} >
+                <img className='h-24 w-24' src={item.product.images[0]} alt={item.product.name} />
+              </Link>
+              <div className='col-span-3'>
+              <h3 className='text-main'>{item.product.name}</h3>
+              <p className='text-main '>EGP {item.product.priceAfterDiscount? 
+                <span className='inline-flex gap-3'>
+                  <span className='line-through text-gray-400'>{item.product.price}</span> 
+                  <span>{item.product.priceAfterDiscount}</span>
+                </span>
+                :<span>{item.product.price}</span>} 
+              </p>
+              <div className='flex items-center justify-between'>
+                <input ref={quantityRef} onChange={(e)=>changeQtyHandler(e,item.product)} type="number" className='w-10 p-1 text-center' placeholder={item.quantity} />
+                <div onClick={()=>removeFromCartHandler(item.product._id)} className='p-2 bg-red-600 rounded-md cursor-pointer'>
+                  <FaTrash className='text-white'/>
                 </div>
-              ))}
+              </div>
+              </div>
             </div>
           )}
         </div>
-        <div className="col-span-4 h-fit p-2 shadow-lg">
-          <div className="text-main">
-            <h4>Subtotal ({itemsQuantity}) items</h4>
-            <div className="flex justify-between">
-              <strong>Price :</strong>${itemsPrice}
-            </div>
-            <div className="flex justify-between">
-              <strong>Shipping :</strong>${shippingPrice}
-            </div>
-            <div className="flex justify-between">
-              <strong>Tax :</strong>${taxPrice}
-            </div>
-            <hr />
-            <div className="flex justify-between">
-              <strong>Total :</strong>${totalPrice}
-            </div>
+        {/* Order Summary */}
+        <div className='shadow-md bg-back h-fit p-2 text-main rounded-md'>
+          <h2 className='md:text-xl font-extrabold text-center mb-4'>Order Summary</h2>
+          <div className="flex justify-between ">
+            <input type="text" ref={couponRef} disabled={cart?.isCoupon} placeholder='Coupon Code' className='rounded-r-[0]'/>
+            <button className='btn !rounded-l-[0px]' disabled={couponLoader | cart?.isCoupon} onClick={applyCouponHandler}>{couponLoader ? <Loader/>: "Apply"}</button>
           </div>
-          <Link to="/shipping">
-            <button
-              type="button"
-              className="btn mt-2 w-full"
-              disabled={cartItems.length == 0}
-            >
-              Checkout
-            </button>
+          {cart?.isCoupon && <p className='text-green-500 px-5'>You get discount</p> }
+          {isCouponError && <p className='text-red-500 px-5'>Invalid coupon</p> }
+          <div className='flex text-sm md:text-bases text-main my-1 justify-between'>
+            <p >Subtotal <span className='text-gray-500 text-xs'>({cart?.cartItems.length} item)</span> </p>
+            <span>{cart?.totalPriceAfterDisCount?cart?.totalPriceAfterDisCount: cart?.totalPrice}</span>
+          </div>
+          <p className='flex text-sm md:text-base text-main my-1 justify-between'>Shipping <span>{cart?.shipping == 0 ? "Free" : cart?.shipping}</span></p>
+          <hr />
+          <p className='flex font-bold my-1 md:text-lg justify-between'>Total: <span className='md:text-lg font-semibold'>{cart?.totalPriceAfterDisCount?cart?.totalPriceAfterDisCount: cart?.totalPrice}</span></p>
+          <Link to={userInfo?"/shipping" : "/auth"} >
+            <button className='btn w-full my-4 uppercase'>CheckOUt</button>
           </Link>
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }
 

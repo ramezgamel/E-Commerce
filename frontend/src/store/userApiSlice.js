@@ -2,7 +2,7 @@ import { apiSlice } from './apiSlice';
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-  register: builder.mutation({
+    register: builder.mutation({
       query: (data) => ({
         url: '/users/register',
         method: 'POST',
@@ -59,6 +59,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags:['Notification'],
     }),
+    getProfile: builder.query({
+      query: () => ({
+        url: `/users/profile`,
+      }),
+      providesTags: ['User'],
+      keepUnusedDataFor: 5,
+    }),
     getUsers: builder.query({
       query: ({ keyword, page = 1, sort = '', dec = '+' }) => ({
         url: `/users?limit=${import.meta.env.VITE_LIMIT}&page=${page}${
@@ -97,5 +104,6 @@ export const {
   useVerifyCodeMutation,
   useResetPasswordMutation,
   useGetNotificationQuery,
-  useMarkAsReadMutation
+  useMarkAsReadMutation,
+  useGetProfileQuery
 } = userApiSlice;

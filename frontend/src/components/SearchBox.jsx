@@ -51,11 +51,11 @@ const SearchBox = memo(function SearchBox() {
         ></input>
       </form>
       {keyword != '' && (
-          <div className='mt-2 content-center'>
+          <div className='mt-2 overflow-y-scroll h-full content-center'>
             {isLoading && <Loader/>}
-            {(!isLoading && data?.result.length == 0 ) && <div className='alert text-center'>No Data</div> }
-            {data?.result.length > 0 && 
-              data.result.map((item) =>  (
+            {(!isLoading && data?.data?.length == 0 ) && <div className='alert text-center '>No Data</div> }
+            {data?.data?.length > 0 && 
+              data.data.map((item) =>  (
                 <Link
                   key={item._id}
                   to={`/product/${item._id}`}

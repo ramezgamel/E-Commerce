@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
-import cartSliceReducers from "./cartSlice";
 import authSliceReducer from "./authSlice";
 import { Provider } from "react-redux";
 import { memo } from "react";
+import offlineSlice from "./offlineSlice";
 
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
-    cart: cartSliceReducers,
+    offline: offlineSlice,
     auth: authSliceReducer,
   },  
   middleware: (getDefaultMiddleware) =>

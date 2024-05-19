@@ -1,21 +1,18 @@
 import { useGetProductQuery } from '../store/productsApiSlice';
 import Product from '../components/Product';
-import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import ProductCarousel from './ProductCarousel';
 import { useState } from 'react';
 import Tabs from '../components/Tabs';
-import Features from "../components/Features"
-import NavAnimation from '../animation/NavAnimation';
+import { useGetUserWishListQuery } from '../store/wishListApi';
+import { useSelector } from 'react-redux';
+import ProductSkeleton from '../components/skeleton/ProductSkeleton';
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
-  const [features, setFeatures] = useState('');
-  const [sort, setSort] = useState('');
-  const { data: products, isLoading, error } = useGetProductQuery({page, category, sort, features});
-  if (isLoading) return <div className='h-full my-auto text-center'>  
-    <Loader/>
-  </div> ;
+  const { data } = useGetUserWishListQuery();
+  const { cart } = useSelector(state => state.offline);
+  const { data: products, isLoading, error } = useGetProductQuery({ page, category });
   if (error)
     return (
       <div role="alert" className="alert">
@@ -23,44 +20,44 @@ function Home() {
       </div>
     );
   return (
-    <NavAnimation> 
-      <div className='flex'>
-        <aside className='hidden md:block md:w-48 shadow-md'>
-          <Features setFeatures={setFeatures} sort={sort}  setSort={setSort}/>
-        </aside>
-        <div className='w-full'>
-          <Tabs category={category} setCategory={setCategory}/>
-          <main className='p-3'>
-            <ProductCarousel />
-            <h1 className="text-main mb-4">Latest Products</h1>
-            <div className=" grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {products?.data.length > 0 ? (
-                products?.data?.map((product) => (
-                  <div key={product._id}>
-                    <Product product={product} />
-                  </div>
-                ))
-              ) : (
-                <div role="alert" className="alert">
-                  No Data to Show
-                </div>
-              )}
+    <div className='md:container md:mx-auto'>
+      <Tabs category={category} setCategory={setCategory} />
+      <main className='p-3'>
+        <ProductCarousel />
+        <h1 className="text-main mb-4">Latest Products</h1>
+        <div className="grid gap-3 grid-cols-1 mb:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {
+            isLoading && Array.from({ length: 20 }).map(() =>
+              <div key={Math.random()} >
+                <ProductSkeleton />
+              </div>
+            )
+          }
+          {products?.data.length > 0 ? (
+            products?.data?.map((product) => (
+              <div key={product._id}>
+                <Product product={product} isInWishList={data?.data?.some(item => product._id === item._id)} isInCart={cart?.cartItems?.some(item => item.product._id == product._id)} />
+              </div>
+            ))
+          ) : (
+            <div role="alert" className="alert">
+              No Data to Show
             </div>
-            <div className="text-center">
-              {products?.paginationResult.totalPages > 0 && (
-                <div className="d-flex justify-content-center mt-4">
-                  <Paginate
-                    pages={products?.paginationResult.totalPages}
-                    pageNum={products?.paginationResult.currentPage}
-                    setPage={setPage}
-                  />
-                </div>
-              )}
-            </div>
-          </main>
+          )}
         </div>
-      </div>
-    </NavAnimation>
+        <div className="text-center">
+          {products?.paginationResult.totalPages > 0 && (
+            <div className="d-flex justify-content-center mt-4">
+              <Paginate
+                pages={products?.paginationResult.totalPages}
+                pageNum={products?.paginationResult.currentPage}
+                setPage={setPage}
+              />
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
   );
 }
 

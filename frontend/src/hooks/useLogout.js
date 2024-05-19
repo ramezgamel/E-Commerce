@@ -11,7 +11,7 @@ function useLogout() {
       await logoutCall().unwrap();
       socket.disconnect()
       dispatch(logout());
-      navigate('/login');
+      navigate('/auth');
   };
   return [logout]
 }

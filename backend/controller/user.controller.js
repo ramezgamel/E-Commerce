@@ -7,10 +7,39 @@ const { updateOne, deleteOne, getOne, getAll } = require("./factory");
 // @route   GET /api/users/:id
 // @access  all
 module.exports.getUser = getOne(User);
-// @desc    Update My profile
-// @route   POST /api/users/profile
+// @desc    get My profile
+// @route   PUT /api/users/profile
 // @access  user
-module.exports.updateUser = updateOne(User);
+module.exports.getProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  res.status(200).json({
+    name: user.name,
+    phoneNumber: user.phoneNumber,
+    addresses: user.addresses,
+    email: user.email,
+    image: user.image,
+  });
+});
+// @desc    Update My profile
+// @route   PUT /api/users/profile
+// @access  user
+module.exports.updateUser = asyncHandler(async (req, res) => {
+  const { name, image, phoneNumber, password } = req.body;
+  const user = await User.findById(req.user._id);
+  const isCorrect = await user.checkPass(password);
+  if (isCorrect) throw new ApiError("Invalid password", 400);
+  user.name = name;
+  user.image = image;
+  user.phoneNumber = phoneNumber;
+  await user.save();
+  res.status(200).json({
+    name: user.name,
+    email: user.email,
+    image: user.image,
+    role: user.role,
+    addresses: user.addresses,
+  });
+});
 // @desc    update user password
 // @route   POST /api/users/changePass
 // @access  user
@@ -62,7 +91,7 @@ module.exports.markAsRead = asyncHandler(async (req, res) => {
 // @route   GET /api/users/notifications
 // @access  user
 module.exports.myNotification = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id.toString());
   if (!user) throw new ApiError("Invalid user", 404);
   res.status(200).json({
     notifications: user.notifications.reverse(),

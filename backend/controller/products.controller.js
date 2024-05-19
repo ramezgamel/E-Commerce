@@ -18,7 +18,10 @@ module.exports.createProduct = factory.createOne(Product);
 // @desc    Get specific products
 // @route   GET /api/products/:id
 // @access  All
-module.exports.getProduct = factory.getOne(Product);
+module.exports.getProduct = factory.getOne(Product, {
+  path: "category",
+  select: "name",
+});
 
 // @desc    Delete specific products
 // @route   DELETE /api/products/:id

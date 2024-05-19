@@ -1,49 +1,101 @@
 /* eslint-disable react/prop-types */
+import { FaHeart,FaRegHeart,FaShuttleVan, FaTrash } from 'react-icons/fa';
+import {MdOutlineAddShoppingCart}from "react-icons/md"
+import RatingAvg from './RatingAvg';
+import { useAddToWishListMutation, useDeleteItemFromWishListMutation } from '../store/wishListApi';
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Rating from './Rating';
-import { addToCart } from '../store/cartSlice';
-import { useDispatch } from 'react-redux';
-import { FaCartPlus } from "react-icons/fa6";
+import Loader from './Loader';
+import { useAddToCartMutation,useDeleteFromCartMutation } from '../store/cartApiSlice';
 
+function Product({ product,isInWishList,isInCart }) {
+  const [addToWish, {isLoading:addLoad}] = useAddToWishListMutation()
+  const [deleteFromWish, {isLoading:removeLoad}] = useDeleteItemFromWishListMutation()
+  const [removeFromCart,{isLoading: removeCartLoad}] = useDeleteFromCartMutation()
+  const [addToCart, {isLoading: addCartLoad}] = useAddToCartMutation()
+  const addToWishList= async(e) => {
+    e.preventDefault()
+    try {
+      await addToWish(product._id).unwrap();
+      toast.success("Added to wish list")
+    } catch (err) {
+      toast.error("Only logged in users")
+    }
+  };
+  const deleteToWishList= async(e) => {
+    e.preventDefault()
+    try {
+      await deleteFromWish(product._id).unwrap();
+      toast.success("Product removed")
+    } catch (err) {
+      toast.error(err)
+    }
+  };
+  const addToCartHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const cartId = localStorage.getItem("cartID");
+      console.log(cartId)
+      if(cartId) {
+        await addToCart({productId:product._id, cartId}).unwrap()
+      }else {
+        const res = await addToCart({productId:product._id}).unwrap()
+        localStorage.setItem('cartID', res._id);
+      }
+      toast.success("Added to cart")
+    } catch (err) {
+      toast.error(err)
+    }
+  };
 
-function Product({ product }) {
-  const dispatch = useDispatch();
-  const addToCartHandler = () => {
-    const qty = 1;
-    dispatch(addToCart({ ...product, qty }));
+  const removeFromCartHandler = async(e,productId) =>{
+    e.preventDefault()
+    const cartId = localStorage.getItem("cartID");
+    if(!cartId) return toast.error("Invalid cart")
+    try {
+      await removeFromCart({cartId,productId}).unwrap();
+      toast.success("Removed successfully");
+    } catch (err) {
+      toast.error(err)
+    }
   };
   return (
-    <div
-      className="h-[23rem] max-w-sm rounded-lg border transition-all hover:scale-105
-    border-gray-200 bg-slat e-50 shadow  hover:bg-gray-400 dark:border-gray-700 dark:bg-gray-800  dark:transition-colors dark:hover:bg-gray-600"
-    >
-      <div className="h-[15rem]">
-        <Link to={`/product/${product?._id}`}>
-          <img
-            className="h-full rounded-t-lg w-full "
-          src={product?.images[0]}  
-          />
-        </Link>
-      </div>
-      <div className="px-3 py-2">
-        <Link to={`/product/${product?._id}`}>
-          <h6 className="h-10 text-main">
-            <strong>{product?.name.slice(0, 35)}</strong>
-          </h6>
-        </Link>
-        <div className="text-sec">
-          <Rating
-            value={product?.rating}
-            text={`${product?.numReviews} reviews`}
-          />
+    <div className='bg-back p-2 h-full max-w-md min-h-[240px] rounded-md overflow-hidden' >
+      <Link to={"/product/"+product._id}>
+        <div className='relative h-[65%] '>
+          <span className='absolute top-2 flex justify-center items-center cursor-pointer right-2 size-9 rounded-md p-2 shadow-md bg-white'>
+            {addLoad || removeLoad ? <Loader /> : isInWishList ?  
+              <FaHeart onClick={deleteToWishList} className='text-red-600 w-full h-full'/> : <FaRegHeart onClick={addToWishList} className='text-gray-800 w-full h-full' />
+            }
+          </span>
+          <img className='h-full mx-auto' src={product.images[0]} alt={product.name} />
+          <span className='absolute w-9 h-9 p-2 flex justify-center items-center  rounded-md bottom-2 right-2 shadow-md cursor-pointer bg-white'>
+            {removeCartLoad || addCartLoad ? <Loader/> :isInCart ? <FaTrash onClick={(e)=>removeFromCartHandler(e,product._id)} className='text-red-600 w-full h-full'/> : 
+            <MdOutlineAddShoppingCart onClick={addToCartHandler}  className='text-gray-800 w-full h-full' />
+            }
+          </span>
+          <span className='absolute left-2 bottom-2'>
+            <RatingAvg ratingAvg={product.rating.toFixed(1)} ratingsNum={product.numReviews} />
+          </span>
         </div>
-        <div className='flex justify-between'>
-          <div className="text-xl text-main">${product?.price}</div>
-        <button className="btn " onClick={addToCartHandler}>
-          <FaCartPlus/>
-        </button>
+        <div className='mt-1 flex flex-col justify-between h-[35%]'>
+          <h2 className='font-semibold line-clamp-2 '>{product.name}</h2>
+          <div>
+            <div className='flex gap-1'>
+            <span>EGP</span>
+            <span className='font-semibold'>{product.price}</span>
+            { product.discount && <>
+            <span className='line-through text-slate-500'>{product.price}</span>
+            <span className='text-green-600'>{product.discount}%</span>
+              </>}
+          </div>
+          <div className='flex items-center gap-2'>
+            <FaShuttleVan className='text-blue-500'/>
+            {product.shipping ? product.shipping :'Free Delivery' }
+          </div>
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }

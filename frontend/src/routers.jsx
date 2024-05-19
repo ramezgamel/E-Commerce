@@ -3,10 +3,14 @@ import { Route, createBrowserRouter, createRoutesFromElements } from "react-rout
 import {lazy } from "react";
 import App from "./App.jsx";
 import Auth from "./pages/Auth.jsx";
+import Addresses from "./pages/Profile/Addresses.jsx";
+const UserOrders = lazy(()=>import("./pages/Profile/UserOrders.jsx"))
+const WishList = lazy(()=>import("./pages/Profile/WishList.jsx"))
+const Personal = lazy(()=>import("./pages/Profile/Personal.jsx"))
 const ResetPassword =lazy(()=>import( "./pages/ResetPassword.jsx"));
 const ProductDetails =lazy(()=>import( "./pages/ProductDetails.jsx"));
 const PrivateRoute =lazy(()=>import( "./components/PrivateRoute.jsx"));
-const Profile =lazy(()=>import( "./pages/Profile.jsx"));
+const Profile =lazy(()=>import( "./pages/Profile"));
 const Shipping =lazy(()=>import( "./pages/Shipping.jsx"));
 const Payment =lazy(()=>import( "./pages/Payment.jsx"));
 const PlaceOrder =lazy(()=>import( "./pages/PlaceOrder.jsx"));
@@ -30,7 +34,12 @@ const router = createBrowserRouter(
         <Route index element={<Home/>}/>
         <Route path="product/:id" element={<ProductDetails/>}/>
         <Route path="/" element={<PrivateRoute/>}>
-          <Route path="profile" element={<Profile/>}/> 
+          <Route path="profile" element={<Profile/>}>
+            <Route index element={ <Personal/> }/>
+            <Route path="orders" element={ <UserOrders/> } />
+            <Route path="wishList" element={ <WishList/> } />
+            <Route path="addresses" element={ <Addresses/> } />
+          </Route> 
           <Route path="shipping" element={<Shipping/>} />
           <Route path="payment" element={<Payment/>} />
           <Route path="placeorder" element={<PlaceOrder/>} />

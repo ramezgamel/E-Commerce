@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 function CheckoutSteps({ step1, step2, step3, step4 }) {
   return (
-    <ol className="flex w-full items-center p-0 text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
+    <ol className="flex w-full items-center p-0 text-rcenter text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
       <li className="after:border-1 flex items-center  after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:text-blue-500 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
         {step1 ? (
           <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">

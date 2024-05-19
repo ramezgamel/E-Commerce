@@ -16,7 +16,6 @@ const notificationSchema = new mongoose.Schema({
     default: false,
   },
 });
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -59,9 +58,10 @@ const userSchema = new mongoose.Schema(
       {
         alias: {
           type: String,
-          unique: true,
         },
-        details: String,
+        details: {
+          type: String,
+        },
         phone: String,
         city: String,
         postalCode: String,

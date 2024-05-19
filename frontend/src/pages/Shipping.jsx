@@ -1,73 +1,34 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { saveShippingAddress } from '../store/cartSlice';
 import CheckoutSteps from '../components/CheckoutSteps';
-
+import {useGetUserAddressesQuery} from "../store/addressesApiSlice"
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 function Shipping() {
-  const { shippingAddress } = useSelector((state) => state.cart);
-  const [address, setAddress] = useState(shippingAddress?.address || '');
-  const [city, setCity] = useState(shippingAddress?.city || '');
-  const [country, setCountry] = useState(shippingAddress?.county || '');
-  const [postalCode, setPostalCode] = useState(
-    shippingAddress?.postalCode || '',
-  );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();   
-  const submitHandler = () => {
-    dispatch(saveShippingAddress({ address, country, city, postalCode }));
+  const navigate = useNavigate();
+  const [address,setAddress] = useState()
+  const {data:addresses} = useGetUserAddressesQuery();
+  const nextStep = () => {
+    if(!address) return toast.error("Select address")
+    localStorage.setItem('address',JSON.stringify(address));
     navigate('/payment');
   };
   return (
-    <>
+    <div className='h-[72vh] max-w-lg mx-auto'>
       <CheckoutSteps step1 step2 />
-      <h1 className="my-2 text-main">Shipping</h1>
-      <form onSubmit={submitHandler}>
-        <div className="my-2">
-          <label>Address</label>
-          <input
-            required
-            type="text"
-            placeholder="Enter your address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          ></input>
+      <h1 className="my-5 text-2xl font-extrabold text-main">Select shipping address</h1>
+      {addresses?.data.map(ad => 
+        <div className='ml-8 flex my-4' key={ad.alias}>
+          <input required type="radio" onChange={()=>setAddress(ad)} name='address' value={ad.alias} id={ad.alias} className='w-4 mr-4'/>
+          <label htmlFor={ad.alias} className='flex items-center'>
+            <div className="font-bold w-16 pr-2 border-r border-gray-600 text-main" >{ad.alias}</div>
+            <div className="ml-2 flex flex-grow text-main justify-between items-center">
+              {ad.details}
+            </div>
+          </label>
         </div>
-        <div className="my-2">
-          <label>City</label>
-          <input
-            required
-            type="text"
-            placeholder="Enter your city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          ></input>
-        </div>
-        <div className="my-2">
-          <label>Country</label>
-          <input
-            required
-            type="text"
-            placeholder="Enter your country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-          ></input>
-        </div>
-        <div className="my-2">
-          <label>PostalCode</label>
-          <input
-            required
-            type="text"
-            placeholder="Enter your postalCode"
-            value={postalCode}
-            onChange={(e) => setPostalCode(e.target.value)}
-          ></input>
-        </div>
-        <button type="submit" className="btn my-2">
-          Continue
-        </button>
-      </form>
-    </>
+      )}
+      <button className="btn float-right" onClick={nextStep} >Continue</button>
+    </div>
   );
 }
 

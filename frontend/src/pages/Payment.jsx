@@ -1,41 +1,36 @@
 import { useEffect, useState } from "react";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { savePaymentMethod } from "../store/cartSlice";
+import { toast } from "react-toastify";
 function Payment() {
-  const [paymentMethod, setPaymentMethod] = useState("PayPal");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { shippingAddress } = useSelector((state) => state.cart);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  
   useEffect(() => {
-    if (Object.keys(shippingAddress).length === 0) {
-      navigate("/shipping");
-    }
-  }, [shippingAddress, navigate]);
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(savePaymentMethod(paymentMethod));
+    const address = JSON.parse(localStorage.getItem("address"));
+    if(!address) navigate('/shipping')
+  }, [navigate]);
+
+  const nextStep = () => {
+    if(!paymentMethod) return toast.error("Select payment method")
+    localStorage.setItem("paymentMethod",paymentMethod)
     navigate("/placeorder");
   };
   return (
-    <div className="container">
-      
+    <div className="h-[72vh] max-w-lg mx-auto">
       <CheckoutSteps step1 step2 step3 />
-      <h1 className="text-main mb-3">Payment Method</h1>
-      <form onSubmit={submitHandler} className="px-2">
+      <h1 className="my-5 text-2xl font-extrabold text-main">Payment Method</h1>
         <div className="flex gap-2">
-          <input id="paymentMethod" type="checkbox" value="PayPal" onClick={(e)=>setPaymentMethod(e.target.value)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-          <label htmlFor="paymentMethod">PayPal</label>
+          <input id="cash" defaultChecked onChange={()=>setPaymentMethod('cash')} type="radio" name="payment" value="cash" className="w-4 h-4"/>
+          <label htmlFor="cash">Cash</label>
         </div>
         <div className="flex gap-2">
-          <input id="paymentMethod" type="checkbox" value="vodafoneCash" onClick={(e)=>setPaymentMethod(e.target.value)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-          <label htmlFor="paymentMethod">Vodafone Cash</label>
+          <input id="card" onChange={()=>setPaymentMethod('card')} type="radio" name="payment"  value="card" className="w-4 h-4 "/>
+          <label htmlFor="card">Card</label>
         </div>
-        <button type="submit" className="btn mt-2">
+        <button onClick={nextStep} className="btn mt-2 float-right">
           Continue
         </button>
-      </form>
     </div>
   );
 }
