@@ -108,7 +108,7 @@ function ProductDetails() {
             <img
               className="h-full text-main"
               src={mainImage}
-              alt={product.data?.name} 
+              alt={product?.data.name} 
             />
           </div>
         </div>
