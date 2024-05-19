@@ -129,7 +129,7 @@ function ProductDetails() {
               <strong>Brand:</strong> {product?.data?.brand}
             </p>
             <p className="text-main flex justify-between">
-              <strong>Category:</strong> {product?.data?.category.name}
+              <strong>Category:</strong> {product?.data?.category?.name}
             </p>
           </div>
           <p className="text-main">
@@ -175,7 +175,7 @@ function ProductDetails() {
                   <img className='w-12 h-12  rounded-full' src={review.image} />
                   <div>
                     <p className='font-bold text-main'>{review.name}</p>
-                    <p className='text-gray-400 text-sm'>{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}</p>
+                    <p className='text-gray-400 text-sm'>{review.comment}</p>
                   </div>
                 </div>
                 <div>
