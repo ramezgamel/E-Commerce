@@ -84,7 +84,7 @@ function ProductDetails() {
 
   return (
     <NavAnimation>
-      <Meta title={product.data.name} />
+      <Meta title={product?.data.name} />
       <div className="md:container md:mx-auto mt-4">
       <div className="gap-2 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
