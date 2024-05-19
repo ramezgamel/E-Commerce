@@ -33,7 +33,7 @@ const keepAwake = () => {
   });
   req.end();
 };
-setInterval(keepAwake, 1000 * 60 * 10);
+setInterval(keepAwake, 1000 * 60 * 50);
 app.get("/keep-alive", (req, res) => {
   res.sendStatus(200);
 });

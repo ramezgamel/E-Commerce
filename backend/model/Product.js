@@ -45,6 +45,7 @@ const productSchema = new mongoose.Schema(
     countInStock: {
       type: Number,
       required: true,
+      min: 0,
     },
     sold: {
       type: Number,
@@ -57,10 +58,12 @@ const productSchema = new mongoose.Schema(
     shipping: {
       type: Number,
       default: 0,
+      min: 0,
     },
     tax: {
       type: Number,
       default: 0,
+      min: 0,
     },
     numReviews: {
       type: Number,

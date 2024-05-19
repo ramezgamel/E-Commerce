@@ -89,8 +89,7 @@ function ProductDetails() {
       <div className="gap-2 md:grid md:grid-cols-12">
         <div className="flex gap-1 md:col-span-5">
           <div className="bd flex w-[20%] flex-col gap-1">
-            {product.data?.images &&
-              product.data?.images.map((image) => (
+            {product?.data.images.map((image) => (
                 <div
                   key={image}
                   className="bd cursor-pointer h-[20%] rounded-md border   text-main hover:opacity-30"
@@ -98,7 +97,7 @@ function ProductDetails() {
                   <img
                     className="mb-2 h-full w-full "
                     src={image}
-                    alt={product.data?.name}
+                    alt={product?.data.name}
                     onClick={() => setMainImage(image)}
                   />
                 </div>
@@ -114,39 +113,39 @@ function ProductDetails() {
         </div>
         <div className="md:col-span-7">
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
-            <h3 className="text-main">{product.data?.name}</h3>
+            <h3 className="text-main">{product?.data?.name}</h3>
             <Rating
-              value={product.data?.rating}
-              text={`${product.data?.numReviews} reviews`}
+              value={product?.data?.rating}
+              text={`${product?.data?.numReviews} reviews`}
             />
           </div>
           <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
             <p className="text-main flex justify-between">
-              <strong>Price:</strong>EGP {product.data?.price}
+              <strong>Price:</strong>EGP {product?.data?.price}
             </p>
             <p className="text-main flex justify-between">
-              <strong>Brand:</strong> {product.data?.brand}
+              <strong>Brand:</strong> {product?.data?.brand}
             </p>
             <p className="text-main flex justify-between">
-              <strong>Category:</strong> {product.data?.category.name}
+              <strong>Category:</strong> {product?.data?.category.name}
             </p>
           </div>
           <p className="text-main">
-            <strong>Description:</strong> {product.data?.description}
+            <strong>Description:</strong> {product?.data?.description}
           </p>
           <div className="flex items-center mt-3 justify-between md:px-10">
-            {product.data?.countInStock > 0 ? (
+            {product?.data?.countInStock > 0 ? (
               <>
                 <input
                     className="w-14 py-2"
                     placeholder='1'
                     type="number"
-                    onChange={(e)=>changeQtyHandler(e,product.data)}
+                    onChange={(e)=>changeQtyHandler(e,product?.data)}
                   />
                 <button
               className="btn w-100"
               type="button"
-              disabled={product.data?.countInStock === 0}
+              disabled={product?.data?.countInStock === 0}
               onClick={addToCartHandler}
             >
               Add To Cart
@@ -159,7 +158,7 @@ function ProductDetails() {
       <div className="review">
         <div>
           <h2 className="text-main">Reviews</h2>
-          {product.data?.reviews?.length == 0 ? (
+          {product?.data?.reviews?.length == 0 ? (
             <p
               role="info"
               className="border-collapse rounded-md border-red-400 bg-red-400 py-2 pl-5 text-white"
@@ -168,7 +167,7 @@ function ProductDetails() {
             </p>
           ):
           <div className="text-main">
-            {product.data?.data.reviews.map((review) => (
+            {product?.data?.data.reviews.map((review) => (
               <div key={review._id} className="mb-2">
                 <div className="flex items-center justify-between border-b border-slate-900/10 dark:border-slate-50/[0.06] ">
                   <strong>{review.name}</strong>
