@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import Meta from '../components/Meta';
 import {useAddToCartMutation} from "../store/cartApiSlice"
 import NavAnimation from '../animation/NavAnimation';
+import { format } from 'date-fns';
 function ProductDetails() {
   const [mainImage, setMainImage] = useState('');
   const { id } = useParams();
@@ -84,6 +85,7 @@ function ProductDetails() {
 
   return (
     <NavAnimation>
+      {product.data &&<>
       <Meta title={product?.data.name} />
       <div className="md:container md:mx-auto mt-4">
       <div className="gap-2 md:grid md:grid-cols-12">
@@ -155,10 +157,10 @@ function ProductDetails() {
         </div>
         </div>
       </div>
+      <hr className='my-3' />
       <div className="review">
         <div>
-          <h2 className="text-main">Reviews</h2>
-          {product?.data?.reviews?.length == 0 ? (
+          {product?.data?.reviews.length == 0 ? (
             <p
               role="info"
               className="border-collapse rounded-md border-red-400 bg-red-400 py-2 pl-5 text-white"
@@ -167,22 +169,27 @@ function ProductDetails() {
             </p>
           ):
           <div className="text-main">
-            {product?.data?.data.reviews.map((review) => (
-              <div key={review._id} className="mb-2">
-                <div className="flex items-center justify-between border-b border-slate-900/10 dark:border-slate-50/[0.06] ">
-                  <strong>{review.name}</strong>
+            {product?.data?.reviews.map((review) => (
+              <div key={review._id} className="mb-2 flex justify-between">
+                <div className='overflow-hidden my-2 flex gap-3'>
+                  <img className='w-12 h-12  rounded-full' src={review.image} />
                   <div>
-                    <Rating value={review.rating} />
-                    <p className="text-sm text-main opacity-70">
-                      {review.createdAt.substring(0, 10)}
-                    </p>
+                    <p className='font-bold text-main'>{review.name}</p>
+                    <p className='text-gray-400 text-sm'>{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}{review.comment}</p>
                   </div>
                 </div>
-                <p className="p-2">{review.comment}</p>
+                <div>
+                    <Rating value={review.rating} />
+                    <p className="text-sm text-main opacity-70">
+                      {format(review.createdAt, "dd/MM/yy")}
+                    </p>
+                  </div>
               </div>
             ))}
-            <div>
-              <h4 className="text-main">Write a review</h4>
+            
+          </div>
+          }
+          <div>
               {loadingReview && <Loader />}
               {userInfo ? (
                 <form onSubmit={submitHandler}>
@@ -223,11 +230,11 @@ function ProductDetails() {
                 </h3>
               )}
             </div>
-          </div>
-          }
         </div>
       </div>
       </div>
+      </>
+      }
     </NavAnimation>
   );
 }

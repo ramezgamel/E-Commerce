@@ -1,5 +1,29 @@
 const mongoose = require("mongoose");
-const reviewSchema = new mongoose.Schema({}, { timestamps: true });
+const reviewSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    image: String,
+    rating: {
+      type: Number,
+      required: true,
+      min: [1, "Min rating value is 1"],
+      max: [5, "max rating value is 1"],
+    },
+    comment: {
+      type: String,
+      require: true,
+    },
+  },
+  { timestamps: true }
+);
 const productSchema = new mongoose.Schema(
   {
     user: {
@@ -69,29 +93,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    reviews: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-          ref: "User",
-        },
-        name: {
-          type: String,
-          required: true,
-        },
-        rating: {
-          type: Number,
-          required: true,
-          min: [1, "Min rating value is 1"],
-          max: [5, "max rating value is 1"],
-        },
-        comment: {
-          type: String,
-          require: true,
-        },
-      },
-    ],
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );

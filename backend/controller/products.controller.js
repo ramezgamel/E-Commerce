@@ -57,6 +57,7 @@ module.exports.createReview = asyncHandler(async (req, res) => {
   const review = {
     user: req.user._id,
     name: req.user.name,
+    image: req.user.image,
     rating: Number(rating),
     comment,
   };
