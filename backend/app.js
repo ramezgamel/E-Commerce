@@ -17,25 +17,8 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 // keep server alive
-const keepAwake = () => {
-  const options = {
-    hostname: "localhost",
-    port: 5000,
-    path: "/keep-alive",
-    method: "GET",
-  };
-  const req = http.request(options, (res) => {
-    console.log(`Keep-alive request status: ${res.statusCode}`);
-  });
-  req.on("error", (error) => {
-    console.log(error);
-    console.error("Error sending keep-alive request:", error);
-  });
-  req.end();
-};
-setInterval(keepAwake, 1000 * 60 * 50);
 app.get("/keep-alive", (req, res) => {
-  res.sendStatus(200);
+  res.status(200).json({ status: "success" });
 });
 
 app.use(cookieParser());
