@@ -114,6 +114,7 @@ module.exports.createSession = asyncHandler(async (req, res) => {
 
 module.exports.webhookCheckOut = asyncHandler(async (req, res) => {
   const sig = req.headers["stripe-signature"];
+  console.log(sig);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
@@ -128,8 +129,6 @@ module.exports.webhookCheckOut = asyncHandler(async (req, res) => {
   switch (event.type) {
     case "checkout.session.completed":
       createNewOrder(event.data.object);
-    default:
-      console.log(`Unhandled event type ${event.type}`);
   }
   res.status(200).json({ payment: "success" });
 });

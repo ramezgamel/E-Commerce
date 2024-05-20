@@ -30,7 +30,6 @@ function PlaceOrder() {
 
   const placeOrderHandler = async () => {
     const cartId =  localStorage.getItem("cartID");
-    console.log(cartId)
     try {
       let res;
       if(paymentMethod == "cash"){
@@ -45,8 +44,6 @@ function PlaceOrder() {
       }
       if(paymentMethod == "card"){
         res = await checkoutSession(cartId).unwrap();
-        dispatch(setCart({}))
-        localStorage.removeItem("cartID");
         window.location.href = res.url
       }
     } catch (error) {
@@ -121,7 +118,7 @@ function PlaceOrder() {
               className="btn"
               onClick={placeOrderHandler}
             >
-              {isLoading || checkoutLoading ? <Loader />:"Place Order"}          </button>
+              {isLoading || checkoutLoading ? <Loader />:"Place Order"} </button>
           </div>
         </div>
       </div>
