@@ -8,7 +8,7 @@ import { AiOutlineSearch, AiOutlineShoppingCart} from 'react-icons/ai';
 import Modal from "../components/Modal"
 import useLoggedIn from '../hooks/useLoggedIn';
 import ModeToggler from './ModeToggler';
-import NotificationsPanel from './NotificationsPanel';
+// import NotificationsPanel from './NotificationsPanel';
 import ProfileDropdown from './ProfileDropdown';
 import { setUser, socket } from '../socket';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,11 +31,11 @@ const Header = memo(function Header ()  {
     }
     return ()=> {
       socket.disconnect();}
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userInfo]);
 
   useEffect(()=>{
     dispatch(setCart(data?.data))
-  },[data]);
+  },[data, dispatch]);
 
   useEffect(()=>{
     dispatch(setFavorite(favData))

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useRedirect from "./useRedirect";
 
@@ -6,16 +6,15 @@ function useLoggedIn() {
   const { userInfo } = useSelector((state) => state.auth);
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [redirect] = useRedirect()
-  const userInfoMemo = useMemo(()=> userInfo, [userInfo]);
   useEffect(() => {
-  if (userInfoMemo) {
+  if (userInfo) {
     setIsLoggedIn(true);
-    redirect()
+    redirect()  
   }else { 
     setIsLoggedIn(false);
   }
-  }, [userInfoMemo]);
-  return [isLoggedIn,userInfoMemo]
+  }, [redirect, userInfo]);
+  return [isLoggedIn,userInfo]
 }
 
 export default useLoggedIn

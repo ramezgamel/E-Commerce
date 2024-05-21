@@ -12,11 +12,16 @@ const ApiError = require("./utils/apiError");
 const globalError = require("./middleware/globalError");
 const mountRoutes = require("./routes/mountRoutes");
 const { webhookCheckOut } = require("./controller/order.controller");
-const bodyParser = require("body-parser");
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckOut
+);
 
 app.use(cookieParser());
 app.use(compression());
@@ -32,11 +37,6 @@ app.use(
 app.get("/keep-alive", (req, res) => {
   res.status(200).json({ status: "success" });
 });
-app.post(
-  "/webhook-checkout",
-  bodyParser.raw({ type: "application/json" }),
-  webhookCheckOut
-);
 
 mountRoutes(app);
 
