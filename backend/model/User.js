@@ -45,8 +45,8 @@ const userSchema = new mongoose.Schema(
       enum: {
         values: ["admin", "user"],
         message: "{VALUE} is not supported",
-        default: "user",
       },
+      default: "user",
     },
     wishList: [
       {
@@ -58,9 +58,11 @@ const userSchema = new mongoose.Schema(
       {
         alias: {
           type: String,
+          required: [true, "Address alias is required"],
         },
         details: {
           type: String,
+          required: [true, "Address details is required"],
         },
         phone: String,
         city: String,

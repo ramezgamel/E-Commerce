@@ -11,7 +11,7 @@ import { socket } from "../socket";
 import { toast } from "react-toastify";
 import { logout } from "../store/authSlice";
 
-function ProfileDropdown({ isLoggedIn, userInfo }) {
+function ProfileDropdown({ userInfo }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutCall] = useLogoutMutation();
@@ -21,7 +21,7 @@ function ProfileDropdown({ isLoggedIn, userInfo }) {
     try {
       await logoutCall().unwrap();
       socket.disconnect();
-      dispatch(logout());
+      dispatch(logout());w
       navigate('/auth');
     } catch (err) {
       toast.error(err?.data?.message || err.error);
@@ -48,7 +48,8 @@ function ProfileDropdown({ isLoggedIn, userInfo }) {
       >
         <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-1 py-1">
-            <Menu.Item>
+
+            {userInfo.role == "user" && <Menu.Item>
               <Link
                 to="/profile"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -56,17 +57,9 @@ function ProfileDropdown({ isLoggedIn, userInfo }) {
                 <AiOutlineUser className="h-5 w-5" />
                 Your Profile
               </Link>
-            </Menu.Item>
-            <Menu.Item>
-              <button
-                onClick={logoutHandler}
-                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-              >
-                <CiLogout className="h-5  w-5" />
-                Logout
-              </button>
-            </Menu.Item>
-            {(isLoggedIn && userInfo?.role == 'admin') && (
+            </Menu.Item>}
+            
+            {(userInfo?.role == 'admin') && (
               <Menu.Item>
                 <Link
                   to="/admin/users"
@@ -77,6 +70,16 @@ function ProfileDropdown({ isLoggedIn, userInfo }) {
                 </Link>
               </Menu.Item>
             )}
+            
+            <Menu.Item>
+              <button
+                onClick={logoutHandler}
+                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <CiLogout className="h-5  w-5" />
+                Logout
+              </button>
+            </Menu.Item>
           </div>
         </Menu.Items>
       </Transition>

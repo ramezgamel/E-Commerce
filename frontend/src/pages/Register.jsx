@@ -6,7 +6,6 @@ import { setCredentials } from '../store/authSlice';
 import { toast } from 'react-toastify';
 import Progress from '../components/Progress';
 import useUpload from '../hooks/useUpload';
-import useLoggedIn from '../hooks/useLoggedIn';
 import Loader from '../components/Loader';
 import {motion as m} from "framer-motion"
 
@@ -15,11 +14,12 @@ function Register() {
   const navigate = useNavigate()
   const emailInput = useRef();
   const passwordInput = useRef();   
-  const passwordConfirmationInput = useRef();   
+  const addressAliasInput = useRef();   
+  const addressDetailsInput = useRef();   
+  const passwordConfirmationInput = useRef();
   const nameInput = useRef();
   const PhoneNumberInput = useRef();
   const dispatch = useDispatch();
-  useLoggedIn()
   const [register, { isLoading }] = useRegisterMutation();
   const {images, error, preview, progress, isUploaded, uploadData} = useUpload()
   
@@ -31,7 +31,13 @@ function Register() {
         password: passwordInput.current.value,
         name: nameInput.current.value,
         phoneNumber: PhoneNumberInput.current.value,
-        image:images,
+        addresses:[
+          {
+            alias: addressAliasInput.current.value,
+            details: addressDetailsInput.current.value,
+          }
+        ],
+        image:images,   
         passwordConfirmation: passwordConfirmationInput.current.value
       }
       const res = await register(data).unwrap();
@@ -39,9 +45,10 @@ function Register() {
       navigate("/");
       toast.success("Successfully")
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.msg || err.error);
     }
   };
+  
   return (
     <m.form 
       layoutScroll 
@@ -64,6 +71,13 @@ function Register() {
             placeholder="Enter email"
             ref={emailInput}
           />
+        </div>
+        <div className="my-2">
+          <label >Address</label>
+          <div className="flex items-center my-2">
+            <input ref={addressAliasInput} placeholder='alias' className="font-bold w-16 pr-2 border-r border-gray-600 text-main" ></input>
+            <input ref={addressDetailsInput} placeholder='details' className="ml-2 flex flex-grow text-main justify-between items-center"></input>
+          </div>
         </div>
         <div className="my-2">
           <label>Phone number</label>

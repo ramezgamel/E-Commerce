@@ -7,7 +7,6 @@ function Addresses() {
   const {data:addresses, isLoading:addressesLoading} = useGetUserAddressesQuery();
   const [removeAddress, {isLoading:deleteLoading}] = useDeleteFromAddressesMutation();
   const [addAddress,{isLoading:addLoading}] = useAddToAddressesMutation();
-  console.log(addresses?.data);
   const deleteAddress = async(addressId) => {
     try {
       await removeAddress(addressId).unwrap();

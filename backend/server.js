@@ -6,7 +6,9 @@ const sr = server.listen(port, () =>
 );
 
 process.on("unhandledRejection", (err) => {
-  console.log(`unhandledRejection: ${err.name} | ${err.message}`);
+  console.log(
+    `unhandledRejection: ${err.name} | ${err.message}\n stack:${err.stack}`
+  );
   sr.close(() => {
     console.log("shutting down");
     process.exit(1);

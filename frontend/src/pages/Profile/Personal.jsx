@@ -4,14 +4,18 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from '../../store/authSlice';
 import Loader from "../../components/Loader";
+import useUpload from "../../hooks/useUpload";
+import Progress from "../../components/Progress";
 function Personal() {
 	const { data: profileData, isLoading, isError } = useGetProfileQuery();
 	const [updateUser, { isLoading: updateLoading }] = useUpdateUserMutation();
 	const dispatch = useDispatch();
+	const { images, error, preview, progress, isUploaded, uploadData } = useUpload();
+
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		const newUserData = {
-			image: e.target.image?.value || profileData.image,
+			image: images,
 			name: e.target.name?.value || profileData.name,
 			phoneNumber: e.target.phoneNumber?.value || profileData.phoneNumber,
 			password: e.target.password.value
@@ -34,9 +38,11 @@ function Personal() {
 					className="w-full mx-auto shadow-2xl p-4 rounded-xl self-center dark:bg-gray-800/40">
 					<form onSubmit={submitHandler}>
 						<div className="relative rounded-full mx-auto w-32 h-32">
-							<img className="rounded-full w-full h-full" src={profileData.image} alt="" />
+							{error && <div className="alert">{error.message}</div> }
+								{Boolean(progress) && images && !isUploaded && <Progress progress={progress} />}
+								<img className="rounded-full w-full h-full" src={preview ? preview[0] : profileData.image} />
 							<div className="absolute bottom-2 right-2 bg-white/90 rounded-full w-6 h-6 text-center">
-								<input type="file" name="image" id="upload_image" hidden />
+								<input type="file" onChange={(e) => uploadData(e.target.files)} id="upload_image" hidden />
 								<label htmlFor="upload_image" className="cursor-pointer" >
 									<svg data-slot="icon" className="w-6 h-5 text-blue-700" fill="none"
 										strokeWidth="1.5" stroke="currentColor" viewBox="0 0 24 24"

@@ -12,12 +12,14 @@ function WishList() {
   </div>);
   if(isError)return <div className="alert text-center py-2 my-10">Failed to get wish list items</div>
   return (
-    <div className="grid grid-cols-12 gap-2 h-full overflow-auto no-scrollbar">
+    <div className="h-full overflow-auto no-scrollbar">
+    <div className="grid grid-cols-12 gap-2">
       {wishList?.data.map(prd =>
-        <div key={prd._id} className="col-span-6 md:col-span-3">
+        <div key={prd._id} className="col-span-6 md:col-span-4 lg:col-span-3">
           <Product product={prd} key={prd._id} isInWishList={true} />
         </div>
       )}
+    </div>
     </div>
   );
 }

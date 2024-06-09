@@ -10,33 +10,30 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.auth);
+  const {userInfo} = useSelector((state) => state.auth);
   const [login, { isLoading }] = useLoginMutation();
+  
 
-  const { search } = useLocation();
-  const searchParams = new URLSearchParams(search);
-  const redirect = searchParams.get('redirect') || '/';
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
         const res = await login({ email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
-        navigate(redirect);
+        navigate(location.state.from.pathname || "/", {replace:true});
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
   
   useEffect(() => {
-    if (userInfo) navigate(redirect);
-  }, [userInfo, navigate, redirect]);
+    if (userInfo ) navigate( "/", {replace:true});
+  }, [userInfo, navigate]);
   
   return (
     <m.form 
         layoutScroll
-        // initial={{y:-220}}
-        // animate={{y:0}}
         transition={{
           duration:2
         }}

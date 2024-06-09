@@ -2,6 +2,7 @@ const {
   pushToUser,
   pushToSomeUsers,
   pushToAllUsers,
+  pushToAdmins,
 } = require("./socketFunctions");
 
 function emitToSomeUsers(users, notification, io) {
@@ -9,6 +10,7 @@ function emitToSomeUsers(users, notification, io) {
     io.to(user._id.toString()).emit("get_notification", notification);
   });
 }
+
 function setRooms(socket) {
   if (socket.user.role == "admin") {
     socket.join("admins_room");
@@ -17,6 +19,7 @@ function setRooms(socket) {
     socket.join(socket.user._id);
   }
 }
+
 module.exports = (io) => {
   return io.on("connection", (socket) => {
     socket.on("set_user", (data) => {
@@ -24,41 +27,43 @@ module.exports = (io) => {
       setRooms(socket);
     });
 
-    socket.on("payment_success", (data) => {
+    socket.on("payment_success", (paymentData) => {
       let notification = {
-        date: data.date,
-        refId: data.refId,
-        senderId: socket?.user?.id,
-        content: `${socket?.user?.name} has been paid for his order successfully`,
+        date: paymentData.date,
+        refId: paymentData.refId,
+        senderId: socket.user?._id,
+        content: `${socket.user.name} has been paid for his order successfully`,
       };
-      // pushToAdmins(notification);
+      pushToAdmins(notification);
       notification.userInfo = socket.user;
       io.to("admins_room").emit("get_notification", notification);
     });
 
     socket.on("deliver_order", (data) => {
-      console.log(data.receiver);
       let notification = {
         date: data.date,
         refId: data.refId,
-        senderId: socket?.user?.id,
+        senderId: socket?.user?._id,
         content: `Your order on deliver`,
       };
       pushToUser(data.receiver, notification);
       io.to(data.receiver).emit("get_notification", notification);
     });
 
-    socket.on("publish_notification", async (data) => {
+    socket.on("publish_notification", async (notificationData) => {
       let notification = {
         date: Date.now(),
-        senderId: socket?.user?.id,
-        content: data.content,
+        senderId: socket.user?._id,
+        content: notificationData.content,
       };
       let users;
-      if (data.to == "all") {
+      if (notificationData.to == "all") {
         users = await pushToAllUsers(notification);
       } else {
-        users = await pushToSomeUsers(selectedUsers, notification);
+        users = await pushToSomeUsers(
+          notificationData.selectedUsers,
+          notification
+        );
       }
       emitToSomeUsers(users, notification, io);
     });

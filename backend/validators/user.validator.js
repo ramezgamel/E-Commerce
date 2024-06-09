@@ -33,7 +33,7 @@ exports.registerValidator = [
   check("addresses")
     .notEmpty()
     .withMessage("Address required")
-    .custom(isArrayOfString),
+    .custom(isArrayOfObjects),
   checkExact(
     [],
     { locations: ["body"] },

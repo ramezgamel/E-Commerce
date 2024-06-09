@@ -25,6 +25,7 @@ module.exports.createOrder = asyncHandler(async (req, res) => {
   });
 
   await bulk(order, cart);
+
   res.status(200).send({ status: "success", data: order });
 });
 // @desc    Get my orders

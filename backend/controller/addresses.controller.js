@@ -7,13 +7,9 @@ const ApiError = require("../utils/apiError");
 module.exports.addToAddresses = asyncHandler(async (req, res) => {
   const address = {
     alias: req.body.alias,
-    phone: req.body.phone,
     details: req.body.details,
-    city: req.body.city,
-    postalCode: req.body.postalCode,
   };
   const user = await User.findById(req.user._id);
-
   user.addresses.map((ad) => {
     if (ad.alias == address.alias)
       throw new ApiError("Alias is already exist", 400);

@@ -89,47 +89,5 @@ function CheckoutSteps({ step1, step2, step3, step4 }) {
     </ol>
   );
 }
-{
-  /* <div className="text-main flex justify-between w-full">
-      <div>
-        {step1 ? (
-          // <Link role="button" to="/login" disabled className="text-main disabled:text-gray-300">
-          //   <Nav.Link>Login</Nav.Link>
-          // </Link>
-          <button disabled={true} className="text-main disabled:text-gray-200 disabled:cursor-not-allowed">
-            <Link to="/login" disabled='disabled' className="disabled:text-gray-400">Login</Link>
-          </button>
-        ) : (
-          <Nav.Link disabled>Login</Nav.Link>
-        )}
-      </div>
-      <Nav.Item>
-        {step2 ? (
-          <LinkContainer to="/shipping">
-            <Nav.Link>Shipping</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Shipping</Nav.Link>
-        )}
-      </Nav.Item>
-      <Nav.Item>
-        {step3 ? (
-          <LinkContainer to="/payment">
-            <Nav.Link>Payment</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Payment</Nav.Link>
-        )}
-      </Nav.Item>
-      <Nav.Item>
-        {step4 ? (
-          <LinkContainer to="/placeorder">
-            <Nav.Link>Place Order</Nav.Link>
-          </LinkContainer>
-        ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
-        )}
-      </Nav.Item>
-    </div> */
-}
+
 export default CheckoutSteps;

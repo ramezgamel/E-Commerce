@@ -4,14 +4,12 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from './ProductCarousel';
 import { useState } from 'react';
 import Tabs from '../components/Tabs';
-import { useGetUserWishListQuery } from '../store/wishListApi';
 import { useSelector } from 'react-redux';
 import ProductSkeleton from '../components/skeleton/ProductSkeleton';
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
-  const { data } = useGetUserWishListQuery();
-  const { cart } = useSelector(state => state.offline);
+  const { cart,favorite } = useSelector(state => state.offline);
   const { data: products, isLoading, error } = useGetProductQuery({ page, category });
   if (error)
     return (
@@ -36,7 +34,7 @@ function Home() {
           {products?.data.length > 0 ? (
             products?.data?.map((product) => (
               <div key={product._id}>
-                <Product product={product} isInWishList={data?.data?.some(item => product._id === item._id)} isInCart={cart?.cartItems?.some(item => item.product._id == product._id)} />
+                <Product product={product} isInWishList={favorite?.some(item => product._id === item._id)} isInCart={cart?.cartItems?.some(item => item.product._id == product._id)} />
               </div>
             ))
           ) : (

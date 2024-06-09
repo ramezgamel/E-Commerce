@@ -9,6 +9,7 @@ function CreateNotification() {
   const [to, setTo] = useState('all');
   const [selectedUsers, setSelectedUsers] = useState([]);
   const {data:users, isLoading} = useGetUsersQuery({});
+
   const createNotification = (e) => {
     e.preventDefault();
     const notification = {
@@ -16,6 +17,7 @@ function CreateNotification() {
     }
     publishNotification(notification)
   };
+  
   const values = users?.data.map(user => {return {label:user.email, value:user._id}});
   return (
     <div className="p-4 items-center flex flex-col">

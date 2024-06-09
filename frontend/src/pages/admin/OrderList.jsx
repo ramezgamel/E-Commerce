@@ -17,6 +17,7 @@ function OrderList() {
   const [toggle, setToggle] = useState('+');
   const {data:orders, isLoading, isFetching, error} = useGetOrdersQuery({page, sort, keyword, toggle});
   const [makeDelivered] = useDeliverOrderMutation();
+
   const markAsDelivered = async (id, userId) => {
     await makeDelivered(id);
     deliverOrder({
@@ -119,14 +120,14 @@ function OrderList() {
                           </div>
                         )}
                       </td>
-                      <td className="my-auto pr-2">
+                      <td className="my-auto">
                         {!order.isDelivered && (
-                          <button
-                            onClick={() => markAsDelivered(order._id, order.user._id)}
-                            className="rounded-md bg-green-500 px-2 py-1 text-white hover:bg-green-400"
+                          <buttons
+                            onClick={() => markAsDelivered(order._id, order.user)}
+                            className="rounded-md block bg-green-500 px-2 py-1 cursor-pointer hover:bg-green-400"
                           >
-                            <FaEdit />
-                          </button>
+                            <FaEdit className='w-4 h-4 text-white' />
+                          </buttons>
                         )}
                       </td>
                     </tr>

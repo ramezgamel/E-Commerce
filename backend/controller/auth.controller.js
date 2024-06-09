@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const Email = require("../utils/email");
 const crypto = require("crypto");
-
+const jwt = require("jsonwebtoken");
 const signIn = async (res, user) => {
   const token = await user.generateToken();
   res.cookie("mhp_token", token, {
@@ -22,12 +22,30 @@ const signIn = async (res, user) => {
     role: user.role,
   });
 };
+// @desc    verify token
+// @route   GET   /api/verifyToken
+// @access  all
+module.exports.verifyToken = asyncHandler(async (req, res) => {
+  const { mhp_token } = req.cookies;
+  if (!mhp_token) throw new ApiError("Not Authorized, no token", 401);
+  const decoded = jwt.verify(mhp_token, process.env.SEC_JWT);
+  const user = await User.findById(decoded.id).select("-password");
+  if (user == null) throw new ApiError("User not found");
+  res.status(200).json(user);
+});
 // @desc    Register new user
 // @route   POST /api/users/register
 // @access  all
 module.exports.register = asyncHandler(async (req, res) => {
-  const { name, password, email, image, phoneNumber, passwordConfirmation } =
-    req.body;
+  const {
+    name,
+    password,
+    email,
+    image,
+    phoneNumber,
+    passwordConfirmation,
+    addresses,
+  } = req.body;
 
   const user = new User({
     name,
@@ -35,6 +53,7 @@ module.exports.register = asyncHandler(async (req, res) => {
     email,
     image,
     phoneNumber,
+    addresses,
   });
   await user.save();
   const url = `${req.protocol}://${req.get("host")}/profile`;

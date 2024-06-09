@@ -7,14 +7,20 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
 import { useAddToCartMutation,useDeleteFromCartMutation } from '../store/cartApiSlice';
+import { setCartID } from '../store/offlineSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Product({ product,isInWishList,isInCart }) {
   const [addToWish, {isLoading:addLoad}] = useAddToWishListMutation()
   const [deleteFromWish, {isLoading:removeLoad}] = useDeleteItemFromWishListMutation()
   const [removeFromCart,{isLoading: removeCartLoad}] = useDeleteFromCartMutation()
-  const [addToCart, {isLoading: addCartLoad}] = useAddToCartMutation()
+  const [addToCart, {isLoading: addCartLoad}] = useAddToCartMutation();
+  const {cartID} = useSelector(state=>state.offline);
+  const {userInfo} = useSelector(state=>state.auth);
+  const dispatch = useDispatch();
   const addToWishList= async(e) => {
     e.preventDefault()
+    if(userInfo.role == "admin") return toast.error("Unavailable for admins")
     try {
       await addToWish(product._id).unwrap();
       toast.success("Added to wish list")
@@ -33,14 +39,14 @@ function Product({ product,isInWishList,isInCart }) {
   };
   const addToCartHandler = async (e) => {
     e.preventDefault();
+    if(userInfo.role == "admin") return toast.error("Unavailable for admins")
     if(product.countInStock == 0 ) return 
     try {
-      const cartId = localStorage.getItem("cartID");
-      if(cartId) {
-        await addToCart({productId:product._id, cartId}).unwrap()
+      if(cartID) {
+        await addToCart({productId:product._id, cartId:cartID}).unwrap()
       }else {
         const res = await addToCart({productId:product._id}).unwrap()
-        localStorage.setItem('cartID', res._id);
+        dispatch(setCartID(res._id))
       }
       toast.success("Added to cart")
     } catch (err) {
@@ -60,7 +66,7 @@ function Product({ product,isInWishList,isInCart }) {
     }
   };
   return (
-    <div className='bg-back p-2 h-full max-w-md min-h-[240px] rounded-md overflow-hidden' >
+    <div className='bg-back p-2 h-full border border-slate-600 max-w-md min-h-[240px] rounded-md overflow-hidden' >
       <Link to={"/product/"+product._id}>
         <div className='relative h-[65%] '>
           <span className='absolute top-2 flex justify-center items-center cursor-pointer right-2 size-9 rounded-md p-2 shadow-md bg-white'>
@@ -74,7 +80,7 @@ function Product({ product,isInWishList,isInCart }) {
             {removeCartLoad || addCartLoad ? <Loader/> :isInCart ? <FaTrash onClick={(e)=>removeFromCartHandler(e,product._id)} className='text-red-600 w-full h-full'/> : 
             <MdOutlineAddShoppingCart  onClick={addToCartHandler}  className='text-gray-800 w-full h-full' />
             }
-          </span>: <span className='absolute h-9 p-2 flex justify-center items-center  rounded-md bottom-2 right-2 shadow-md cursor-pointer bg-red-400'>Out of Stock</span>
+          </span>: <span className='absolute h-9 p-2 flex justify-center items-center  rounded-md -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 shadow-md cursor-pointer bg-red-400/70 text-sm whitespace-nowrap'>Out of Stock</span>
           }
           
           <span className='absolute left-2 bottom-2'>

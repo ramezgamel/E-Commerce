@@ -5,16 +5,18 @@ import { useCreateOrderMutation } from "../store/orderApiSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
-import { setCart } from "../store/offlineSlice";
+import { removeCartID, setCart } from "../store/offlineSlice";
 import { useLazyCheckoutSessionQuery } from "../store/orderApiSlice";
+import { paymentSuccess } from "../socket";
 function PlaceOrder() {
   const navigate = useNavigate();
   const [address] = useState(JSON.parse(localStorage.getItem("address")));
   const [paymentMethod] = useState(localStorage.getItem("paymentMethod"));
-  const { cart } = useSelector((state) => state.offline);
+  const { cart, cartID:cartId } = useSelector((state) => state.offline);
   const dispatch = useDispatch();
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
   const [checkoutSession, { isLoading: checkoutLoading }] = useLazyCheckoutSessionQuery();
+  
   useEffect(() => {
     if (!cart) {
       navigate("/");
@@ -29,7 +31,6 @@ function PlaceOrder() {
 
 
   const placeOrderHandler = async () => {
-    const cartId = localStorage.getItem("cartID");
     try {
       let res;
       if (paymentMethod == "cash") {
@@ -39,7 +40,11 @@ function PlaceOrder() {
           paymentMethod
         }).unwrap();
         dispatch(setCart({}));
-        localStorage.removeItem("cartID");
+        dispatch(removeCartID())
+        paymentSuccess({
+          date:Date.now(),
+          refId:res.data._id,
+        })
         navigate(`/order/${res.data._id}`);
       }
       if (paymentMethod == "card") {

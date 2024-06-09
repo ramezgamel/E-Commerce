@@ -126,9 +126,6 @@ function ProductList() {
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-2">
-                  ID
-                </th>
-                <th scope="col" className="p-2">
                   Name
                 </th>
                 <th scope="col" className="p-2">
@@ -160,7 +157,6 @@ function ProductList() {
                       key={product._id}
                       className="border-b dark:border-gray-700"
                     >
-                      <td className="p-2">{product._id}</td>
                       <td className="p-2">{product.name}</td>
                       <td className="p-2">{product.price}</td>
                       <td className="p-2">{product.category.name}</td>

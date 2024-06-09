@@ -3,6 +3,8 @@ import { memo, useEffect, useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
+import Model from './Modal';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 const product = (item) => {
   return (
@@ -16,59 +18,70 @@ const product = (item) => {
       </div>
       <div className="col-span-9">
         <p className='text-main mb-1'>{item.name}</p>
-        <div className='flex justify-between'> 
+        <div className='flex justify-between'>
           <p className='text-main mb-1 text-sm'>{item.category.name}</p>
           <p className='text-main mb-1 text-sm'>{item.price}</p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const SearchBox = memo(function SearchBox() {
+  const [show, setShow] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [searchProducts, { data, isLoading }] = useGetProductsFeaturesMutation();
   const onSearch = (e) => {
     setKeyword(e.target.value);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     searchProducts({ keyword });
-  },[keyword, searchProducts]);
+  }, [keyword, searchProducts]);
 
   document.addEventListener('click', () => {
     setKeyword('');
   });
   return (
-    <div className='h-[60vh]'>
-      <form >
-        <input
-          type="text"
-          name="q"
-          placeholder="Search..."
-          onChange={onSearch}
-          className="mr-sm-2 ml-sm-5"
-        ></input>
-      </form>
-      {keyword != '' && (
-          <div className='mt-2 overflow-y-scroll h-full content-center'>
-            {isLoading && <Loader/>}
-            {(!isLoading && data?.data?.length == 0 ) && <div className='alert text-center '>No Data</div> }
-            {data?.data?.length > 0 && 
-              data.data.map((item) =>  (
-                <Link
-                  key={item._id}
-                  to={`/product/${item._id}`}
-                  onClick={() => setKeyword('')}
-                >
-                  {product(item)}
-                </Link>
-              ))
-            }
-          </div>
-        )}
-    </div>
+    <>
+      <Model show={show} header="Search" setShow={setShow}>
+        <div className='h-[60vh]'>
+          <form >
+            <input
+              type="text"
+              name="q"
+              placeholder="Search..."
+              onChange={onSearch}
+              className="mr-sm-2 ml-sm-5"
+            ></input>
+          </form>
+          {keyword != '' && (
+            <div className='mt-2 overflow-y-scroll h-full content-center'>
+              {isLoading && <Loader />}
+              {(!isLoading && data?.data?.length == 0) && <div className='alert text-center '>No Data</div>}
+              {data?.data?.length > 0 &&
+                data.data.map((item) => (
+                  <Link
+                    key={item._id}
+                    to={`/product/${item._id}`}
+                    onClick={() => setKeyword('')}
+                  >
+                    {product(item)}
+                  </Link>
+                ))
+              }
+            </div>
+          )}
+        </div>
+      </Model>
+      <div className='relative' >
+        <input type="text" className='h-7 hidden sm:block sm:w-44' id='search' onClick={() => setShow(true)} placeholder='Search..' />
+        <label htmlFor="search" className=' absolute top-1/2 -translate-y-1/2 right-1'>
+          <AiOutlineSearch className=' text-main w-5 h-5 hover:cursor-pointer' />
+        </label>
+      </div>
+    </>
   );
-})
+});
 
 export default SearchBox;

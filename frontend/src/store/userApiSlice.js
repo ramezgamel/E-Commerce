@@ -89,7 +89,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
       invalidatesTags:['Notifications']
-    })
+    }),
+    verifyToken:builder.query({
+      query:() => ({
+        url:"/users/verifyToken"
+      })
+    }),
   }),
 });
 
@@ -105,5 +110,6 @@ export const {
   useResetPasswordMutation,
   useGetNotificationQuery,
   useMarkAsReadMutation,
-  useGetProfileQuery
+  useGetProfileQuery,
+  useVerifyTokenQuery,
 } = userApiSlice;
