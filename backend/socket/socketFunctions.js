@@ -60,7 +60,6 @@ module.exports.publishNotification = asyncHandler(
 );
 
 async function addNotification(user, notification) {
-  console.log(user);
   user.notifications = [...user?.notifications, notification];
   await user.save();
 }

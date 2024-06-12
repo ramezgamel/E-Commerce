@@ -27,7 +27,6 @@ function ProductList() {
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
 
-
   const deleteProduct = async (id) => {
     try {
       if (window.confirm('Are you sure?')) {
@@ -56,6 +55,7 @@ function ProductList() {
       setProduct({});
     }
   };
+  console.log(products)
   return (
     <>
       <Model
@@ -159,7 +159,7 @@ function ProductList() {
                     >
                       <td className="p-2">{product.name}</td>
                       <td className="p-2">{product.price}</td>
-                      <td className="p-2">{product.category.name}</td>
+                      <td className="p-2">{product.category?.name}</td>
                       <td className="p-2">{product.brand}</td>
                       <td className="flex justify-center gap-1 py-2 pr-2">
                         <button

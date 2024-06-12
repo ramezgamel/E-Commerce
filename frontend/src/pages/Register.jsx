@@ -100,7 +100,6 @@ function Register() {
             type="file"
             onChange={(e)=>uploadData(e.target.files)}
           />
-          
         </div>
         <div className="my-2">
           <label>password</label>

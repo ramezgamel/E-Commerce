@@ -39,7 +39,7 @@ function Product({ product,isInWishList,isInCart }) {
   };
   const addToCartHandler = async (e) => {
     e.preventDefault();
-    if(userInfo.role == "admin") return toast.error("Unavailable for admins")
+    if(userInfo?.role == "admin") return toast.error("Unavailable for admins")
     if(product.countInStock == 0 ) return 
     try {
       if(cartID) {

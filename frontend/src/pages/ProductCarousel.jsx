@@ -27,7 +27,7 @@ function ProductCarousel() {
   if (isLoading) return <Loader />;
   if (error) return <h3 role="alert">{error?.data?.message}</h3>;
   return (
-    <div className="relative overflow-hidden pb-10  " >
+    products.length > 0 && <div className="relative overflow-hidden pb-10  " >
       {/* <!-- Carousel wrapper --> */}
       <AnimatePresence mode='wait'>
         <m.div
@@ -39,7 +39,7 @@ function ProductCarousel() {
             duration:.5
           }}
           className="h-56 flex justify-center md:h-80">
-            <img src={products[view].images[0]}/>
+            <img src={products[view]?.images[0]}/>
         </m.div>
       </AnimatePresence>
       {/* <!-- Slider controls --> */}
