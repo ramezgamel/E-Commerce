@@ -8,11 +8,11 @@ import {
 // import { MdOutlineSpaceDashboard } from 'react-icons/md';
 function SideBar() {
   return (
-    <aside className="flex sm:block w-40">
+    <aside className="flex sm:block sm:w-40">
       <Link to="https://res.cloudinary.com/dfv2vlj7u/image/upload/v1708256865/logo.png" className="cursor-pointer hidden sm:flex justify-center my-4">
         <img className="w-16 h-10" src="../../../public/images/logo.png" alt="" />
       </Link>
-      <ul className="flex transition-all sm:flex-col gap-2 text-center sm:font-medium text-gray-500  dark:text-gray-400">
+      <ul className="flex transition-all overflow-scroll sm:flex-col gap-2 text-center sm:font-medium text-gray-500  dark:text-gray-400">
         <li>
           <NavLink
             to="/admin/users"
