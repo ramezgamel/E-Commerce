@@ -55,7 +55,6 @@ function ProductList() {
       setProduct({});
     }
   };
-  console.log(products)
   return (
     <>
       <Model
@@ -119,7 +118,6 @@ function ProductList() {
           </div>
         </div>
 
-
         {/* TABLE  */}
         <div className="overflow-auto">
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -155,13 +153,16 @@ function ProductList() {
                   products?.data.map((product) => (
                     <tr
                       key={product._id}
-                      className="border-b dark:border-gray-700"
+                      className="border-b dark:border-gray-700 "
                     >
-                      <td className="p-2">{product.name}</td>
-                      <td className="p-2">{product.price}</td>
-                      <td className="p-2">{product.category?.name}</td>
-                      <td className="p-2">{product.brand}</td>
-                      <td className="flex justify-center gap-1 py-2 pr-2">
+                      <td className="px-2">
+                        <p className='line-clamp-2 py-1'>{product.name}</p>
+                      </td>
+                      <td className="px-2">{product.price}</td>
+                      <td className="px-2">{product.category?.name}</td>
+                      <td className="px-2">{product.brand}</td>
+                      <td className="">
+                        <div className='flex justify-between gap-1 items-center'>
                         <button
                           onClick={() => {
                             setProduct(product);
@@ -177,6 +178,7 @@ function ProductList() {
                         >
                           <FaTrash />
                         </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -197,7 +199,7 @@ function ProductList() {
           )}
         {/* PAGINATE  */}
         {products?.paginationResult.totalPages > 1 &&(
-        <div className="d-flex justify-content-center">
+        <div className="flex justify-center">
           <Paginate
             pages={products?.paginationResult.totalPages}
             pageNum={products?.paginationResult.currentPage}

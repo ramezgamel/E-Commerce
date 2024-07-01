@@ -1,19 +1,27 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   AiOutlineUser,
   AiOutlineShoppingCart,
   AiOutlineShop,
   AiFillBell
 } from 'react-icons/ai';
+import {motion as m} from "framer-motion";
+import { containerVariants,childVariants } from "../animation/variants";
+
 // import { MdOutlineSpaceDashboard } from 'react-icons/md';
 function SideBar() {
   return (
-    <aside className="flex sm:block sm:w-40">
-      <Link to="https://res.cloudinary.com/dfv2vlj7u/image/upload/v1708256865/logo.png" className="cursor-pointer hidden sm:flex justify-center my-4">
-        <img className="w-16 h-10" src="../../../public/images/logo.png" alt="" />
-      </Link>
-      <ul className="flex transition-all overflow-scroll sm:flex-col gap-2 text-center sm:font-medium text-gray-500  dark:text-gray-400">
-        <li>
+    <aside
+      className="flex sm:block sm:w-40"
+    >
+      <h2 className="hidden sm:block text-main text-xl text-center py-5">Dashboard</h2>
+      <m.ul 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="flex transition-all overflow-x-scroll no-scrollbar sm:flex-col gap-2 text-center sm:font-medium text-gray-500  dark:text-gray-400"
+      >
+        <m.li variants={childVariants}>
           <NavLink
             to="/admin/users"
             className={({ isActive }) =>
@@ -28,8 +36,8 @@ function SideBar() {
             </div>
             <div className="col-span-10">Users</div>
           </NavLink>
-        </li>
-        <li>
+        </m.li>
+        <m.li variants={childVariants}>
           <NavLink
             to="/admin/orders"
             className={({ isActive }) =>
@@ -44,8 +52,8 @@ function SideBar() {
             </div>
             <div className="col-span-10">Orders</div>
           </NavLink>
-        </li>
-        <li>
+        </m.li>
+        <m.li variants={childVariants}>
           <NavLink
             to="/admin/products"
             className={({ isActive }) =>
@@ -60,8 +68,8 @@ function SideBar() {
             </div>
             <div className="col-span-10">Products</div>
           </NavLink>
-        </li>
-        <li>
+        </m.li>
+        <m.li variants={childVariants}>
           <NavLink
             to="/admin/notifications"
             className={({ isActive }) =>
@@ -76,8 +84,8 @@ function SideBar() {
             </div>
             <div className="col-span-10">Notifications</div>
           </NavLink>
-        </li>
-        <li>
+        </m.li>
+        <m.li variants={childVariants}>
           <NavLink
             to="/admin/categories"
             className={({ isActive }) =>
@@ -92,8 +100,8 @@ function SideBar() {
             </div>
             <div className="col-span-10">Categories</div>
           </NavLink>
-        </li>
-      </ul>
+        </m.li>
+      </m.ul>
     </aside>
   );
 }

@@ -57,8 +57,8 @@ function OrderList() {
         </div>
       </div>
       <div className=" flex flex-col justify-between">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+        <div className="overflow-x-scroll no-scrollbar">
+          <table className="w-full text-left  text-sm text-gray-500 dark:text-gray-400">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-2">

@@ -33,10 +33,7 @@ function CategoryList() {
     <Model
       header={`${category? "Update Category": "Create Category"}`}
       show={show}
-      handleClose={() => {
-        setCategory('')
-        setShow(false)
-      }}
+      setShow={setShow}
     >
       <CategoryForm setShow={setShow} category={category}/>
     </Model>

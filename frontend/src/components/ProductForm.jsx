@@ -27,7 +27,6 @@ function ProductForm({ submit, btnName, product }) {
   }, [product]);
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(images)
     let newPrd = {
       name: nameInput.current.value,
       price: priceInput.current.value,
@@ -35,7 +34,7 @@ function ProductForm({ submit, btnName, product }) {
       category,
       countInStock:countInStockInput.current.value,
       description:descriptionInput.current.value,
-      images: images ? images : (product?.images || [])
+      images: images ? Array.isArray(images) ? images:[images] : (product?.images || [])
     };
     if(category == "") return toast.error("Should select category");
     if (product) {
@@ -46,8 +45,7 @@ function ProductForm({ submit, btnName, product }) {
     }
     navigate('/admin/products');
   };
-
-  return (
+return (
     <form onSubmit={submitHandler}>
       <div>
         <label className="text-main">Name:</label>
@@ -82,26 +80,28 @@ function ProductForm({ submit, btnName, product }) {
         </div>
         <div className='w-[50%]'>
           <label>Category:</label>
-          <select className='hover:cursor-pointer' name="category" onChange={(e)=>setCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            {data?.result?.map(cat => <option selected={cat._id == category} key={cat._id} value={cat._id} >{cat.name}</option> )}
+          <select className='hover:cursor-pointer' value={category} name="category" onChange={(e)=>setCategory(e.target.value)}>
+            <option defaultValue >Select Category</option>
+            {data?.data.length > 1 && data?.data.map(cat => 
+              <option  key={cat._id} value={cat._id} >
+                {cat.name}
+              </option> )}
           </select>
         </div>
       </div>
       <div>
         <label>Images:</label>
-        {uploadErr ? <div className="error">{uploadErr.message}</div>: preview &&
-            <div  className='my-2 grid grid-cols-5 gap-2 '>
-            {preview.map(i=> <img key={i} className='h-20 w-full rounded-lg' src={i} />)}
-            </div>
-        }
         {(Boolean(progress) && !isUploaded) && <Progress progress={progress}/> }
         <input
           type="file"
           multiple
           onChange={(e)=> uploadData(e.target.files)}
         />
-        
+        {uploadErr?.error ? <div className="alert px-3 my-2">{uploadErr.error}</div>: preview &&
+            <div  className='my-2 grid grid-cols-5 gap-2 '>
+            {preview.map(i=> <img key={i} className='h-20 w-full rounded-lg' src={i} />)}
+            </div>
+        }
       </div>
       <div>
         <label>Description:</label>
@@ -111,7 +111,7 @@ function ProductForm({ submit, btnName, product }) {
         />
       </div>
       <div className="mt-2 text-right">
-        <button type="submit" className="btn " disabled={!isUploaded && !product?.images}>
+        <button type="submit" className="btn " disabled={!isUploaded && !product?.images || uploadErr?.error}>
           {btnName}
         </button>
       </div>

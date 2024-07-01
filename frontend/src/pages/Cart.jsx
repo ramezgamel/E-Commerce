@@ -2,11 +2,11 @@ import { Link, Navigate } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
-import {useDeleteFromCartMutation} from '../store/cartApiSlice'
+import {useDeleteFromCartMutation} from '../store/cartApiSlice.js'
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
-import { useApplyCouponMutation } from '../store/cartApiSlice';
-import {useAddToCartMutation} from "../store/cartApiSlice"
+import { useApplyCouponMutation } from '../store/cartApiSlice.js';
+import {useAddToCartMutation} from "../store/cartApiSlice.js"
 import { setCart } from '../store/offlineSlice';
 function Cart() {
   const couponRef = useRef();

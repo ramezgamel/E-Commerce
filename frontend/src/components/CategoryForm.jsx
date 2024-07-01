@@ -51,7 +51,7 @@ function CategoryForm({setShow ,category}) {
       </div>
       
       <div className="text-right">
-        <button className="btn" type="submit">{category? "Update":"Create"}</button>
+        <button disabled={!isUploaded} className="btn" type="submit">{category? "Update":"Create"}</button>
       </div>
     </form>
   )

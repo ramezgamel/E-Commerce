@@ -12,15 +12,14 @@ const checkCategory = async (val, { req }) => {
 exports.createValidator = [
   check("name")
     .notEmpty()
-    .withMessage("Name is required")
-    .isLength({ min: 3, max: 32 })
+    .withMessage("Product name is required")
+    .isLength({ min: 3 })
     .withMessage("Name length must be 3 min and 32 max"),
   check("shipping").optional(),
   check("images")
-    .custom(isArrayOfStringValidator)
-    .withMessage("Accept images as array of string")
     .notEmpty()
-    .withMessage("Must be at least One image for product"),
+    .withMessage("Images is required")
+    .custom(isArrayOfStringValidator),
   check("category")
     .notEmpty()
     .withMessage("Product must be belong to category")
@@ -62,13 +61,9 @@ exports.updateValidator = [
   check("shipping").optional(),
   check("name")
     .optional()
-    .isLength({ min: 3, max: 32 })
+    .isLength({ min: 3 })
     .withMessage("Name length must be 3 min and 32 max"),
-  check("images")
-    .optional()
-    .custom(isArrayOfStringValidator)
-    .isLength({ min: 1, max: 5 })
-    .withMessage("Must be at least One image for product"),
+  check("images").optional().custom(isArrayOfStringValidator),
   check("category")
     .optional()
     .isMongoId()
@@ -82,12 +77,12 @@ exports.updateValidator = [
   check("price").optional(),
   check("countInStock").optional(),
   check("discount").optional(),
+  check("_id").notEmpty().withMessage("Id not provided"),
   checkExact(
     [],
     { locations: ["body"] },
     {
       message: (fields) => {
-        console.log(fields);
         const [field] = fields;
         return `Can't add ${field.path} field`;
       },

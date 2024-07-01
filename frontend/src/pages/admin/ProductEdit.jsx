@@ -15,13 +15,13 @@ function ProductEdit() {
     refetch,
   } = useGetProductByIdQuery(id);
   const [updatePrd, { isLoading: updateLoading }] = useUpdateProductMutation();
-  const updateHandler = async (id, prd) => {
+  const updateHandler = async (prd) => {
     try {
       const formData = new FormData();
       Object.keys(prd).map((key) => {
         formData.append(key, prd[key]);
       });
-      await updatePrd({ id, formData }).unwrap();
+      await updatePrd({ id:prd._id, formData }).unwrap();
       toast.success("Product updated");
       refetch();
     } catch (err) {

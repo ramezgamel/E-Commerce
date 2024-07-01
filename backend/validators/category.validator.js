@@ -3,13 +3,14 @@ const validator = require("../middleware/validator");
 
 exports.createCatValidator = [
   check("name")
-    .isEmpty()
+    .notEmpty()
     .withMessage("Category name required")
     .isLength({ min: 4, max: 25 })
     .withMessage("Category name length 4 to 25 chr"),
-  check("slug").custom((value, { req }) => {
+  (req, res, next) => {
     req.body.slug = req.body.name.toLowerCase();
-  }),
+    next();
+  },
   check("image").isString().withMessage("Accept image as URL string"),
   validator,
 ];

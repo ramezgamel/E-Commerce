@@ -27,7 +27,7 @@ const signIn = async (res, user) => {
 // @access  all
 module.exports.verifyToken = asyncHandler(async (req, res) => {
   const { mhp_token } = req.cookies;
-  if (!mhp_token) throw new ApiError("Not Authorized, no token", 401);
+  if (!mhp_token) return;
   const decoded = jwt.verify(mhp_token, process.env.SEC_JWT);
   const user = await User.findById(decoded.id).select("-password");
   if (user == null) throw new ApiError("User not found");

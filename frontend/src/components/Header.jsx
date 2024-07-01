@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Disclosure, } from '@headlessui/react';
-
+import {motion as m} from "framer-motion";
 import { useVerifyTokenQuery } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import SearchBox from './SearchBox';
@@ -28,7 +28,11 @@ function Header ()  {
   
   return (
     <>
-    <header >
+    <m.header 
+      // initial={{x: "-100vw", opacity:0}}
+      animate={{y:[-100,0], x:0, opacity:[0,1]  }}
+      transition={{type:"spring",stiffness:120, duration:.5}}
+    >
       <Disclosure as="nav" className="bd border-b ">
         <div className="md:mx-auto md:container">
           <div className="relative px-5 flex h-16 items-center justify-between">
@@ -63,7 +67,7 @@ function Header ()  {
           </div>
         </div>
       </Disclosure>
-    </header>
+    </m.header>
     </>
   );
 }

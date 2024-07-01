@@ -1,17 +1,23 @@
 /* eslint-disable react/prop-types */
-import {motion as m} from "framer-motion"
-function NavAnimation({children}) {
+import {AnimatePresence, motion as m} from "framer-motion";
+
+
+function NavAnimation({id,children}) {
   return (
-    <m.main
-      initial={{y:"100vh", x:0}}
-      animate={{y:0, x:0}}
-      exit={{y:"-100vh",x:0 }}
-      transition={{
-        duration:.5,
-      }}
+    <AnimatePresence mode="wait">
+      <m.main
+        key={id}
+        initial={{x:"-100vw", opacity:0}}
+        animate={{x:0, opacity:1, transition:{
+          duration: .5
+        }}}
+        exit={{y:"100vh", opacity:0, transition:{
+          duration: .2
+        }}}
     >
       {children}
-    </m.main>
+      </m.main>
+    </AnimatePresence>
   )
 }
 

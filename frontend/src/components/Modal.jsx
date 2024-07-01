@@ -19,7 +19,7 @@ function Model({ children, show, setShow, header }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -33,7 +33,7 @@ function Model({ children, show, setShow, header }) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-50 p-6 text-left align-middle text-main shadow-xl transition-all dark:bg-gray-800">
+                <Dialog.Panel className="w-full ring max-w-md transform overflow-hidden rounded-2xl bg-slate-50 p-6 text-left align-middle text-main shadow-xl transition-all dark:bg-gray-800">
                   <span
                     className="absolute right-4 top-1  cursor-pointer p-1 text-main"
                     onClick={handleClose}
@@ -46,7 +46,7 @@ function Model({ children, show, setShow, header }) {
                   >
                     {header}
                   </Dialog.Title>
-                  <div className="mt-2 bg-slate-50 dark:bg-gray-800">
+                  <div className="mt-2  bg-slate-50 dark:bg-gray-800">
                     {children}
                   </div>
                 </Dialog.Panel>

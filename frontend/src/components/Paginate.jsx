@@ -4,13 +4,14 @@ function Paginate({ pages, pageNum, setPage }) {
     <nav aria-label="Page navigation example">
       <ul className="mt-2 inline-flex -space-x-px text-sm">
         <li>
+          {pageNum > 1 && 
           <button
             onClick={() => setPage(pageNum - 1)}
             className="flex h-8 items-center justify-center rounded-l-lg border border-gray-300 bg-slate-50 px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:disabled:bg-slate-300 dark:disabled:text-slate-50"
             disabled={pageNum == 1}
           >
             Previous
-          </button>
+          </button>}
         </li>
         {[...Array(pages).keys()].map((x) => (
           <li key={x}>
@@ -26,6 +27,7 @@ function Paginate({ pages, pageNum, setPage }) {
             </button>
           </li>
         ))}
+        {pageNum < pages && 
         <li>
           <button
             onClick={() => setPage(pageNum + 1)}
@@ -35,6 +37,7 @@ function Paginate({ pages, pageNum, setPage }) {
             Next
           </button>
         </li>
+        }
       </ul>
     </nav>
   );

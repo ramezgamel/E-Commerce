@@ -46,7 +46,7 @@ const SearchBox = memo(function SearchBox() {
     <>
       <Model show={show} header="Search" setShow={setShow}>
         <div className='h-[60vh]'>
-          <form >
+          <form className='mb-2'>
             <input
               type="text"
               name="q"
@@ -56,7 +56,7 @@ const SearchBox = memo(function SearchBox() {
             ></input>
           </form>
           {keyword != '' && (
-            <div className='mt-2 overflow-y-scroll h-full content-center'>
+            <div className='pb-5 overflow-y-scroll no-scrollbar h-full content-center'>
               {isLoading && <Loader />}
               {(!isLoading && data?.data?.length == 0) && <div className='alert text-center '>No Data</div>}
               {data?.data?.length > 0 &&

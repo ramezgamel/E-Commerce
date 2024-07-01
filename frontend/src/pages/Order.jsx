@@ -18,7 +18,6 @@ function Order() {
     refetch,
   } = useGetOrderByIdQuery(orderId);
   const { userInfo } = useSelector((state) => state.auth);
-  // const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [deliverOrder, { isLoading: loadingDeliver }] =
     useDeliverOrderMutation();
 
@@ -42,8 +41,8 @@ function Order() {
   return (
     <div className='min-h-[70vh] md:mx-20'>
       <h1 className="text-main text-3xl font-extrabold text-center mb-3">Order {order?._id}</h1>
-      <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-8">
+      <div className="md:grid md:grid-cols-12 gap-2">
+        <div className="md:col-span-8">
           <div className="mb-2 p-2 text-main">
             <h2 className="text-main font-bold text-xl border-b pb-2">Order Items</h2>
             <div className='mt-4'>
@@ -63,7 +62,7 @@ function Order() {
             </div>
           </div>
         </div>
-        <div className="col-span-4">
+        <div className="md:col-span-4">
           <div className="p-2 text-main bg-back rounded-md shadow-md">
             <h2 className='text-xl font-bold text-center my-3'>Order Details</h2>
             <div className="">

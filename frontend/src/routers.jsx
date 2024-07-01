@@ -11,9 +11,9 @@ const ResetPassword =lazy(()=>import( "./pages/ResetPassword.jsx"));
 const ProductDetails =lazy(()=>import( "./pages/ProductDetails.jsx"));
 const PrivateRoute =lazy(()=>import( "./components/PrivateRoute.jsx"));
 const Profile =lazy(()=>import( "./pages/Profile"));
-const Shipping =lazy(()=>import( "./pages/Shipping.jsx"));
-const Payment =lazy(()=>import( "./pages/Payment.jsx"));
-const PlaceOrder =lazy(()=>import( "./pages/PlaceOrder.jsx"));
+const Shipping =lazy(()=>import( "./pages/user/Shipping.jsx"));
+const Payment =lazy(()=>import( "./pages/user/Payment.jsx"));
+const PlaceOrder =lazy(()=>import( "./pages/user/PlaceOrder.jsx"));
 const Order =lazy(()=>import( "./pages/Order.jsx"));
 const UserList =lazy(()=>import( "./pages/admin/UserList.jsx"));
 const OrderList =lazy(()=>import( "./pages/admin/OrderList.jsx"));
@@ -22,7 +22,7 @@ const CreateNotification =lazy(()=>import( "./pages/admin/CreateNotification.jsx
 const CategoryList =lazy(()=>import( "./pages/admin/CategoryList.jsx"));
 const ProductEdit =lazy(()=>import( "./pages/admin/ProductEdit.jsx"));
 const Home = lazy(()=>import('./pages/Home.jsx'));
-const UserLayout = lazy(()=>import('./pages/UserLayout.jsx'));
+const UserLayout = lazy(()=>import('./pages/user/UserLayout.jsx'));
 const AdminLayout = lazy(()=>import('./pages/admin/AdminLayout.jsx'));
 const Cart = lazy(()=>import('./pages/Cart.jsx'));
 
@@ -32,6 +32,9 @@ const router = createBrowserRouter(
       <Route path="/" element={<UserLayout/>}>
         <Route index element={<Home/>}/>
         <Route path="product/:id" element={<ProductDetails/>}/>
+        <Route path="/" element={<PrivateRoute restrictTo={["user","admin"]}/>}>
+          <Route path="order/:id" element={<Order/>} />
+        </Route>
         <Route path="/" element={<PrivateRoute restrictTo={"user"}/>}>
           <Route path="profile" element={<Profile/>}>
             <Route index element={ <Personal/> }/>
@@ -42,7 +45,6 @@ const router = createBrowserRouter(
           <Route path="shipping" element={<Shipping/>} />
           <Route path="payment" element={<Payment/>} />
           <Route path="placeorder" element={<PlaceOrder/>} />
-          <Route path="order/:id" element={<Order/>} />
         </Route>
         <Route path="/cart" element={ <Cart/> }/>
       </Route>
@@ -60,4 +62,5 @@ const router = createBrowserRouter(
     </Route>
   )
 );
+
 export default router

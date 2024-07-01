@@ -11,7 +11,16 @@ const ApiError = require("./utils/apiError");
 const globalError = require("./middleware/globalError");
 const mountRoutes = require("./routes/mountRoutes");
 const { webhookCheckOut } = require("./controller/order.controller");
+const { rateLimit } = require("express-rate-limit");
 
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }

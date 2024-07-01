@@ -16,14 +16,13 @@ module.exports = asyncHandler(async (req, res) => {
       cloudinary.uploader.upload(file.path)
     );
     const results = await Promise.all(req.files);
-
     if (!results) throw new ApiError("Error uploading images", 401);
     req.files.images = results.map((res) => res.secure_url);
     res.status(200).json({ success: true, data: req.files.images });
   } else {
     const result = await cloudinary.uploader.upload(req.file.path);
+    if (!result) throw new ApiError("Error uploading image", 401);
     req.file.url = result.secure_url;
-    console.log(req.file.url);
     res.status(200).json({ success: true, data: req.file.url });
   }
 });

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import Meta from '../components/Meta';
-import {useAddToCartMutation} from "../store/cartApiSlice"
+import {useAddToCartMutation} from "../store/cartApiSlice.js"
 import NavAnimation from '../animation/NavAnimation';
 import { format } from 'date-fns';
 function ProductDetails() {

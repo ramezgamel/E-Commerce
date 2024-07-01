@@ -115,7 +115,6 @@ module.exports.createSession = asyncHandler(async (req, res) => {
 
 module.exports.webhookCheckOut = asyncHandler(async (req, res) => {
   const sig = req.headers["stripe-signature"];
-  console.log(sig);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
