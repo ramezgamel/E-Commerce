@@ -45,9 +45,10 @@ const errorForDev = (err, res) => {
 };
 
 module.exports = function globalError(err, req, res, next) {
-  console.log(err);
   err.statusCode = err.statusCode || 500;
   if (process.env.NODE_ENV == "development") {
+    console.log(err);
+    console.log(err.stack);
     errorForDev(err, res);
   } else {
     if (err.name === "ValidatorError")

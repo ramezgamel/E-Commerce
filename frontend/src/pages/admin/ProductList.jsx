@@ -78,7 +78,7 @@ function ProductList() {
           />
         )}
       </Model>
-      <div className="px-4 mt-3 overflow-auto bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
+      <div className="px-4 mt-3 overflow-auto h-full pb-4 no-scrollbar bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
         {/* NAV  */}
         <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <AdminSearchBox keyword={keyword} setKeyword={setKeyword} />
@@ -119,7 +119,7 @@ function ProductList() {
         </div>
 
         {/* TABLE  */}
-        <div className="overflow-auto">
+        <div>
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>

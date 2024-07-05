@@ -22,7 +22,7 @@ const childVariants = {
     x: 0,
   },
   hover:{
-    scale:1.1
+    scale: 1.15
   }
 };
 function Tabs({ setCategory, category, setPage }) {
@@ -32,7 +32,7 @@ function Tabs({ setCategory, category, setPage }) {
       <m.ul variants={containerVariants} initial="hidden" animate="show" className="flex overflow-y-hidden -mb-px no-scrollbar overflow-scroll">
         <li 
           onClick={() => setCategory("")}
-          className={`${category == "" ? "border-blue-600 text-blue-600" : "text-main border-transparent"} mr-2 inline-block pb-2 px-3 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-400 dark:hover:text-gray-400 hover:cursor-pointer`}>
+          className={`${category == "" ? "border-blue-600 text-blue-600" : "text-main border-transparent"} mr-2 pb-2 px-3 border-b-2 hover:text-blue-600 hover:cursor-pointer`}>
           All
         </li>
         {data?.data?.map((cat,i) =>
@@ -45,7 +45,7 @@ function Tabs({ setCategory, category, setPage }) {
               setCategory(cat._id);
               setPage(1)
             }}
-            className={`${category == cat._id ? "border-blue-600 text-blue-600" : "text-main border-transparent"} mr-2 whitespace-nowrap inline-block pb-2 px-3 border-b-2 rounded-t-lg hover:cursor-pointer`}>
+            className={`${category == cat._id ? "border-blue-600 border-b-2 text-blue-600" : "text-main"} mr-2 whitespace-nowrap  px-3 hover:cursor-pointer hover:text-blue-600 transition-all`}>
             {cat.name}
           </m.li>
         )}

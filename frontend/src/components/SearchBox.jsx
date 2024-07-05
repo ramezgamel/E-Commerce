@@ -56,9 +56,17 @@ const SearchBox = memo(function SearchBox() {
             ></input>
           </form>
           {keyword != '' && (
-            <div className='pb-5 overflow-y-scroll no-scrollbar h-full content-center'>
-              {isLoading && <Loader />}
-              {(!isLoading && data?.data?.length == 0) && <div className='alert text-center '>No Data</div>}
+            <div className='pb-5 overflow-y-scroll no-scrollbar h-full '>
+              {isLoading ? <div className="content-center h-full"> <Loader /> </div>: data?.data?.length > 0 ? data.data.map((item) => (
+                  <Link
+                    key={item._id}
+                    to={`/product/${item._id}`}
+                    onClick={() => setKeyword('')}
+                  >
+                    {product(item)}
+                  </Link>
+                )) :  <div className='alert text-center'>No Data</div>}
+              {/* {(!isLoading && data?.data?.length == 0) && <div className='alert text-center '>No Data</div>}
               {data?.data?.length > 0 &&
                 data.data.map((item) => (
                   <Link
@@ -69,7 +77,7 @@ const SearchBox = memo(function SearchBox() {
                     {product(item)}
                   </Link>
                 ))
-              }
+              } */}
             </div>
           )}
         </div>

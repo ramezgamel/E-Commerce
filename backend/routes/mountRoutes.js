@@ -23,7 +23,7 @@ const mountRoutes = (app) => {
   app.use("/api/cart", cartRoutes);
   app.post(
     "/api/uploadSingle",
-    upload.single("image"),
+    // upload.single("image"),
     (err, req, res, next) => {
       if (err instanceof multer.MulterError) {
         res.status(400).send({ error: err.message });

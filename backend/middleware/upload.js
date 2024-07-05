@@ -3,20 +3,7 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../uploads/users"));
-    // switch (req.baseUrl.split("/api/")[1]) {
-    //   case "users":
-    //     cb(null, path.join(__dirname, "../uploads/users"));
-    //     break;
-    //   case "products":
-    //     cb(null, path.join(__dirname, "../uploads/products"));
-    //     break;
-    //   case "category":
-    //     cb(null, path.join(__dirname, "../uploads/categories"));
-    //     break;
-    //   default:
-    //     break;
-    // }
+    cb(null, path.join(__dirname, "../uploads"));
   },
   filename: function (req, file, cb) {
     file.filename = `${req.baseUrl.split("/api/")[1]}-${Math.round(

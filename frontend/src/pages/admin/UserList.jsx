@@ -27,8 +27,8 @@ function UserList() {
     }
   };
   return (
-    <div className="max-w-screen-xl bg-gray-50 dark:bg-gray-800">
-      <div className="relative mx-3 mt-3 overflow-hidden bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
+    <div className="max-w-screen-xl overflow-hidden h-full pb-4 no-scrollbar">
+      <div className="relative mx-3 mt-3  bg-slate-50 shadow-md dark:bg-gray-800 sm:rounded-lg">
         <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <AdminSearchBox keyword={keyword} setKeyword={setKeyword} />
           {/* ACTIONS PART */}

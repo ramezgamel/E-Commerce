@@ -44,9 +44,9 @@ export default function useUpload(){
   const [preview, setPreview] = useState();
   const [images, setImages] = useState();
   const [error, setError] = useState();
-  function uploadData (data) {
+  async function uploadData (data) {
     setPreview(getPreview(data));
-    uploadImage(data,setProgress, setImages, setError)
+    await uploadImage(data,setProgress, setImages, setError)
     setIsUploaded(true);
   }
   return {images, error,preview, progress, isUploaded, uploadData}
