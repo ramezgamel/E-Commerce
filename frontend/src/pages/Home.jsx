@@ -15,8 +15,10 @@ function Home() {
   const { data: products, isLoading, error } = useGetProductQuery({ page, category });
   if (error)
     return (
-      <div role="alert" className="alert">
-        Something went wrong
+      <div role="alert" className="h-[75vh] flex items-center justify-center">
+        <div className="alert py-5 px-10">
+          Something went wrong!
+        </div>
       </div>
     );
   return (

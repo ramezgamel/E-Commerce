@@ -12,19 +12,20 @@ import { useEffect } from "react";
 function NotificationsPanel() {
   const [markAsRead] = useMarkAsReadMutation();
   const { data, isLoading, refetch } = useGetNotificationQuery();
-  const {userInfo} =  useSelector(state=>state.auth);
-  useEffect(()=>{
-    if(userInfo){
-      socket.connect();
-      setUser(userInfo)
-    }
-    return ()=> {
-      socket.disconnect();
-    }
-  }, [ userInfo]);
+  const { userInfo } = useSelector(state => state.auth);
 
-  getNotification(async ()=> await refetch());
-  
+  useEffect(() => {
+    if (userInfo) {
+      socket.connect();
+      setUser(userInfo);
+    }
+    return () => {
+      socket.disconnect();
+    };
+  }, [userInfo]);
+
+  getNotification(async () => await refetch());
+
   const markRead = async (id) => {
     try {
       await markAsRead(id).unwrap();
@@ -33,8 +34,8 @@ function NotificationsPanel() {
       toast.error(err.message | "Something went wrong");
     }
   };
+
   return (
-    userInfo &&
     <Menu as="div" className="relative z-10">
       <Menu.Button className="relative flex rounded-full text-main focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
         <AiOutlineBell
@@ -51,31 +52,8 @@ function NotificationsPanel() {
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-        <Menu.Items as="ul" className="absolute no-scrollbar right-0 top-3 mt-2 w-60 origin-top-right rounded-md p-2 bg-slate-50 dark:bg-gray-700 max-h-48 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto">
-          {isLoading && <Loader />}
-          {!Boolean(data?.notifications?.length) && <div className="alert m-2 p-2">No Notifications</div>}
-          {data?.notifications?.length > 0 && data?.notifications?.map((notification, index) =>
-            <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}` : ""}`}>
-              <Menu.Item as="li"
-                onClick={() => markRead(notification?._id)}
-                className={`${notification?.isRead ? "bg-back" : "bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
-                {data?.sender && (
-                  <div className="col-span-2">
-                    <img
-                      className='rounded-full w-10 h-10'
-                      src={data?.sender?.image} alt={data?.sender?.name}
-                    />
-                  </div>
-                )}
-                <div className={data?.notifications.senderId ? "col-span-6" : "col-span-8"}>
-                  <p className="m-0 text-sm">{notification?.content}</p>
-                  <p className="text-gray-400 m-0 text-xs text-right">
-                    {new Date(notification?.date).toLocaleTimeString("en-EG")}
-                  </p>
-                </div>
-              </Menu.Item>
-            </Link>
-          )}
+        <Menu.Items as="ul" className="absolute no-scrollbar -right-3 top-3 mt-2 w-60 origin-top-right rounded-md p-2 bg-slate-50 dark:bg-gray-700 max-h-[17.53rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto">
+          {isLoading ? <Loader /> : notificationElements(data, markRead)}
         </Menu.Items>
       </Transition>
     </Menu>
@@ -83,3 +61,29 @@ function NotificationsPanel() {
 }
 
 export default NotificationsPanel;
+
+function notificationElements (data, markRead) {
+    if (data?.notifications.length <= 0) return <div className="alert m-2 p-2">No Notifications</div>;
+    return data?.notifications?.map((notification, index) =>
+      <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}` : ""}`}>
+        <Menu.Item as="li"
+          onClick={() => markRead(notification?._id)}
+          className={`${notification?.isRead ? "bg-back" : "bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
+          {data?.sender && (
+            <div className="col-span-2">
+              <img
+                className='rounded-full w-10 h-10'
+                src={data?.sender?.image} alt={data?.sender?.name}
+              />
+            </div>
+          )}
+          <div className={data?.notifications.senderId ? "col-span-6" : "col-span-8"}>
+            <p className="m-0 text-sm line-clamp-2">{notification?.content}</p>
+            <p className="text-gray-400 m-0 text-xs text-right">
+              {new Date(notification?.date).toLocaleTimeString("en-EG")}
+            </p>
+          </div>
+        </Menu.Item>
+      </Link>
+    );
+  }

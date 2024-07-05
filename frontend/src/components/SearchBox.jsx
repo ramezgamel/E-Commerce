@@ -65,19 +65,9 @@ const SearchBox = memo(function SearchBox() {
                   >
                     {product(item)}
                   </Link>
-                )) :  <div className='alert text-center'>No Data</div>}
-              {/* {(!isLoading && data?.data?.length == 0) && <div className='alert text-center '>No Data</div>}
-              {data?.data?.length > 0 &&
-                data.data.map((item) => (
-                  <Link
-                    key={item._id}
-                    to={`/product/${item._id}`}
-                    onClick={() => setKeyword('')}
-                  >
-                    {product(item)}
-                  </Link>
-                ))
-              } */}
+                )) :  <div className='flex items-center justify-center h-full'>
+                    <div className="alert px-8 py-4">No Data!</div>
+                  </div>}
             </div>
           )}
         </div>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useCreateOrderMutation } from "../store/orderApiSlice";
-import CheckoutSteps from "../components/CheckoutSteps";
+import { useCreateOrderMutation } from "../../store/orderApiSlice";
+import CheckoutSteps from "../../components/CheckoutSteps";
 import { toast } from "react-toastify";
-import Loader from "../components/Loader";
-import { removeCartID, setCart } from "../store/offlineSlice";
-import { useLazyCheckoutSessionQuery } from "../store/orderApiSlice";
-import { paymentSuccess } from "../socket";
+import Loader from "../../components/Loader";
+import { removeCartID, setCart } from "../../store/offlineSlice";
+import { useLazyCheckoutSessionQuery } from "../../store/orderApiSlice";
+import { paymentSuccess } from "../../socket";
 function PlaceOrder() {
   const navigate = useNavigate();
   const [address] = useState(JSON.parse(localStorage.getItem("address")));

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import CheckoutSteps from '../components/CheckoutSteps';
-import {useGetUserAddressesQuery} from "../store/addressesApiSlice"
+import CheckoutSteps from '../../components/CheckoutSteps';
+import {useGetUserAddressesQuery} from "../../store/addressesApiSlice"
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 function Shipping() {

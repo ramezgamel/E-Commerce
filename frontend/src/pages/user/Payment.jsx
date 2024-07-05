@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CheckoutSteps from "../components/CheckoutSteps";
+import CheckoutSteps from "../../components/CheckoutSteps";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 function Payment() {
