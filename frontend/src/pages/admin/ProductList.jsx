@@ -119,7 +119,6 @@ function ProductList() {
         </div>
 
         {/* TABLE  */}
-        <div>
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -128,6 +127,9 @@ function ProductList() {
                 </th>
                 <th scope="col" className="p-2">
                   Price
+                </th>
+                <th scope="col" className="p-2">
+                  Stock
                 </th>
                 <th scope="col" className="p-2">
                   Category
@@ -159,6 +161,7 @@ function ProductList() {
                         <p className='line-clamp-2 py-1'>{product.name}</p>
                       </td>
                       <td className="px-2">{product.price}</td>
+                      <td className="px-2">{product.countInStock}</td>
                       <td className="px-2">{product.category?.name}</td>
                       <td className="px-2">{product.brand}</td>
                       <td className="">
@@ -185,7 +188,6 @@ function ProductList() {
               </tbody>
             )} 
           </table>
-        </div>
         {isLoading || isFetching ? (
             <div className="py-5 text-center">
               <Loader />

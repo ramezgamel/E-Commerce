@@ -16,7 +16,7 @@ function Reviews({product}) {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await createReview({ id, rating, comment }).unwrap();
+      await createReview({ id:product._id, rating, comment }).unwrap();
       refetch();
       toast.success('Review submitted');
       setRating(0);

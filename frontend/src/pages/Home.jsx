@@ -46,7 +46,7 @@ function Home() {
             </div>
           )}
         <div className="text-center">
-          {products?.paginationResult.totalPages > 1 && (
+          {(products?.results >= import.meta.env.VITE_LIMIT || products?.paginationResult.currentPage > 1 ) && products?.paginationResult.totalPages > 1 && (
             <div className="d-flex justify-content-center mt-4">
               <Paginate
                 pages={products?.paginationResult.totalPages}

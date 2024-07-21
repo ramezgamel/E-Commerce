@@ -141,7 +141,7 @@ function ProductDetails() {
             </div>
           </div>
           <hr className='my-3' />
-          <Reviews product={product}/>
+          <Reviews product={product.data}/>
         </div>
       </>
       }

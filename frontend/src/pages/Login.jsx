@@ -21,6 +21,7 @@ function Login() {
     try {
         const res = await login({ email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
+        if(res.role == "admin") return navigate("/admin/users")
         navigate(location.state.from.pathname || "/", {replace:true});
     } catch (err) {
       toast.error(err?.data?.message || err.error);
