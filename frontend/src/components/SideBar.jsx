@@ -5,6 +5,7 @@ import {
   AiOutlineShop,
   AiFillBell
 } from 'react-icons/ai';
+import {CiDiscount1} from "react-icons/ci"
 import {motion as m} from "framer-motion";
 import { containerVariants,childVariants } from "../animation/variants";
 
@@ -99,6 +100,22 @@ function SideBar() {
               <AiFillBell />
             </div>
             <div className="col-span-10">Categories</div>
+          </NavLink>
+        </m.li>
+        <m.li variants={childVariants}>
+          <NavLink
+            to="/admin/coupons"
+            className={({ isActive }) =>
+              `${isActive
+                ? 'xs:border-b-4 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
+                : ''
+              } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
+            }
+          >
+            <div className="col-span-2">
+              <CiDiscount1 />
+            </div>
+            <div className="col-span-10">Coupons</div>
           </NavLink>
         </m.li>
       </m.ul>

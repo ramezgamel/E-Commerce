@@ -93,6 +93,21 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
   cart.totalPriceAfterDisCount =
     cart.totalPrice - cart.totalPrice * (coupon.discount / 100).toFixed(2);
   cart.isCoupon = true;
+  cart.coupon = coupon.discount;
+  await cart.save();
+  res.status(200).json({ data: cart });
+});
+
+// url    DEL    api/cart/:cartId/clearCoupon
+exports.clearCoupon = asyncHandler(async (req, res) => {
+  console.log("clearCoupon *************");
+  const cart = await Cart.findById(req.params.cartId).populate(
+    "cartItems.product"
+  );
+  if (!cart) throw new ApiError("No cart for this user");
+  cart.totalPriceAfterDisCount = undefined;
+  cart.coupon = undefined;
+  cart.isCoupon = false;
   await cart.save();
   res.status(200).json({ data: cart });
 });

@@ -19,6 +19,7 @@ const couponApiSLice = apiSlice.injectEndpoints({
         method:"POST",
         body:{name,expire,discount}
       }),
+      invalidatesTags:["Coupon"]
     }),
     updateCoupon:builder.mutation({
       query:({name,expire,discount, couponId})=>({
@@ -26,12 +27,14 @@ const couponApiSLice = apiSlice.injectEndpoints({
         method:"PUT",
         body:{name,expire,discount}
       }),
+      invalidatesTags:["Coupon"]
     }),
     deleteCoupon:builder.mutation({
       query:(couponId)=>({
         url:`/coupons/${couponId}`,
         method:"DELETE",
       }),
+      invalidatesTags:["Coupon"]
     })
   })
 });

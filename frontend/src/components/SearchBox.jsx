@@ -1,4 +1,3 @@
-// import { useNavigate } from "react-router-dom";
 import { memo, useEffect, useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
@@ -73,7 +72,7 @@ const SearchBox = memo(function SearchBox() {
         </div>
       </Model>
       <div className='relative' >
-        <input type="text" className='h-7 hidden sm:block sm:w-44' id='search' onClick={() => setShow(true)} placeholder='Search..' />
+        <input type="text" className='h-7 hidden sm:block sm:w-48' id='search' onClick={() => setShow(true)} placeholder='Search..' />
         <label htmlFor="search" className=' absolute top-1/2 -translate-y-1/2 right-1'>
           <AiOutlineSearch className=' text-main w-5 h-5 hover:cursor-pointer' />
         </label>

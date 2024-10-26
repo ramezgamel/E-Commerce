@@ -37,8 +37,15 @@ const cartApiSLice = apiSlice.injectEndpoints({
         body: {couponName}
       }),
       invalidatesTags:["Cart"]
+    }),
+    clearCoupon:builder.mutation({
+      query:(cartId)=>({
+        url:`/cart/${cartId}/clearCoupon`,
+        method:"DELETE"
+      }),
+      invalidatesTags:["Cart"]
     })
   })
 });
 
-export const {useLazyGetUserCartQuery, useGetUserCartQuery ,useAddToCartMutation, useApplyCouponMutation, useClearCartMutation, useDeleteFromCartMutation} = cartApiSLice
+export const {useLazyGetUserCartQuery, useClearCouponMutation,useGetUserCartQuery ,useAddToCartMutation, useApplyCouponMutation, useClearCartMutation, useDeleteFromCartMutation} = cartApiSLice

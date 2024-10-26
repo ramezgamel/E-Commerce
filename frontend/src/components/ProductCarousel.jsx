@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Loader from '../components/Loader';
 import { useGetTopProductsQuery } from '../store/productsApiSlice';
 import {AnimatePresence, motion as m} from "framer-motion"
 import {IoIosArrowBack,IoIosArrowForward} from "react-icons/io"
+import CarouselSkeleton from './skeleton/CarouselSkeleton';
 function ProductCarousel() {
   const [view, setView] = useState(0);
   const { data: products, isLoading, error } = useGetTopProductsQuery();
@@ -24,7 +24,7 @@ function ProductCarousel() {
   const next = () => {
     setView(curr=> curr === products.length -1 ? 0: curr +1)
   };
-  if (isLoading) return <Loader />;
+  if (isLoading) return <CarouselSkeleton/>
   if (error) return <h3 role="alert">{error?.data?.message}</h3>;
   return (
     products.length > 0 && <div className="relative overflow-hidden pb-10  " >

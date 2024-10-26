@@ -38,6 +38,7 @@ const cartSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    coupon: Number,
     readOnly: {
       type: Boolean,
       default: false,
@@ -56,6 +57,10 @@ cartSchema.pre("save", function (next) {
     (acc, curr) => (acc += curr.price * curr.quantity),
     0
   );
+  if (this.isCoupon) {
+    this.totalPriceAfterDisCount =
+      this.totalPrice - this.totalPrice * (this.coupon / 100).toFixed(2);
+  }
   next();
 });
 

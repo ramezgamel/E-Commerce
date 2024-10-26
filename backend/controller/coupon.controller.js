@@ -1,12 +1,6 @@
 const Coupon = require("../model/Coupon");
 const ApiError = require("../utils/apiError");
-const {
-  getOne,
-  createOne,
-  updateOne,
-  deleteOne,
-  getAll,
-} = require("./factory");
+const { createOne, updateOne, deleteOne, getAll } = require("./factory");
 const asyncHandler = require("express-async-handler");
 
 exports.getCoupons = getAll(Coupon);

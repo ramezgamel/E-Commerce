@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,23 +7,24 @@ import {motion as m} from "framer-motion";
 import { useVerifyTokenQuery } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import SearchBox from './SearchBox';
-import ModeToggler from './ModeToggler';
 import CartPanel from './CartPanel';
 import FavoritePanel from './FavoritePanel';
 import NotificationsPanel from './NotificationsPanel';
 import ProfileDropdown from './ProfileDropdown';
-
+import { useMemo } from 'react';
+import ModeToggler from "./buttons/ModeToggler"
 function Header ()  {
   const {userInfo} = useSelector(state => state.auth)
   const {cartID} = useSelector(state => state.offline)
-  const {data:user, isLoading:verifyTokenLoader} = useVerifyTokenQuery();
+  const {data, isLoading:verifyTokenLoader} = useVerifyTokenQuery();
   const dispatch = useDispatch();
-
+  const user = useMemo(()=> data ,[data]);
+  
   useEffect(()=> {
     if(!verifyTokenLoader && user) {
       dispatch(setCredentials(user))
     }
-  },[dispatch, user, verifyTokenLoader]);
+  },[user, verifyTokenLoader]);
   
   return (
     <m.header 

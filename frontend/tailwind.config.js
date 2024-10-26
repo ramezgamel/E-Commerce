@@ -6,10 +6,10 @@ export default {
     extend: {
       container:{
         center:true,
-        mb:"620px"
+        xs:"620px"
       },
       screens:{
-        'mb':"321px"
+        'xs':"321px"
       },
       colors: {
         main: "var(--color-main)",

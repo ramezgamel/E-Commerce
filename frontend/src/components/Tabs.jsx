@@ -26,7 +26,8 @@ const childVariants = {
   }
 };
 function Tabs({ setCategory, category, setPage }) {
-  const { data } = useGetCatsQuery(1);
+  const { data, isError } = useGetCatsQuery(1);
+
   return (
     <div className="w-full flex pt-1 font-medium border-b">
       <m.ul variants={containerVariants} initial="hidden" animate="show" className="flex overflow-y-hidden -mb-px no-scrollbar overflow-scroll">
@@ -35,7 +36,7 @@ function Tabs({ setCategory, category, setPage }) {
           className={`${category == "" ? "border-blue-600 text-blue-600" : "text-main border-transparent"} mr-2 pb-2 px-3 border-b-2 hover:text-blue-600 hover:cursor-pointer`}>
           All
         </li>
-        {data?.data?.map((cat,i) =>
+        {!isError && data?.data?.map((cat,i) =>
           <m.li
             variants={childVariants}
             initial="hidden" animate="show"

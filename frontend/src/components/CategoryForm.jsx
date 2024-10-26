@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useCreateCatsMutation, useUpdateCatMutation } from "../store/catApiSlice";
 import { toast } from 'react-toastify';
 import Progress from "./Progress";
@@ -9,11 +9,7 @@ function CategoryForm({setShow ,category}) {
   const [createCat] = useCreateCatsMutation();
   const [updateCat] = useUpdateCatMutation();
   const {images, error:uploadErr, preview, progress, isUploaded, uploadData} = useUpload();
-  useEffect(()=>{
-    if(category){
-      nameInput.current.value = category.name
-    } 
-  }, [category]);
+  
   const submitHandler = async (e)=>{
     e.preventDefault();
     const cat = {
@@ -35,11 +31,12 @@ function CategoryForm({setShow ,category}) {
       setShow(false)
     }
   };
+
   return (
     <form onSubmit={submitHandler}>
       <div className="mb-3">
         <label htmlFor="name">Category Name</label>
-        <input type="text" placeholder="Category name" ref={nameInput} />
+        <input type="text" placeholder="Category name" defaultValue={category && category.name} ref={nameInput} />
       </div>
       <div className="mb-3">
         <label htmlFor="image">Image</label>
@@ -49,7 +46,6 @@ function CategoryForm({setShow ,category}) {
         <input type="file" onChange={(e)=>uploadData(e.target.files)}/>
         {(Boolean(progress) && !isUploaded) && <Progress progress={progress}/> }
       </div>
-      
       <div className="text-right">
         <button disabled={!isUploaded} className="btn" type="submit">{category? "Update":"Create"}</button>
       </div>

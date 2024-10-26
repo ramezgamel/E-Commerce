@@ -4,14 +4,11 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import { useState } from 'react';
 import Tabs from '../components/Tabs';
-import { useSelector } from 'react-redux';
 import ProductSkeleton from '../components/skeleton/ProductSkeleton';
-import {AnimatePresence, motion as m} from "framer-motion" ;
-import { childVariants, containerVariants } from '../animation/variants';
+import Reveal from '../animation/Reveal';
 function Home() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState('');
-  const { cart,favorite } = useSelector(state => state.offline);
   const { data: products, isLoading, error } = useGetProductQuery({ page, category });
   if (error)
     return (
@@ -31,15 +28,13 @@ function Home() {
             { Array.from({ length: 20 }).map((_,i) => <ProductSkeleton key={i}/>)}
           </div>}
           {products?.data.length > 0 ? (
-            <AnimatePresence mode='popLayout'>
-              <m.div key={category} variants={containerVariants} initial='hidden' animate="show" exit="exit" className="grid gap-3 grid-cols-1 mb:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-x-hidden">
-                {products?.data?.map((product, i) => (
-                  <m.div variants={childVariants} key={i}>
-                    <Product product={product} isInWishList={favorite?.some(item => product._id === item._id)} isInCart={cart?.cartItems?.some(item => item.product._id == product._id)} />
-                  </m.div>
+            <div className="grid gap-3 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-x-hidden">
+              {products?.data?.map((product, i) => (
+                  <Reveal  key={i}>
+                    <Product product={product} />
+                  </Reveal>
                 ))}
-              </m.div>
-            </AnimatePresence>
+            </div>
           ) : (
             <div role="alert" className="alert">
               No Data to Show

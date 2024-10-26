@@ -12,7 +12,6 @@ function Reviews({product}) {
   const [comment, setComment] = useState('');
   const { userInfo } = useSelector((state) => state.auth);
   const [createReview, { isLoading: loadingReview }, refetch] = useAddReviewMutation();
-  console.log(product);
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -54,7 +53,6 @@ function Reviews({product}) {
                       </div>
                     </div>
                   ))}
-
                 </div>
               }
               <div>
