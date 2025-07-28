@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
         "https://res.cloudinary.com/dfv2vlj7u/image/upload/f_auto,q_auto/k7ayyu7n0orspymdwoe4",
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       required: true,
     },
     role: {

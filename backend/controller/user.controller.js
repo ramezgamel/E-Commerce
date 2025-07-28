@@ -8,7 +8,7 @@ const { updateOne, deleteOne, getOne, getAll } = require("./factory");
 // @access  all
 module.exports.getUser = getOne(User);
 // @desc    get My profile
-// @route   PUT /api/users/profile
+// @route   GET /api/users/profile
 // @access  user
 module.exports.getProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
@@ -27,7 +27,7 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
   const { name, image, phoneNumber, password } = req.body;
   const user = await User.findById(req.user._id);
   const isCorrect = await user.checkPass(password);
-  if (isCorrect) throw new ApiError("Invalid password", 400);
+  if (!isCorrect) throw new ApiError("Invalid password", 400);
   user.name = name;
   user.image = image;
   user.phoneNumber = phoneNumber;
@@ -46,8 +46,8 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
 module.exports.changePassword = asyncHandler(async (req, res) => {
   const { oldPass, newPass } = req.body;
   const user = await User.findById(req.user._id);
-  const isMatch = await user.checkPass(oldPass);
-  if (!isMatch) throw new ApiError("Password is incorrect", 400);
+  const isCorrect = await user.checkPass(oldPass);
+  if (!isCorrect) throw new ApiError("Password is incorrect", 400);
   user.password = newPass;
   await user.save();
   res.status(200).json({ message: "Password changed Successfully" });

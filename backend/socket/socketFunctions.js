@@ -1,5 +1,6 @@
 const User = require("../model/User");
 const asyncHandler = require("express-async-handler");
+
 module.exports.pushNotification = asyncHandler(
   async (notification, receiver) => {
     if (!receiver) {
@@ -31,6 +32,7 @@ module.exports.pushToSomeUsers = asyncHandler(async (usersId, notification) => {
     addNotification(user, notification);
   });
 });
+
 module.exports.pushToAllUsers = asyncHandler(async (notification) => {
   const users = await User.find({ role: "user" });
   users.forEach(async (user) => {
@@ -52,8 +54,7 @@ module.exports.publishNotification = asyncHandler(
       users = await Promise.all(usersPromise);
     }
     users.forEach(async (user) => {
-      user.notifications = [...user.notifications, notification];
-      await user.save();
+      addNotification(user, notification);
     });
     return users;
   }
@@ -63,3 +64,18 @@ async function addNotification(user, notification) {
   user.notifications = [...user?.notifications, notification];
   await user.save();
 }
+
+module.exports.emitToSomeUsers = (users, notification, io) => {
+  users.forEach((user) => {
+    io.to(user._id.toString()).emit("get_notification", notification);
+  });
+};
+
+module.exports.setRooms = (socket) => {
+  if (socket.user?.role == "admin") {
+    socket.join("admins_room");
+  } else {
+    socket.join("users_room");
+    socket.join(socket.user._id);
+  }
+};

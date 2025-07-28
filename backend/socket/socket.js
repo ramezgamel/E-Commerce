@@ -3,28 +3,22 @@ const {
   pushToSomeUsers,
   pushToAllUsers,
   pushToAdmins,
+  setRooms,
+  emitToSomeUsers,
 } = require("./socketFunctions");
-
-function emitToSomeUsers(users, notification, io) {
-  users.forEach((user) => {
-    io.to(user._id.toString()).emit("get_notification", notification);
-  });
-}
-
-function setRooms(socket) {
-  if (socket.user.role == "admin") {
-    socket.join("admins_room");
-  } else {
-    socket.join("users_room");
-    socket.join(socket.user._id);
-  }
-}
 
 module.exports = (io) => {
   return io.on("connection", (socket) => {
     socket.on("set_user", (data) => {
       socket.user = data;
       setRooms(socket);
+    });
+    // 66649ea05f7bfdd980404f6c
+    // 66656e94b2b4b6b57c6931be
+    socket.on("try", () => {
+      io.to("66656e94b2b4b6b57c6931be").emit("get_notification", {
+        userID: socket.user._id,
+      });
     });
 
     socket.on("payment_success", (paymentData) => {
