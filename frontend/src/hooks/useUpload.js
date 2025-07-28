@@ -9,12 +9,14 @@ function getFormData(data){
   })
   return formData
 }
+
 async function readImage(image, arr){
   const reader = new FileReader();
   reader.readAsDataURL(image);
-  reader.onload = () =>  arr.push(reader.result) 
+  reader.onload = () =>  arr.push(reader.result)
 }
-  function getPreview(data){
+
+function getPreview(data){
   const preview = []; 
   Object.keys(data).map(async (key)=>{
     readImage(data[key],preview);
@@ -33,8 +35,10 @@ async function uploadImage(data, setProgress, setImages, setErr){
         setProgress(Math.round((loaded * 100) / total));
       }
     });
-    setImages(res.data)
+    console.log(res);
+    setImages(res)
   } catch (err) {
+    console.log(err);
     setErr(err.response.data);
   }
 }

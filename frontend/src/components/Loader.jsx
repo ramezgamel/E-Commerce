@@ -1,7 +1,7 @@
 function Loader() {
   return (
     <div className="bg-blend-overlay text-main">
-      <div  
+      <div
         className="my-auto justify-center flex"
       >
         <svg

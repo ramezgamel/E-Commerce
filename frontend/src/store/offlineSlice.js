@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  cart:[],
+  cart:{},
   favorite:[],
   cartID: localStorage.getItem("cartID") ? localStorage.getItem("cartID"): null
 }

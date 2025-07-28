@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckoutSteps from '../../components/CheckoutSteps';
 import {useGetUserAddressesQuery} from "../../store/addressesApiSlice"
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 function Shipping() {
   const navigate = useNavigate();
   const [address,setAddress] = useState()

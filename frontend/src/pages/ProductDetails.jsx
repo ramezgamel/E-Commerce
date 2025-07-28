@@ -9,6 +9,7 @@ import Meta from '../components/Meta';
 import NavAnimation from '../animation/NavAnimation';
 import Reviews from '../components/Reviews.jsx';
 import InputCountToCartButton from '../components/buttons/InputCountToCartButton.jsx';
+import Error from '../components/Error.jsx';
 
 function ProductDetails() {
   const [mainImage, setMainImage] = useState('');
@@ -29,7 +30,8 @@ function ProductDetails() {
     <Loader />
   </div>;
 
-  if (error) return <div className="alert">Error: {error.message || "Something went wrong"}</div>;
+  if (error) return <Error errMsg={error.message} />;
+  // <div className="alert">Error: {error.message || "Something went wrong"}</div>;
 
   return (
     <NavAnimation>
@@ -38,7 +40,7 @@ function ProductDetails() {
         <div className="gap-2 md:grid md:grid-cols-12 ">
           <div className="flex gap-1 md:col-span-5 max-h-[80vh] ">
             <div className="bd relative w-[20%] gap-1 overflow-auto no-scrollbar">
-              {product?.data.images.map((image) => (
+              {product?.data.images?.map((image) => (
                 <div
                   key={image}
                   className="bd h-[20%] mb-1 cursor-pointer bg-white rounded-md border  text-main hover:opacity-30"
@@ -82,8 +84,8 @@ function ProductDetails() {
             <p className="text-main line-clamp-[11]">
               <strong>Description:</strong> {product?.data?.description}
             </p>
-              {product?.data?.countInStock > 0 ?
-              <InputCountToCartButton productId={product.data._id} countInStock={product.data.countInStock}/>
+            {product?.data?.countInStock > 0 ?
+              <InputCountToCartButton productId={product.data._id} countInStock={product.data.countInStock} />
               : <p className='text-red-500 text-2xl'>Out of Stock</p>}
           </div>
         </div>

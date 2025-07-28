@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FormContainer from "../components/FormContainer";
+import FormContainer from "../components/form/FormContainer";
 import { Link } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";

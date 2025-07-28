@@ -4,8 +4,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import { AiOutlineBell } from "react-icons/ai";
-import { toast } from "react-toastify";
-import { getNotification, setUser, socket } from "../socket";
+import { toast } from "sonner";
+import { cleanSocketNotification, getNotification, setUser, socket } from "../socket";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -15,16 +15,20 @@ function NotificationsPanel() {
   const { userInfo } = useSelector(state => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo._id) {
       socket.connect();
       setUser(userInfo);
     }
-    return () => {
-      socket.disconnect();
-    };
-  }, [userInfo]);
+    return () => socket.disconnect();
+  }, [userInfo, userInfo._id]);
 
-  getNotification(async () => await refetch());
+  useEffect(() => {
+    getNotification((data) => {
+      refetch();
+      toast(data);
+    });
+    return () => cleanSocketNotification();
+  });
 
   const markRead = async (id) => {
     try {
@@ -53,7 +57,7 @@ function NotificationsPanel() {
         leaveTo="transform scale-95 opacity-0"
       >
         <Menu.Items as="ul" className="absolute no-scrollbar -right-3 top-3 mt-2 w-60 origin-top-right rounded-md p-2 bg-slate-50 dark:bg-gray-700 max-h-[17.53rem] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto">
-          {isLoading ? <Loader /> : notificationElements(data, markRead)}
+          {isLoading ? <Loader /> : notificationElements(data?.notifications, markRead)}
         </Menu.Items>
       </Transition>
     </Menu>
@@ -62,28 +66,30 @@ function NotificationsPanel() {
 
 export default NotificationsPanel;
 
-function notificationElements (data, markRead) {
-    if (data?.notifications.length <= 0) return <div className="alert m-2 p-2">No Notifications</div>;
-    return data?.notifications?.map((notification, index) =>
-      <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}` : ""}`}>
-        <Menu.Item as="li"
-          onClick={() => markRead(notification?._id)}
-          className={`${notification?.isRead ? "bg-back" : "bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
-          {data?.sender && (
-            <div className="col-span-2">
-              <img
-                className='rounded-full w-10 h-10'
-                src={data?.sender?.image} alt={data?.sender?.name}
-              />
-            </div>
-          )}
-          <div className={data?.notifications.senderId ? "col-span-6" : "col-span-8"}>
-            <p className="m-0 text-sm line-clamp-2">{notification?.content}</p>
-            <p className="text-gray-400 m-0 text-xs text-right">
-              {new Date(notification?.date).toLocaleTimeString("en-EG")}
-            </p>
+function notificationElements(data, markRead) {
+
+  if (data?.length <= 0) return <div className="alert m-2 p-2">No Notifications</div>;
+
+  return data?.map((notification, index) =>
+    <Link key={index} to={`${notification?.refId != undefined ? `order/${notification?.refId}` : ""}`}>
+      <Menu.Item as="li"
+        onClick={() => markRead(notification?._id)}
+        className={`${notification?.isRead ? "bg-back" : "bg-blue-500"} cursor-pointer text-main hover:bg-clicked px-2 py-1 rounded-md grid grid-cols-8 items-center gap-1 mb-1`}>
+        {data?.sender && (
+          <div className="col-span-2">
+            <img
+              className='rounded-full w-10 h-10'
+              src={data?.sender?.image} alt={data?.sender?.name}
+            />
           </div>
-        </Menu.Item>
-      </Link>
-    );
-  }
+        )}
+        <div className={data?.senderId ? "col-span-6" : "col-span-8"}>
+          <p className="m-0 text-sm line-clamp-2">{notification?.content}</p>
+          <p className="text-gray-400 m-0 text-xs text-right">
+            {new Date(notification?.date).toLocaleTimeString("en-EG")}
+          </p>
+        </div>
+      </Menu.Item>
+    </Link>
+  );
+}

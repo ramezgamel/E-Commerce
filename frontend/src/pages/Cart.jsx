@@ -3,7 +3,7 @@ import { FaTrash } from 'react-icons/fa';
 import {  useSelector } from 'react-redux';
 import { useRef } from 'react';
 import {useClearCouponMutation, useDeleteFromCartMutation} from '../store/cartApiSlice.js'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import Loader from '../components/Loader';
 import { useApplyCouponMutation } from '../store/cartApiSlice.js';
 import {useAddToCartMutation} from "../store/cartApiSlice.js"

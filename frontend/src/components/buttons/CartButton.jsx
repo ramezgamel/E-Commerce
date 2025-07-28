@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAddToCartMutation, useDeleteFromCartMutation } from "../../store/cartApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineAddShoppingCart } from "react-icons/md";

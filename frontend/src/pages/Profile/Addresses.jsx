@@ -1,6 +1,6 @@
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useAddToAddressesMutation, useDeleteFromAddressesMutation, useGetUserAddressesQuery } from "../../store/addressesApiSlice";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Loader from "../../components/Loader"
 
 function Addresses() {

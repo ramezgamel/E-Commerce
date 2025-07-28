@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useCreateCouponMutation, useUpdateCouponMutation } from "../store/couponApiSlice";
-import Loader from "./Loader";
-import {toast} from "react-toastify";
+import { useCreateCouponMutation, useUpdateCouponMutation } from "../../store/couponApiSlice";
+import Loader from "../Loader";
+import {toast} from "sonner";
 
 function CouponForm({setShow,coupon}) {
   const [createCoupon, {createLoading}] = useCreateCouponMutation();

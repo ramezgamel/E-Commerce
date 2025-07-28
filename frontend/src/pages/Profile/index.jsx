@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../../store/userApiSlice';
 import { useDispatch } from 'react-redux';
 import { socket } from '../../socket';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { logout } from '../../store/authSlice';
 
 

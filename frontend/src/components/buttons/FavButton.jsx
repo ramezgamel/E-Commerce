@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useAddToWishListMutation, useDeleteItemFromWishListMutation } from "../../store/wishListApi";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";

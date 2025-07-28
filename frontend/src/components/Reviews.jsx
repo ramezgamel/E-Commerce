@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddReviewMutation } from "../store/productsApiSlice";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Rating from "./Rating";
 import { format } from "date-fns";
 import Loader from "./Loader";

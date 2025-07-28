@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../store/userApiSlice";
 import { socket } from "../socket";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { logout } from "../store/authSlice";
 
 function ProfileDropdown({ userInfo }) {
@@ -21,7 +21,7 @@ function ProfileDropdown({ userInfo }) {
     try {
       await logoutCall().unwrap();
       socket.disconnect();
-      dispatch(logout());w
+      dispatch(logout());
       navigate('/auth');
     } catch (err) {
       toast.error(err?.data?.message || err.error);

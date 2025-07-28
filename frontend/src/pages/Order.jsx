@@ -5,7 +5,7 @@ import {
 } from '../store/orderApiSlice';
 import Loader from '../components/Loader';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 
 function Order() {

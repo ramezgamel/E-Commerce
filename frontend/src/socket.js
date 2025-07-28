@@ -2,6 +2,10 @@ import { io } from 'socket.io-client';
 const URL = import.meta.env.VITE_BASE_URL
 
 export const socket = io(URL);
+
+export const setUser = (userInfo) => {
+  socket.emit("set_user", userInfo);
+}
 export const deliverOrder = (orderData) => {
   socket.emit("deliver_order", orderData)
 };
@@ -11,10 +15,18 @@ export const paymentSuccess = (paymentData) => {
 export const publishNotification = (notificationData) => {
   socket.emit("publish_notification", notificationData)
 }
+// ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
 export const getNotification = (cb) => {
   socket.on("get_notification", cb );
+};
+
+export const cleanSocketNotification = () => {
+  socket.off("get_notification")
 }
-export const setUser = (userInfo) => {
-  socket.emit("set_user", userInfo);
+
+export const trying = () => {
+  socket.emit("try")
 }
+
 

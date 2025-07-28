@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../../store/orderApiSlice";
 import CheckoutSteps from "../../components/CheckoutSteps";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Loader from "../../components/Loader";
 import { removeCartID, setCart } from "../../store/offlineSlice";
 import { useLazyCheckoutSessionQuery } from "../../store/orderApiSlice";

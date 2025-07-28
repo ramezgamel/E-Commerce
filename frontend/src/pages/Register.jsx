@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import Progress from '../components/Progress';
 import useUpload from '../hooks/useUpload';
 import Loader from '../components/Loader';

@@ -27,7 +27,7 @@ function SideBar() {
             to="/admin/users"
             className={({ isActive }) =>
               `${isActive
-                ? 'xs:border-b-4 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
+                ? 'border-b-4 sm:border-b-0 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
                 : ''
               } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
             }
@@ -43,7 +43,7 @@ function SideBar() {
             to="/admin/orders"
             className={({ isActive }) =>
               `${isActive
-                ? 'xs:border-b-4 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
+                ? 'border-b-4 sm:border-b-0 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
                 : ''
               } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
             }
@@ -59,7 +59,7 @@ function SideBar() {
             to="/admin/products"
             className={({ isActive }) =>
               `${isActive
-                ? 'xs:border-b-4 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
+                ? 'border-b-4 sm:border-b-0 sm:border-l-4 border-blue-500 bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 '
                 : ''
               } flex items-center gap-2 p-3 hover:bg-gray-50 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300`
             }

@@ -4,6 +4,7 @@ import {lazy } from "react";
 import App from "./App.jsx";
 import Auth from "./pages/Auth.jsx";
 import Addresses from "./pages/Profile/Addresses.jsx";
+const AdminLayout = lazy(()=>import('./pages/admin/AdminLayout.jsx'));
 const Coupon = lazy(()=>import("./pages/admin/Coupon.jsx"));
 const UserOrders = lazy(()=>import("./pages/Profile/UserOrders.jsx"))
 const WishList = lazy(()=>import("./pages/Profile/WishList.jsx"))
@@ -21,10 +22,8 @@ const OrderList =lazy(()=>import( "./pages/admin/OrderList.jsx"));
 const ProductList =lazy(()=>import( "./pages/admin/ProductList.jsx"));
 const CreateNotification =lazy(()=>import( "./pages/admin/CreateNotification.jsx"));
 const CategoryList =lazy(()=>import( "./pages/admin/CategoryList.jsx"));
-const ProductEdit =lazy(()=>import( "./pages/admin/ProductEdit.jsx"));
 const Home = lazy(()=>import('./pages/Home.jsx'));
 const UserLayout = lazy(()=>import('./pages/user/UserLayout.jsx'));
-const AdminLayout = lazy(()=>import('./pages/admin/AdminLayout.jsx'));
 const Cart = lazy(()=>import('./pages/Cart.jsx'));
 
 const router = createBrowserRouter(
@@ -56,7 +55,6 @@ const router = createBrowserRouter(
         <Route path="products" element={<ProductList/>}/>
         <Route path="notifications" element={<CreateNotification/>}/>
         <Route path="categories" element={<CategoryList/>}/>
-        <Route path="product/:id/list" element={<ProductEdit/>}/>
         <Route path="coupons" element={<Coupon/>}/>
       </Route>
       <Route path="auth" element={ <Auth/> }/>

@@ -5,7 +5,7 @@ import { useLoginMutation } from '../store/userApiSlice';
 import { setCredentials } from '../store/authSlice';
 import Loader from '../components/Loader';
 import {motion as m} from "framer-motion"
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

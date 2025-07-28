@@ -26,7 +26,7 @@ export const catApiSlice = apiSlice.injectEndpoints(({
     }),
     updateCat: builder.mutation({
       query: (data) => ({
-        url:`/category/${data.get("_id")}`,
+        url:`/category/${data._id}`,
         method:"PUT",
         body:data
       }),
