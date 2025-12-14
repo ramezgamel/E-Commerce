@@ -1,30 +1,30 @@
 import { useEffect, useState } from 'react';
-import { useGetTopProductsQuery } from '../store/productsApiSlice';
-import {AnimatePresence, motion as m} from "framer-motion"
-import {IoIosArrowBack,IoIosArrowForward} from "react-icons/io"
-import CarouselSkeleton from './skeleton/CarouselSkeleton';
+import { AnimatePresence, motion as m } from "framer-motion";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import CarouselSkeleton from '../skeleton/CarouselSkeleton';
+import { useGetTopProductsQuery } from '../../store/productsApiSlice';
 function ProductCarousel() {
   const [view, setView] = useState(0);
   const { data: products, isLoading, error } = useGetTopProductsQuery();
-  useEffect(()=>{
-    const interval = setInterval(()=>{
-      if(view == products?.length -1){
-        setView(0)
-      }else {
-        setView(prev => prev + 1)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (view == products?.length - 1) {
+        setView(0);
+      } else {
+        setView(prev => prev + 1);
       }
-    }, 3000)
+    }, 3000);
     return () => {
-      clearInterval(interval)
-    }
-  },[products, view]);
-  const prev = ()=> {
-    setView(curr => curr === 0 ? products.length -1: curr -1)
+      clearInterval(interval);
+    };
+  }, [products, view]);
+  const prev = () => {
+    setView(curr => curr === 0 ? products.length - 1 : curr - 1);
   };
   const next = () => {
-    setView(curr=> curr === products.length -1 ? 0: curr +1)
+    setView(curr => curr === products.length - 1 ? 0 : curr + 1);
   };
-  if (isLoading) return <CarouselSkeleton/>
+  if (isLoading) return <CarouselSkeleton />;
   if (error) return <h3 role="alert">{error?.data?.message}</h3>;
   return (
     products.length > 0 && <div className="relative overflow-hidden pb-10  " >
@@ -32,14 +32,14 @@ function ProductCarousel() {
       <AnimatePresence mode='wait'>
         <m.div
           key={view}
-          initial={{x:"-100%"}}
-          animate={{x:0,opacity:["10%","30%","100%"]}}
-          exit={{x:"100%", opacity:["70%","30%","10%"]}}
+          initial={{ x: "-100%" }}
+          animate={{ x: 0, opacity: ["10%", "30%", "100%"] }}
+          exit={{ x: "100%", opacity: ["70%", "30%", "10%"] }}
           transition={{
-            duration:.5
+            duration: .5
           }}
           className="h-56 flex justify-center md:h-80">
-            <img src={products[view]?.images[0]}/>
+          <img src={products[view]?.images[0]} />
         </m.div>
       </AnimatePresence>
       {/* <!-- Slider controls --> */}
@@ -47,10 +47,10 @@ function ProductCarousel() {
         <button type="button"
           className='hover:scale-150 transition-all'
           onClick={prev}>
-          <IoIosArrowBack className='w-7 h-7 text-main hover:text-blue-700'/>
+          <IoIosArrowBack className='w-7 h-7 text-main hover:text-blue-700' />
         </button>
         <button type="button" onClick={next} className='hover:scale-150 transition-all'>
-          <IoIosArrowForward className='w-7 h-7 text-main hover:text-blue-700'/>
+          <IoIosArrowForward className='w-7 h-7 text-main hover:text-blue-700' />
         </button>
       </div>
       {/* <!-- Slider indicators --> */}
@@ -60,8 +60,8 @@ function ProductCarousel() {
             <button
               key={index}
               type="button"
-              className={`${view == index ? "p-2":"opacity-50"} h-3 w-3 rounded-full transition-all bg-main`}
-              onClick={()=>setView(index)}
+              className={`${view == index ? "p-2" : "opacity-50"} h-3 w-3 rounded-full transition-all bg-main`}
+              onClick={() => setView(index)}
             ></button>
           ))}
         </div>

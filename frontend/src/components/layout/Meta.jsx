@@ -11,7 +11,7 @@ function Meta({ title, description, keyword }) {
   );
 }
 Meta.defaultProps = {
-  title: "ProShop",
+  title: "MHPShop",
   description: "We sell best products for cheap",
   keyword: "electronics, buy electronics, cheap electronics",
 };

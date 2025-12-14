@@ -1,15 +1,27 @@
 /* eslint-disable react/prop-types */
-import { FaStar, FaRegStar } from "react-icons/fa";
-function Rating({ value, text }) {
+import { motion } from "framer-motion";
+import { FaStar } from "react-icons/fa";
+function Rating({ value, count }) {
   return (
-    <div className="flex items-center">
-      <span>{value >= 1 ? <FaStar className="text-yellow-500"/> : <FaRegStar className="text-main"/>}</span>
-      <span>{value >= 2 ? <FaStar className="text-yellow-500"/> : <FaRegStar className="text-main"/>}</span>
-      <span>{value >= 3 ? <FaStar className="text-yellow-500"/> : <FaRegStar className="text-main"/>}</span>
-      <span>{value >= 4 ? <FaStar className="text-yellow-500"/> : <FaRegStar className="text-main"/>}</span>
-      <span>{value >= 5 ? <FaStar className="text-yellow-500"/> : <FaRegStar className="text-main"/>}</span>
-      <span className="ml-2 text-main">{text}</span>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.4 }}
+      className="flex items-center gap-2"
+    >
+      <div className="flex items-center">
+        {[...Array(5)].map((_, i) => (
+          <FaStar
+            key={i}
+            className={`w-5 h-5 ${i < Math.floor(value) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+              }`}
+          />
+        ))}
+      </div>
+      <span className="text-sm text-gray-600">
+        {value} ({count} reviews)
+      </span>
+    </motion.div>
   );
 }
 

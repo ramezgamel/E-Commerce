@@ -5,7 +5,7 @@ import {
   useUpdateProductMutation,
 } from '../../store/productsApiSlice';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import Paginate from '../../components/Paginate';

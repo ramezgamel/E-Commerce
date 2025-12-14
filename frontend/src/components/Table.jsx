@@ -1,5 +1,5 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Loader from "./Loader";
+import Loader from "./common/Loader";
 
 function Table({ headers, isLoading, error, children }) {
   return (

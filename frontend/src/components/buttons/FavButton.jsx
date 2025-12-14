@@ -2,20 +2,20 @@ import { toast } from "sonner";
 import { useAddToWishListMutation, useDeleteItemFromWishListMutation } from "../../store/wishListApi";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import Loader from "../Loader";
+import Loader from "../common/Loader";
 import { useNavigate } from "react-router-dom";
 
-function FavButton({ productId , isInWishList}) {
+function FavButton({ productId, isInWishList }) {
   const [addToWish, { isLoading: addLoad }] = useAddToWishListMutation();
   const [deleteFromWish, { isLoading: removeLoad }] = useDeleteItemFromWishListMutation();
   const { userInfo } = useSelector(state => state.auth);
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const addToWishList = async (e) => {
     e.preventDefault();
-    if(!userInfo) {
+    if (!userInfo) {
       toast.error("Login First");
-      return navigate("/auth")
+      return navigate("/auth");
     }
     if (userInfo.role == "admin") return toast.error("Unavailable for admins");
     try {
@@ -35,7 +35,7 @@ function FavButton({ productId , isInWishList}) {
     }
   };
   return (
-    <span className='absolute top-2 flex justify-center items-center cursor-pointer right-2 size-9 rounded-md p-2 shadow-md bg-white hover:scale-[1.15] hover:bg-slate-200 '>
+    <span className=' flex justify-center items-center cursor-pointer  size-9 rounded-md p-2 shadow-md bg-white hover:scale-[1.15] hover:bg-slate-200 transition-colors'>
       {addLoad || removeLoad ? <Loader /> : isInWishList ?
         <FaHeart onClick={deleteToWishList} className='text-red-600 w-full h-full' /> : <FaRegHeart onClick={addToWishList} className='text-gray-800 w-full h-full' />
       }

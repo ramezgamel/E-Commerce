@@ -26,7 +26,7 @@ function getPreview(data){
 
 
 async function uploadImage(data, setProgress, setImages, setErr){
-  const path = data['length'] > 1 ? 'uploadMulti': 'uploadSingle'
+  const path = data['length'] > 1 ? 'upload/multi': 'upload/single'
   const formData = getFormData(data);
   setErr(null)
   try {

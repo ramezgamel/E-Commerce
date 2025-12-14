@@ -1,9 +1,9 @@
 import { FaShuttleVan } from 'react-icons/fa';
-import RatingAvg from './RatingAvg';
+import RatingAvg from '../RatingAvg.jsx';
 import { Link } from 'react-router-dom';
-import FavButton from './buttons/FavButton.jsx';
-import CartButton from './buttons/CartButton.jsx';
-import useIsIn from '../hooks/useIsIn.js';
+import FavButton from '../buttons/FavButton.jsx';
+import AddToCartBtn from '../buttons/AddToCartBtn.jsx';
+import useIsIn from '../../hooks/useIsIn.js';
 import React from 'react';
 
 const Product = React.memo(({ product }) => {
@@ -12,10 +12,12 @@ const Product = React.memo(({ product }) => {
     <div className='bg-back p-2 h-full border border-slate-600 max-w-md min-h-[240px] max-h-[350px] rounded-md overflow-hidden' >
       <Link to={"/product/" + product._id}>
         <div className='relative h-[65%] '>
-          <FavButton productId={product._id} isInWishList={isInWishList} />
+          <div className='absolute top-2 right-2 '>
+            <FavButton productId={product._id} isInWishList={isInWishList} />
+          </div>
           <img className='h-full mx-auto' src={product.images[0]} alt={product.name} />
           {
-            product.countInStock > 0 ? <CartButton productId={product._id} isInCart={isInCart} />
+            product.countInStock > 0 ? <div className='absolute  bottom-2 right-2'><AddToCartBtn productId={product._id} isInCart={isInCart} /></div>
               : <span className='absolute h-9 p-2 flex justify-center items-center  rounded-md -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 shadow-md cursor-pointer bg-red-400/70 text-sm whitespace-nowrap'>Out of Stock</span>
           }
 

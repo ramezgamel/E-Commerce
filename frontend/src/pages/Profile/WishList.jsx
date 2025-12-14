@@ -1,5 +1,5 @@
 import { useGetUserWishListQuery } from "../../store/wishListApi";
-import Product from "../../components/Product";
+import Product from "../../components/product/Product";
 import ProductSkeleton from "../../components/skeleton/ProductSkeleton";
 function WishList() {
   const { data: wishList, isLoading, isError } = useGetUserWishListQuery();
@@ -10,10 +10,10 @@ function WishList() {
       </div>
     )}
   </div>);
-  if(isError)return <div className="alert text-center py-2 my-10">Failed to get wish list items</div>
+  if (isError) return <div className="alert text-center py-2 my-10">Failed to get wish list items</div>;
   return (
     <>
-      { wishList?.data.length == 0 ? <div className="alert text-center my-auto">No data</div> :
+      {wishList?.data.length == 0 ? <div className="alert text-center my-auto">No data</div> :
         <div className="h-full overflow-auto no-scrollbar">
           <div className="grid grid-cols-12 gap-2">
             {wishList?.data.map(prd =>

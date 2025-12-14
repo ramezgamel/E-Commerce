@@ -1,7 +1,7 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useDeleteCouponMutation, useGetCouponsQuery } from "../../store/couponApiSlice";
 import { format } from "date-fns";
-import Loader from "../../components/Loader";
+import Loader from "../../components/common/Loader";
 import Paginate from "../../components/Paginate";
 import { useState } from "react";
 import Model from "../../components/Modal";

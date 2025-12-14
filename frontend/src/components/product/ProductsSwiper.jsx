@@ -1,4 +1,4 @@
-import { useGetProductQuery } from "../store/productsApiSlice";
+import { useGetProductQuery } from "../../store/productsApiSlice";
 import Product from "./Product";
 
 const ProductsSwiper = ({ category }) => {

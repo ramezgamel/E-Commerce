@@ -128,7 +128,12 @@ module.exports.webhookCheckOut = asyncHandler(async (req, res) => {
   }
   switch (event.type) {
     case "checkout.session.completed":
-      createNewOrder(event.data.object);
+      try {
+        await createNewOrder(event.data.object);
+      } catch (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      break;
   }
   res.status(200).json({ payment: "success" });
 });

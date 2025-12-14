@@ -58,7 +58,9 @@ app.all("*", (req, res, next) => {
 app.use(globalError);
 
 const server = require("http").createServer(app);
-const io = require("socket.io")(server, { cors: { origin: "*" } });
+const io = require("socket.io")(server, {
+  cors: { origin: process.env.CLIENT_URL },
+});
 require("./socket/socket")(io);
 
 module.exports = server;

@@ -1,15 +1,15 @@
 import { useParams } from 'react-router-dom';
-import Rating from '../components/Rating';
 import {
   useGetProductByIdQuery,
 } from '../store/productsApiSlice';
-import Loader from '../components/Loader';
+import Loader from '../components/common/Loader';
 import { useEffect, useState } from 'react';
-import Meta from '../components/Meta';
+import Meta from '../components/layout/Meta';
 import NavAnimation from '../animation/NavAnimation';
 import Reviews from '../components/Reviews.jsx';
 import InputCountToCartButton from '../components/buttons/InputCountToCartButton.jsx';
-import Error from '../components/Error.jsx';
+import Error from '../components/common/Error.jsx';
+import Rating from '../components/Rating.jsx';
 
 function ProductDetails() {
   const [mainImage, setMainImage] = useState('');
@@ -36,7 +36,7 @@ function ProductDetails() {
   return (
     <NavAnimation>
       <Meta title={product?.data.name} />
-      <div className="md:container md:mx-auto mt-4">
+      <div className="md:w-[85vw] md:mx-auto mt-4">
         <div className="gap-2 md:grid md:grid-cols-12 ">
           <div className="flex gap-1 md:col-span-5 max-h-[80vh] ">
             <div className="bd relative w-[20%] gap-1 overflow-auto no-scrollbar">
@@ -64,10 +64,10 @@ function ProductDetails() {
           </div>
           <div className="md:col-span-7">
             <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
-              <h3 className="text-main">{product?.data?.name}</h3>
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">{product?.data?.name}</h3>
               <Rating
                 value={product?.data?.rating}
-                text={`${product?.data?.numReviews} reviews`}
+                count={product?.data?.numReviews}
               />
             </div>
             <div className="border-b border-slate-900/10 py-1 dark:border-slate-50/[0.06]">
@@ -97,3 +97,4 @@ function ProductDetails() {
 }
 
 export default ProductDetails;
+

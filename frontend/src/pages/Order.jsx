@@ -3,7 +3,7 @@ import {
   useDeliverOrderMutation,
   useGetOrderByIdQuery,
 } from '../store/orderApiSlice';
-import Loader from '../components/Loader';
+import Loader from '../components/common/Loader';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -13,7 +13,7 @@ function Order() {
   const {
     data: order,
     error,
-    isLoading:loadingOrder,
+    isLoading: loadingOrder,
     isError,
     refetch,
   } = useGetOrderByIdQuery(orderId);
@@ -23,7 +23,7 @@ function Order() {
 
   const deliverHandler = async () => {
     try {
-      await deliverOrder(orderId)
+      await deliverOrder(orderId);
       // deliverOrder({
       //   receiver: order.user._id,
       //   type: "Deliver",
@@ -66,43 +66,43 @@ function Order() {
           <div className="p-2 text-main bg-back rounded-md shadow-md">
             <h2 className='text-xl font-bold text-center my-3'>Order Details</h2>
             <div className="">
-            <p>
-              <strong>Name: </strong> {order.data.user.name}
-            </p>
-            <p>
-              <strong>Address: </strong> {order?.data.shippingAddress.alias}{' '}
-              {order?.data?.shippingAddress?.details}
-            </p>
-            <p > <strong>Payment Method</strong> {order?.data.paymentMethod}</p>
-            <div className="mb-2 p-2 text-main shadow-md">
-              <div className="mb-2">
-                {order?.data?.isDelivered ? (
-                  <div className="bg-green-600 rounded-md text-center py-2">Delivered on {format(Date(order?.data.deliveredAt), 'dd/MM/yyy h:m:s',{timeZone:""})}</div>
-                ) : (
-                  <div className="flex">
-                    <div className="bg-red-600 flex-grow rounded-l-md text-center py-2">
-                      Not Delivered
+              <p>
+                <strong>Name: </strong> {order.data.user.name}
+              </p>
+              <p>
+                <strong>Address: </strong> {order?.data.shippingAddress.alias}{' '}
+                {order?.data?.shippingAddress?.details}
+              </p>
+              <p > <strong>Payment Method</strong> {order?.data.paymentMethod}</p>
+              <div className="mb-2 p-2 text-main shadow-md">
+                <div className="mb-2">
+                  {order?.data?.isDelivered ? (
+                    <div className="bg-green-600 rounded-md text-center py-2">Delivered on {format(Date(order?.data.deliveredAt), 'dd/MM/yyy h:m:s', { timeZone: "" })}</div>
+                  ) : (
+                    <div className="flex">
+                      <div className="bg-red-600 flex-grow rounded-l-md text-center py-2">
+                        Not Delivered
+                      </div>
+                      {userInfo.role === 'admin' && !order?.data.isPaid && (
+                        <button
+                          disabled={loadingDeliver}
+                          className="bg-blue-700 px-1 rounded-r-md"
+                          onClick={deliverHandler}
+                        >
+                          {loadingDeliver ? <Loader /> : 'Del'}
+                        </button>
+                      )}
                     </div>
-                    {userInfo.role === 'admin' && !order?.data.isPaid && (
-                      <button
-                        disabled={loadingDeliver}
-                        className="bg-blue-700 px-1 rounded-r-md"
-                        onClick={deliverHandler}
-                      >
-                        {loadingDeliver ? <Loader /> : 'Del'}
-                      </button>
-                    )}
-                  </div>
-                )}
+                  )}
                 </div>
-              {order?.data.isPaid ? (
-                <div className='bg-green-600 rounded-md text-center py-2'>Paid on {order?.data.paidAt.slice(0, 10)}</div>
-              ) : (
-                <div className='bg-red-600 rounded-md text-center py-2'>Not Paid</div>
-              )}
+                {order?.data.isPaid ? (
+                  <div className='bg-green-600 rounded-md text-center py-2'>Paid on {order?.data.paidAt.slice(0, 10)}</div>
+                ) : (
+                  <div className='bg-red-600 rounded-md text-center py-2'>Not Paid</div>
+                )}
+              </div>
             </div>
-          </div>
-          <hr />
+            <hr />
             <h2 className='text-xl font-bold text-center my-3'>Order Summary</h2>
             <div className="flex justify-between">
               <strong>Items :</strong>

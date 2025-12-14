@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { useGetProductsFeaturesMutation } from '../store/productsApiSlice';
 import { Link } from 'react-router-dom';
-import Loader from './Loader';
+import Loader from './common/Loader';
 import Model from './Modal';
 import { AiOutlineSearch } from 'react-icons/ai';
 
@@ -56,17 +56,17 @@ const SearchBox = memo(function SearchBox() {
           </form>
           {keyword != '' && (
             <div className='pb-5 overflow-y-scroll no-scrollbar h-full '>
-              {isLoading ? <div className="content-center h-full"> <Loader /> </div>: data?.data?.length > 0 ? data.data.map((item) => (
-                  <Link
-                    key={item._id}
-                    to={`/product/${item._id}`}
-                    onClick={() => setKeyword('')}
-                  >
-                    {product(item)}
-                  </Link>
-                )) :  <div className='flex items-center justify-center h-full'>
-                    <div className="alert px-8 py-4">No Data!</div>
-                  </div>}
+              {isLoading ? <div className="content-center h-full"> <Loader /> </div> : data?.data?.length > 0 ? data.data.map((item) => (
+                <Link
+                  key={item._id}
+                  to={`/product/${item._id}`}
+                  onClick={() => setKeyword('')}
+                >
+                  {product(item)}
+                </Link>
+              )) : <div className='flex items-center justify-center h-full'>
+                <div className="alert px-8 py-4">No Data!</div>
+              </div>}
             </div>
           )}
         </div>

@@ -1,14 +1,14 @@
 import { useGetProductQuery } from '../store/productsApiSlice';
-import ProductCarousel from '../components/ProductCarousel';
 import Tabs from '../components/Tabs';
-import ProductsSwiper from '../components/ProductsSwiper';
 import { useGetCatsQuery } from '../store/catApiSlice';
-import Product from '../components/Product';
 import Reveal from "../animation/Reveal";
 import Paginate from "../components/Paginate";
-import Error from '../components/Error';
+import Error from '../components/common/Error';
 import ProductsSkeleton from '../components/skeleton/ProductsSkeleton';
 import useQueryParams from '../hooks/useQueryParams';
+import ProductCarousel from '../components/product/ProductCarousel';
+import Product from '../components/product/Product';
+import ProductsSwiper from '../components/product/ProductsSwiper';
 function Home() {
   const { params, addParam } = useQueryParams();
   const { data: products, isLoading, error } = useGetProductQuery(params ? params : { page: 1 }, { refetchOnMountOrArgChange: true });
@@ -16,9 +16,12 @@ function Home() {
 
   if (error) return <Error />;
   if (isLoading) return <ProductsSkeleton />;
+  const handleClick = () => {
 
+  };
   return (
     <div className='md:container md:mx-auto'>
+      <button onClick={handleClick}>click</button>
       <Tabs />
       <main className='p-3'>
         {!params?.category && <ProductCarousel />}

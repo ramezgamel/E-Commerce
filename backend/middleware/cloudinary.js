@@ -10,25 +10,37 @@ cloudinary.config({
   secure: true,
 });
 
-module.exports = asyncHandler(async (req, res) => {
-  if (!req.file && !req.files) return;
-  if (req.files) {
-    req.files = req.files.map(async (file) =>
-      cloudinary.uploader.upload(file.path, (error, result) =>
-        fs.unlinkSync(file.path)
-      )
-    );
-    const results = await Promise.all(req.files);
-    if (!results) throw new ApiError("Error uploading images", 401);
-    req.files.images = results.map((res) => res.secure_url);
-    res.status(200).json({ success: true, data: req.files.images });
-  } else {
-    const result = await cloudinary.uploader.upload(
-      req.file.path,
-      (error, result) => fs.unlinkSync(req.file.path)
-    );
-    if (!result) throw new ApiError("Error uploading image", 401);
-    req.file.url = result.secure_url;
-    res.status(200).json({ success: true, data: req.file.url });
+module.exports = asyncHandler(async (req, res, next) => {
+  if (!req.file && (!req.files || req.files.length === 0)) {
+     return next(new ApiError("No files uploaded", 400));
+  }
+
+  if (req.files && req.files.length > 0) {
+    const uploadPromises = req.files.map(async (file) => {
+      try {
+        const result = await cloudinary.uploader.upload(file.path);
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+        return result.secure_url;
+      } catch (error) {
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+        throw error;
+      }
+    });
+
+    try {
+      const results = await Promise.all(uploadPromises);
+      res.status(200).json({ success: true, data: results });
+    } catch (error) {
+      throw new ApiError("Error uploading images", 500);
+    }
+  } else if (req.file) {
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+      res.status(200).json({ success: true, data: result.secure_url });
+    } catch (error) {
+      if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+      throw new ApiError("Error uploading image", 500);
+    }
   }
 });

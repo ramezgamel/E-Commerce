@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../../store/orderApiSlice";
 import CheckoutSteps from "../../components/CheckoutSteps";
 import { toast } from "sonner";
-import Loader from "../../components/Loader";
+import Loader from "../../components/common/Loader";
 import { removeCartID, setCart } from "../../store/offlineSlice";
 import { useLazyCheckoutSessionQuery } from "../../store/orderApiSlice";
 import { paymentSuccess } from "../../socket";
@@ -12,11 +12,11 @@ function PlaceOrder() {
   const navigate = useNavigate();
   const [address] = useState(JSON.parse(localStorage.getItem("address")));
   const [paymentMethod] = useState(localStorage.getItem("paymentMethod"));
-  const { cart, cartID:cartId } = useSelector((state) => state.offline);
+  const { cart, cartID: cartId } = useSelector((state) => state.offline);
   const dispatch = useDispatch();
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
   const [checkoutSession, { isLoading: checkoutLoading }] = useLazyCheckoutSessionQuery();
-  
+
   useEffect(() => {
     if (!cart) {
       navigate("/");
@@ -40,11 +40,11 @@ function PlaceOrder() {
           paymentMethod
         }).unwrap();
         dispatch(setCart({}));
-        dispatch(removeCartID())
+        dispatch(removeCartID());
         paymentSuccess({
-          date:Date.now(),
-          refId:res.data._id,
-        })
+          date: Date.now(),
+          refId: res.data._id,
+        });
         navigate(`/order/${res.data._id}`);
       }
       if (paymentMethod == "card") {

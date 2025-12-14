@@ -5,9 +5,9 @@ import {
   AiOutlineShop,
   AiFillBell
 } from 'react-icons/ai';
-import {CiDiscount1} from "react-icons/ci"
-import {motion as m} from "framer-motion";
-import { containerVariants,childVariants } from "../animation/variants";
+import { CiDiscount1 } from "react-icons/ci";
+import { motion as m } from "framer-motion";
+import { containerVariants, childVariants } from "../../animation/variants";
 
 // import { MdOutlineSpaceDashboard } from 'react-icons/md';
 function SideBar() {
@@ -16,7 +16,7 @@ function SideBar() {
       className="flex sm:block sm:w-40"
     >
       <h2 className="hidden sm:block text-main text-xl text-center py-5">Dashboard</h2>
-      <m.ul 
+      <m.ul
         variants={containerVariants}
         initial="hidden"
         animate="show"

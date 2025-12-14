@@ -30,7 +30,7 @@ const useImageUpload = () => {
       return;
     }
     
-    const path = imageFiles.length > 1 ? 'uploadMulti': 'uploadSingle';
+    const path = imageFiles.length > 1 ? 'upload/multi': 'upload/single';
     const fieldName = imageFiles.length == 1 ? "image": 'images'
     const formData = new FormData();
     imageFiles.forEach((file) => {

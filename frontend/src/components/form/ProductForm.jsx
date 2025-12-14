@@ -19,8 +19,14 @@ function ProductForm({ submit, btnName, product }) {
   const submitHandler = (e) => {
     e.preventDefault();
     if (e.target.category?.value == "") return toast.error("Should select category");
+
+    let imagePayload = product?.images;
+    if (uploadResponse) {
+      imagePayload = Array.isArray(uploadResponse) ? uploadResponse : [uploadResponse];
+    }
+
     let newPrd = {
-      images: uploadResponse || product?.images,
+      images: imagePayload,
       name: e.target.name.value,
       price: e.target.price.value,
       description: e.target.description.value,

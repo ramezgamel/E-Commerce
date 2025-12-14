@@ -2,7 +2,7 @@
 import { useGetNotificationQuery, useMarkAsReadMutation } from "../store/userApiSlice";
 import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
-import Loader from "./Loader";
+import Loader from "./common/Loader";
 import { AiOutlineBell } from "react-icons/ai";
 import { toast } from "sonner";
 import { cleanSocketNotification, getNotification, setUser, socket } from "../socket";

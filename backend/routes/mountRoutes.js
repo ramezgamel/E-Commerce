@@ -7,9 +7,7 @@ const wishListRoutes = require("./wishList.routes");
 const addressesRoutes = require("./addresses.routes");
 const couponsRoutes = require("./coupon.routes");
 const cartRoutes = require("./cart.routes");
-const cloudinary = require("../middleware/cloudinary");
-const upload = require("../middleware/upload");
-const multer = require("multer");
+const uploadRoutes = require("./upload.routes");
 
 const mountRoutes = (app) => {
   app.use("/api/products", productsRoutes);
@@ -21,33 +19,7 @@ const mountRoutes = (app) => {
   app.use("/api/addresses", addressesRoutes);
   app.use("/api/coupons", couponsRoutes);
   app.use("/api/cart", cartRoutes);
-  app.post(
-    "/api/uploadSingle",
-    upload.single("image"),
-    (err, req, res, next) => {
-      if (err instanceof multer.MulterError) {
-        res.status(400).send({ error: err.message });
-      } else if (err) {
-        res.status(500).send({ error: err });
-      }
-      next();
-    },
-    cloudinary
-  );
-  app.post(
-    "/api/uploadMulti",
-    upload.array("images", 10),
-    (err, req, res, next) => {
-      console.log("Uploading.......");
-
-      if (err instanceof multer.MulterError) {
-        res.status(400).send({ error: err.message });
-      } else if (err) {
-        res.status(500).send({ error: err });
-      }
-      next();
-    },
-    cloudinary
-  );
+  app.use("/api/upload", uploadRoutes);
 };
+
 module.exports = mountRoutes;
